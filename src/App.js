@@ -1,10 +1,8 @@
-import Landingpage from './Components/Landingpage';
-
+import React from 'react';
+import HomeLayout from './Components/Layout/HomeLayout';
 function App() {
   return (
-    <div className="App">
-      <Landingpage />
-    </div>
+    <HomeLayout />
   );
 }
 
