@@ -2,8 +2,13 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 border-t border-gray-800 pt-12 pb-8">
-      <div className="container mx-auto px-4">
+    <footer className="bg-gray-900 border-t border-gray-800 pt-12 pb-8 relative overflow-hidden">
+      {/* Purple gradient focused at top center */}
+      <div className="absolute w-full h-full inset-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-purple-600/30 rounded-full blur-[120px] opacity-70"></div>
+      </div>
+      
+      <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Column 1 - About */}
           <div>
@@ -35,7 +40,7 @@ const Footer = () => {
           
           {/* Column 2 - Services */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Programs</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Programs</h3>
             <ul className="space-y-3">
               <li><a href="#" className="text-gray-400 hover:text-purple-400">Rehabilitation</a></li>
               <li><a href="#" className="text-gray-400 hover:text-purple-400">Pain Management</a></li>
@@ -47,7 +52,7 @@ const Footer = () => {
           
           {/* Column 3 - Company */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Company</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Company</h3>
             <ul className="space-y-3">
               <li><a href="#" className="text-gray-400 hover:text-purple-400">About Us</a></li>
               <li><a href="#" className="text-gray-400 hover:text-purple-400">For Clinics</a></li>
@@ -59,7 +64,7 @@ const Footer = () => {
           
           {/* Column 4 - Newsletter */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Newsletter</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Newsletter</h3>
             <p className="text-gray-400 mb-4">Subscribe to get the latest updates on new programs.</p>
             <form className="flex flex-col space-y-2">
               <input 
