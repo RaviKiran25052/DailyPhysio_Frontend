@@ -61,7 +61,7 @@ const courseData = [
 
 const CourseCard = ({ course }) => {
   return (
-    <div className="bg-gray-800 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-purple-500/10 transition">
+    <div className="bg-gradient-to-br from-indigo-900/70 via-indigo-1000/120 to-purple-900/2 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-purple-500/10 transition">
       <img src={course.image} alt={course.title} className="w-full h-40 object-cover" />
       <div className="p-4">
         <span className="text-xs text-purple-400 font-medium">{course.category}</span>

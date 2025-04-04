@@ -3,7 +3,7 @@ import { Users, Award, Trophy, Medal } from 'lucide-react';
 
 const TrustedBy = () => {
   return (
-    <div className="bg-gradient-to-br from-gray-900 via-purple-900/60 to-gray-900 relative overflow-hidden">
+    <div className="bg-gradient-to-br from-gray-900 via-purple-900/600 to-gray-900 relative overflow-hidden">
       {/* Additional purple gradients for depth */}
       <div className="absolute w-full h-full inset-0">
         <div className="absolute top-10 right-20 w-80 h-80 bg-purple-600/30 rounded-full blur-[100px]"></div>
