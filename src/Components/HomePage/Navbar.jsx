@@ -11,10 +11,14 @@ const Navbar = () => {
     setIsLogin(loginMode);
     setShowLoginModal(true);
     setIsMenuOpen(false);
+    // Prevent scrolling when modal is open
+    document.body.style.overflow = 'hidden';
   };
 
   const closeLoginModal = () => {
     setShowLoginModal(false);
+    // Restore scrolling when modal is closed
+    document.body.style.overflow = 'auto';
   };
 
   return (
@@ -88,19 +92,28 @@ const Navbar = () => {
         )}
       </nav>
       
-      {/* Login/Signup Modal */}
+      {/* Blurred Backdrop Overlay for Login/Signup Modal */}
       {showLoginModal && (
-        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[95%] max-w-md mx-auto">
-          <div className="relative w-full">
-            <button 
-              onClick={closeLoginModal}
-              className="absolute top-2 right-2 text-white bg-gray-700 rounded-full p-1 hover:bg-gray-600 z-10"
-            >
-              <X size={18} />
-            </button>
-            <Login initialMode={isLogin} />
+        <>
+          {/* Dark overlay with blur effect */}
+          <div 
+            className="fixed inset-0 bg-black/70 backdrop-blur-md z-40"
+            onClick={closeLoginModal}
+          ></div>
+          
+          {/* Modal */}
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[95%] max-w-md mx-auto">
+            <div className="relative w-full">
+              <button 
+                onClick={closeLoginModal}
+                className="absolute top-2 right-2 text-white bg-gray-700 rounded-full p-1 hover:bg-gray-600 z-10"
+              >
+                <X size={18} />
+              </button>
+              <Login initialMode={isLogin} />
+            </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );
