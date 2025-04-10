@@ -1,121 +1,171 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import Login from './Login';
 
-const Navbar = () => {
+const Navbar = ({ scrollToAbout, scrollToPrograms, scrollToExercises, scrollToContact, openLoginModal }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
+  const location = useLocation();
 
-  const openLoginModal = (loginMode = true) => {
-    setIsLogin(loginMode);
-    setShowLoginModal(true);
-    setIsMenuOpen(false);
-    // Prevent scrolling when modal is open
-    document.body.style.overflow = 'hidden';
-  };
+  // Track scroll position to add background when scrolled
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+      
+      // Detect which section is in view
+      const aboutPosition = document.getElementById('about')?.getBoundingClientRect().top || 0;
+      const programsPosition = document.getElementById('programs')?.getBoundingClientRect().top || 0;
+      const exercisesPosition = document.getElementById('exercises')?.getBoundingClientRect().top || 0;
+      const contactPosition = document.getElementById('contact')?.getBoundingClientRect().top || 0;
+      
+      const offset = 100;
+      
+      if (aboutPosition - offset < 0 && programsPosition - offset > 0) {
+        setActiveSection('about');
+      } else if (programsPosition - offset < 0 && exercisesPosition - offset > 0) {
+        setActiveSection('programs');
+      } else if (exercisesPosition - offset < 0 && contactPosition - offset > 0) {
+        setActiveSection('exercises');
+      } else if (contactPosition - offset < 0) {
+        setActiveSection('contact');
+      } else {
+        setActiveSection('');
+      }
+    };
 
-  const closeLoginModal = () => {
-    setShowLoginModal(false);
-    // Restore scrolling when modal is closed
-    document.body.style.overflow = 'auto';
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Handle navigation - either scroll or navigate to a new page
+  const handleNavigation = (action, path, section) => {
+    setIsMenuOpen(false); // Close mobile menu
+    setActiveSection(section);
+    
+    if (location.pathname === '/') {
+      // If on home page, use scroll functionality
+      if (action) action();
+    } else {
+      // If on another page, navigate to home with hash
+      window.location.href = `/${path ? path : ''}`;
+    }
   };
 
   return (
-    <>
-      <nav className="px-4 py-5 md:px-8 bg-gray-900">
-        <div className="container mx-auto flex justify-between items-center">
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900 shadow-lg border-b border-gray-800' : 'bg-gray-900/95 border-b border-gray-800/50'}`}>
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between py-4">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold">E</div>
-            <span className="text-xl font-bold text-white">ExerciseMD</span>
-          </div>
+          <Link to="/" className="text-2xl font-bold">
+            <span className="text-purple-500">Exercise</span>
+            <span className="text-white">MD</span>
+          </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
-            <a href="#" className="px-4 py-2 bg-purple-600 rounded-md text-white font-medium">Home</a>
-            <a href="#" className="text-white hover:text-purple-400">Programs</a>
-            <a href="#" className="text-white hover:text-purple-400">Exercises</a>
-            <a href="#" className="text-white hover:text-purple-400">About</a>
-            <a href="#" className="text-white hover:text-purple-400">Contact</a>
-          </div>
-
-          {/* Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-3">
+          <nav className="hidden md:flex space-x-8">
             <button 
-              onClick={() => openLoginModal(true)}
-              className="px-4 py-2 text-sm font-medium text-white hover:text-purple-400"
+              onClick={() => handleNavigation(scrollToAbout, '#about', 'about')} 
+              className={`text-white transition-colors border-b-2 pb-1 ${activeSection === 'about' ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
             >
-              Login
+              About
             </button>
             <button 
-              onClick={() => openLoginModal(false)}
-              className="px-4 py-2 text-sm font-medium bg-purple-600 rounded-md hover:bg-purple-700 transition"
+              onClick={() => handleNavigation(scrollToPrograms, '#programs', 'programs')} 
+              className={`text-white transition-colors border-b-2 pb-1 ${activeSection === 'programs' ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+            >
+              Programs
+            </button>
+            <button 
+              onClick={() => handleNavigation(scrollToExercises, '#exercises', 'exercises')} 
+              className={`text-white transition-colors border-b-2 pb-1 ${activeSection === 'exercises' ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+            >
+              Exercises
+            </button>
+            <button 
+              onClick={() => handleNavigation(scrollToContact, '#contact', 'contact')} 
+              className={`text-white transition-colors border-b-2 pb-1 ${activeSection === 'contact' ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+            >
+              Contact
+            </button>
+          </nav>
+
+          {/* Right Side - Auth Buttons */}
+          <div className="hidden md:flex items-center space-x-4">
+            <button 
+              onClick={() => openLoginModal(true)} 
+              className="px-4 py-2 rounded-md text-white hover:text-purple-300 transition-colors border border-gray-700 hover:border-purple-500"
+            >
+              Sign In
+            </button>
+            <button 
+              onClick={() => openLoginModal(false)} 
+              className="px-4 py-2 bg-purple-600 rounded-md hover:bg-purple-700 text-white transition-colors"
             >
               Sign Up
             </button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-white">
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+          <button 
+            className="md:hidden text-white" 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
+      </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-gray-800 mt-2 py-4 px-4 rounded-lg">
-            <div className="flex flex-col space-y-3">
-              <a href="#" className="bg-purple-600 text-white font-medium py-2 px-3 rounded-md">Home</a>
-              <a href="#" className="text-white hover:text-purple-400 py-2">Programs</a>
-              <a href="#" className="text-white hover:text-purple-400 py-2">Exercises</a>
-              <a href="#" className="text-white hover:text-purple-400 py-2">About</a>
-              <a href="#" className="text-white hover:text-purple-400 py-2">Contact</a>
-              <div className="flex flex-col space-y-2 pt-2">
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-gray-900 border-t border-gray-800">
+          <div className="container mx-auto px-4 py-3">
+            <nav className="flex flex-col space-y-4 py-4">
+              <button 
+                onClick={() => handleNavigation(scrollToAbout, '#about', 'about')} 
+                className={`text-white py-2 transition-colors ${activeSection === 'about' ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+              >
+                About
+              </button>
+              <button 
+                onClick={() => handleNavigation(scrollToPrograms, '#programs', 'programs')} 
+                className={`text-white py-2 transition-colors ${activeSection === 'programs' ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+              >
+                Programs
+              </button>
+              <button 
+                onClick={() => handleNavigation(scrollToExercises, '#exercises', 'exercises')} 
+                className={`text-white py-2 transition-colors ${activeSection === 'exercises' ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+              >
+                Exercises
+              </button>
+              <button 
+                onClick={() => handleNavigation(scrollToContact, '#contact', 'contact')} 
+                className={`text-white py-2 transition-colors ${activeSection === 'contact' ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+              >
+                Contact
+              </button>
+              <div className="flex space-x-4 pt-4 border-t border-gray-800">
                 <button 
                   onClick={() => openLoginModal(true)}
-                  className="px-4 py-2 text-sm font-medium text-white hover:text-purple-400 border border-gray-700 rounded-md"
+                  className="px-4 py-2 rounded-md text-white hover:text-purple-300 transition-colors border border-gray-700 hover:border-purple-500"
                 >
-                  Login
+                  Sign In
                 </button>
                 <button 
                   onClick={() => openLoginModal(false)}
-                  className="px-4 py-2 text-sm font-medium bg-purple-600 rounded-md hover:bg-purple-700 transition"
+                  className="px-4 py-2 bg-purple-600 rounded-md hover:bg-purple-700 text-white transition-colors"
                 >
                   Sign Up
                 </button>
               </div>
-            </div>
+            </nav>
           </div>
-        )}
-      </nav>
-      
-      {/* Blurred Backdrop Overlay for Login/Signup Modal */}
-      {showLoginModal && (
-        <>
-          {/* Dark overlay with blur effect */}
-          <div 
-            className="fixed inset-0 bg-black/70 backdrop-blur-md z-40"
-            onClick={closeLoginModal}
-          ></div>
-          
-          {/* Modal */}
-          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[95%] max-w-md mx-auto">
-            <div className="relative w-full">
-              <button 
-                onClick={closeLoginModal}
-                className="absolute top-2 right-2 text-white bg-gray-700 rounded-full p-1 hover:bg-gray-600 z-10"
-              >
-                <X size={18} />
-              </button>
-              <Login initialMode={isLogin} />
-            </div>
-          </div>
-        </>
+        </div>
       )}
-    </>
+    </header>
   );
 };
 

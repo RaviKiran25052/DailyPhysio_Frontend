@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ initialMode = true }) => {
   const [email, setEmail] = useState('');
@@ -7,6 +8,7 @@ const Login = ({ initialMode = true }) => {
   const [isLogin, setIsLogin] = useState(initialMode);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [forgotPassword, setForgotPassword] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLogin(initialMode);
@@ -23,12 +25,29 @@ const Login = ({ initialMode = true }) => {
     // Handle login/signup logic here
     if (forgotPassword) {
       console.log('Password Reset Request for:', email);
+      // Show a success message for password reset
+      alert('Password reset link sent to your email');
     } else {
       console.log(isLogin ? 'Login' : 'Signup', { 
         email, 
         password,
         ...(isLogin ? {} : { name, confirmPassword })
       });
+      
+      // In a real app, you would perform authentication here
+      // For demo purposes, we'll simulate a successful login/signup
+      if (email && password) {
+        // Store user info in sessionStorage or localStorage if needed
+        sessionStorage.setItem('user', JSON.stringify({
+          name: isLogin ? 'John Doe' : name, // Use form name for signup
+          email: email,
+          joined: "January 2023",
+          location: "New York, USA"
+        }));
+        
+        // Redirect to profile page after successful login/signup
+        navigate('/profile');
+      }
     }
   };
 
@@ -38,8 +57,8 @@ const Login = ({ initialMode = true }) => {
   };
 
   return (
-    <div className="bg-gray-800 rounded-xl shadow-xl overflow-hidden w-full flex flex-col max-h-[85vh]">
-      <div className="bg-gradient-to-r from-purple-600 to-purple-800 py-3 px-5">
+    <div className="bg-gray-800 rounded-xl shadow-xl w-full flex flex-col max-h-[85vh] overflow-hidden">
+      <div className="bg-gradient-to-r from-purple-600 to-purple-800 py-3 px-5 flex-shrink-0">
         <div className="flex items-center space-x-2">
           <div className="h-7 w-7 rounded-full bg-white flex items-center justify-center text-purple-600 font-bold">E</div>
           <span className="text-lg font-bold text-white">ExerciseMD</span>
@@ -62,7 +81,7 @@ const Login = ({ initialMode = true }) => {
         </p>
       </div>
       
-      <div className="p-5 overflow-y-auto">
+      <div className="p-5 overflow-y-auto flex-grow">
         <form onSubmit={handleSubmit} className="space-y-3">
           {!isLogin && !forgotPassword && (
             <div>

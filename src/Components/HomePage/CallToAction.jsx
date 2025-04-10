@@ -14,7 +14,7 @@ const CallToAction = () => {
           </div>
           
           <div className="md:w-1/2">
-            <h2 className="text-3xl font-bold mb-4">Start your healing journey today!</h2>
+            <h2 className="text-3xl font-bold mb-4 text-white">Start your healing journey today!</h2>
             <p className="text-gray-300 mb-6">
               Join thousands of patients who have improved their quality of life with our expert-guided exercise programs. Whether you're recovering from surgery or managing chronic pain, we have the right program for you.
             </p>
