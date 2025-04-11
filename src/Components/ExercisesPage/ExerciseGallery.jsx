@@ -18,10 +18,21 @@ const ExerciseGallery = () => {
   const [showPositionDropdown, setShowPositionDropdown] = useState(false);
   const [layoutSize, setLayoutSize] = useState('medium'); // small, medium, large
   const [selectedExercises, setSelectedExercises] = useState([]);
-  const exercisesPerPage = 8;
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  
+  // Responsive exercises per page: 4 on mobile, 8 on desktop
+  const exercisesPerPage = isMobile ? 4 : 8;
 
   useEffect(() => {
     filterExercises();
+    
+    // Add window resize listener to adjust items per page
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [selectedCategory, selectedPosition, searchQuery]);
 
   const filterExercises = () => {
@@ -50,6 +61,8 @@ const ExerciseGallery = () => {
     }
 
     setFilteredExercises(filtered);
+    // Reset to first page when filters change
+    setCurrentPage(1);
   };
 
   const selectExercise = (exercise) => {
@@ -105,7 +118,15 @@ const ExerciseGallery = () => {
             />
             
             {/* Exercises Grid */}
-            <div className={`grid ${layoutSize === 'small' ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6' : layoutSize === 'large' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'} gap-4 mb-6`}>
+            <div className={`grid ${
+              isMobile 
+                ? 'grid-cols-2' 
+                : layoutSize === 'small' 
+                  ? 'grid-cols-3 lg:grid-cols-4' 
+                  : layoutSize === 'large' 
+                    ? 'grid-cols-1 lg:grid-cols-2' 
+                    : 'grid-cols-2 lg:grid-cols-4'
+            } gap-4 mb-6`}>
               {currentExercises.map((exercise) => (
                 <ExerciseCard 
                   key={exercise.id}
@@ -118,23 +139,85 @@ const ExerciseGallery = () => {
               ))}
             </div>
             
+            {/* No results message */}
+            {currentExercises.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-400 text-lg">No exercises found. Try adjusting your filters.</p>
+              </div>
+            )}
+            
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex justify-center mb-6">
-                <div className="flex space-x-2">
-                  {Array.from({ length: totalPages }).map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => paginate(index + 1)}
-                      className={`w-10 h-10 flex items-center justify-center rounded-md ${
-                        currentPage === index + 1
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
+                <div className="flex flex-wrap justify-center gap-2">
+                  {/* Previous button */}
+                  <button
+                    onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`w-10 h-10 flex items-center justify-center rounded-md ${
+                      currentPage === 1
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    &lt;
+                  </button>
+                  
+                  {/* Page numbers with ellipsis for large page counts */}
+                  {Array.from({ length: totalPages }).map((_, index) => {
+                    const pageNumber = index + 1;
+                    
+                    // Always show first page, last page, current page, and pages around current
+                    if (
+                      pageNumber === 1 ||
+                      pageNumber === totalPages ||
+                      (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                    ) {
+                      return (
+                        <button
+                          key={pageNumber}
+                          onClick={() => paginate(pageNumber)}
+                          className={`w-10 h-10 flex items-center justify-center rounded-md ${
+                            currentPage === pageNumber
+                              ? 'bg-purple-600 text-white'
+                              : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                          }`}
+                        >
+                          {pageNumber}
+                        </button>
+                      );
+                    }
+                    
+                    // Show ellipsis for skipped pages
+                    if (
+                      (pageNumber === 2 && currentPage > 3) ||
+                      (pageNumber === totalPages - 1 && currentPage < totalPages - 2)
+                    ) {
+                      return (
+                        <span 
+                          key={pageNumber}
+                          className="w-10 h-10 flex items-center justify-center text-gray-500"
+                        >
+                          ...
+                        </span>
+                      );
+                    }
+                    
+                    return null;
+                  })}
+                  
+                  {/* Next button */}
+                  <button
+                    onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className={`w-10 h-10 flex items-center justify-center rounded-md ${
+                      currentPage === totalPages
+                        ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    &gt;
+                  </button>
                 </div>
               </div>
             )}

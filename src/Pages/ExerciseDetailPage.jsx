@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { exerciseData } from '../Components/ExercisesPage/ExerciseData';
-import { ArrowLeft, ChevronRight, Heart, PlayCircle, Clock, Activity, ArrowRight, Save, Plus } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Heart, PlayCircle, Clock, Activity, ArrowRight, Save, Plus, Check } from 'lucide-react';
+import { useExerciseContext } from '../context/ExerciseContext';
 
 const ExerciseDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addExercise } = useExerciseContext();
   const [exercise, setExercise] = useState(null);
   const [loading, setLoading] = useState(true);
   const [relatedExercises, setRelatedExercises] = useState([]);
@@ -14,6 +16,7 @@ const ExerciseDetailPage = () => {
   const [sets, setSets] = useState('1 Set');
   const [frequency, setFrequency] = useState('a Day');
   const [isFavorite, setIsFavorite] = useState(false);
+  const [addedToHep, setAddedToHep] = useState(false);
 
   useEffect(() => {
     // Find the exercise by ID
@@ -44,6 +47,19 @@ const ExerciseDetailPage = () => {
 
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
+  };
+  
+  const handleAddToHep = () => {
+    if (exercise) {
+      // Add the exercise to the context
+      addExercise(exercise);
+      setAddedToHep(true);
+      
+      // Show temporary success message
+      setTimeout(() => {
+        setAddedToHep(false);
+      }, 2000);
+    }
   };
 
   if (loading) {
@@ -242,9 +258,21 @@ const ExerciseDetailPage = () => {
                 <span className="text-white hidden xs:inline">Save</span>
               </button>
               
-              <button className="flex items-center justify-center gap-1 bg-purple-600 hover:bg-purple-700 transition-colors rounded-lg p-2 sm:p-3 text-sm">
-                <Plus size={16} className="text-white" />
-                <span className="text-white hidden xs:inline">Add To HEP</span>
+              <button 
+                onClick={handleAddToHep}
+                className={`flex items-center justify-center gap-1 ${addedToHep ? 'bg-green-600 hover:bg-green-700' : 'bg-purple-600 hover:bg-purple-700'} transition-colors rounded-lg p-2 sm:p-3 text-sm`}
+              >
+                {addedToHep ? (
+                  <>
+                    <Check size={16} className="text-white" />
+                    <span className="text-white hidden xs:inline">Added</span>
+                  </>
+                ) : (
+                  <>
+                    <Plus size={16} className="text-white" />
+                    <span className="text-white hidden xs:inline">Add To HEP</span>
+                  </>
+                )}
               </button>
             </div>
           </div>

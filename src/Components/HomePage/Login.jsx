@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Login = ({ initialMode = true }) => {
+const Login = ({ initialMode = true, isPro = false }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [isLogin, setIsLogin] = useState(initialMode);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [forgotPassword, setForgotPassword] = useState(false);
+  const [membershipType, setMembershipType] = useState(isPro ? 'pro' : 'free');
   const navigate = useNavigate();
 
   useEffect(() => {
     setIsLogin(initialMode);
     setForgotPassword(false);
   }, [initialMode]);
+
+  useEffect(() => {
+    // Update membership type when isPro changes
+    setMembershipType(isPro ? 'pro' : 'free');
+  }, [isPro]);
 
   const toggleMode = () => {
     setIsLogin(!isLogin);
@@ -31,7 +37,7 @@ const Login = ({ initialMode = true }) => {
       console.log(isLogin ? 'Login' : 'Signup', { 
         email, 
         password,
-        ...(isLogin ? {} : { name, confirmPassword })
+        ...(isLogin ? {} : { name, confirmPassword, membershipType })
       });
       
       // In a real app, you would perform authentication here
@@ -42,7 +48,8 @@ const Login = ({ initialMode = true }) => {
           name: isLogin ? 'John Doe' : name, // Use form name for signup
           email: email,
           joined: "January 2023",
-          location: "New York, USA"
+          location: "New York, USA",
+          membershipType: isLogin ? 'unknown' : membershipType
         }));
         
         // Redirect to profile page after successful login/signup
@@ -54,6 +61,10 @@ const Login = ({ initialMode = true }) => {
   const handleForgotPassword = (e) => {
     e.preventDefault();
     setForgotPassword(true);
+  };
+
+  const toggleMembershipType = () => {
+    setMembershipType(membershipType === 'free' ? 'pro' : 'free');
   };
 
   return (
@@ -70,19 +81,24 @@ const Login = ({ initialMode = true }) => {
               ? 'Welcome Back' 
               : 'Create Account'
           }
+          {!isLogin && !forgotPassword && membershipType === 'pro' && (
+            <span className="ml-2 bg-yellow-400 text-black text-xs py-1 px-2 rounded uppercase">Pro</span>
+          )}
         </h2>
         <p className="text-purple-200 mt-1 text-sm">
           {forgotPassword
             ? 'Enter your email to receive reset instructions'
             : isLogin 
               ? 'Sign in to access your personalized exercise programs'
-              : 'Join thousands improving their health with expert guidance'
+              : membershipType === 'pro'
+                ? 'Join ExerciseMD Pro and get access to all premium features'
+                : 'Join thousands improving their health with expert guidance'
           }
         </p>
       </div>
       
       <div className="p-5 overflow-y-auto flex-grow">
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && !forgotPassword && (
             <div>
               <label htmlFor="name" className="block text-gray-300 mb-1 text-sm font-medium">Full Name</label>
@@ -99,7 +115,7 @@ const Login = ({ initialMode = true }) => {
           )}
           
           <div>
-            <label htmlFor="email" className="block text-gray-300 mb-1 text-sm font-medium">Email Address</label>
+            <label htmlFor="email" className="block text-gray-300 mb-1 text-sm font-medium">Email</label>
             <input
               type="email"
               id="email"
@@ -125,20 +141,43 @@ const Login = ({ initialMode = true }) => {
               />
             </div>
           )}
-
+          
           {!isLogin && !forgotPassword && (
-            <div>
-              <label htmlFor="confirmPassword" className="block text-gray-300 mb-1 text-sm font-medium">Confirm Password</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Confirm your password"
-                required
-              />
-            </div>
+            <>
+              <div>
+                <label htmlFor="confirmPassword" className="block text-gray-300 mb-1 text-sm font-medium">Confirm Password</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Confirm your password"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-gray-300 mb-1 text-sm font-medium">Membership Type</label>
+                <div className="flex items-center space-x-4 bg-gray-700 border border-gray-600 rounded-md p-3">
+                  <div 
+                    className={`flex items-center cursor-pointer ${membershipType === 'free' ? 'text-white' : 'text-gray-400'}`}
+                    onClick={() => setMembershipType('free')}
+                  >
+                    <div className={`w-4 h-4 rounded-full border ${membershipType === 'free' ? 'border-purple-500 bg-purple-500' : 'border-gray-400'} mr-2`}></div>
+                    <span>Free Plan</span>
+                  </div>
+                  <div 
+                    className={`flex items-center cursor-pointer ${membershipType === 'pro' ? 'text-white' : 'text-gray-400'}`}
+                    onClick={() => setMembershipType('pro')}
+                  >
+                    <div className={`w-4 h-4 rounded-full border ${membershipType === 'pro' ? 'border-purple-500 bg-purple-500' : 'border-gray-400'} mr-2`}></div>
+                    <span>Pro Plan</span>
+                    <span className="ml-1 text-xs px-1 py-0.5 bg-yellow-400 text-black rounded">$7/mo</span>
+                  </div>
+                </div>
+              </div>
+            </>
           )}
           
           <button
@@ -149,7 +188,9 @@ const Login = ({ initialMode = true }) => {
               ? 'Send Reset Link' 
               : isLogin 
                 ? 'Sign In' 
-                : 'Create Account'
+                : membershipType === 'pro'
+                  ? 'Create Pro Account'
+                  : 'Create Free Account'
             }
           </button>
         </form>

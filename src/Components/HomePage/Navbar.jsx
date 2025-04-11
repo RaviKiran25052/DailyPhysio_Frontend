@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
-const Navbar = ({ scrollToAbout, scrollToPrograms, scrollToExercises, scrollToContact, openLoginModal }) => {
+const Navbar = ({ scrollToAbout, scrollToPrograms, scrollToExercises, scrollToContact, scrollToPlans, openLoginModal }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
@@ -14,27 +14,45 @@ const Navbar = ({ scrollToAbout, scrollToPrograms, scrollToExercises, scrollToCo
       setIsScrolled(window.scrollY > 20);
       
       // Detect which section is in view
-      const aboutPosition = document.getElementById('about')?.getBoundingClientRect().top || 0;
-      const programsPosition = document.getElementById('programs')?.getBoundingClientRect().top || 0;
-      const exercisesPosition = document.getElementById('exercises')?.getBoundingClientRect().top || 0;
-      const contactPosition = document.getElementById('contact')?.getBoundingClientRect().top || 0;
+      const aboutElement = document.getElementById('about');
+      const programsElement = document.getElementById('programs');
+      const exercisesElement = document.getElementById('exercises');
+      const plansElement = document.getElementById('plans');
+      const contactElement = document.getElementById('contact');
+      
+      // Get positions if elements exist
+      const aboutPosition = aboutElement?.getBoundingClientRect().top || 0;
+      const programsPosition = programsElement?.getBoundingClientRect().top || 0;
+      const exercisesPosition = exercisesElement?.getBoundingClientRect().top || 0;
+      const plansPosition = plansElement?.getBoundingClientRect().top || 0;
+      const contactPosition = contactElement?.getBoundingClientRect().top || 0;
       
       const offset = 100;
       
-      if (aboutPosition - offset < 0 && programsPosition - offset > 0) {
-        setActiveSection('about');
+      // Use window height to determine if we're at the bottom of the page
+      const isAtBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+      
+      if (isAtBottom && contactElement) {
+        // If we're at the bottom of the page and contact section exists, activate it
+        setActiveSection('contact');
+      } else if (plansPosition - offset < 0 && contactPosition - offset > 0) {
+        setActiveSection('plans');
+      } else if (exercisesPosition - offset < 0 && plansPosition - offset > 0) {
+        setActiveSection('exercises');
       } else if (programsPosition - offset < 0 && exercisesPosition - offset > 0) {
         setActiveSection('programs');
-      } else if (exercisesPosition - offset < 0 && contactPosition - offset > 0) {
-        setActiveSection('exercises');
-      } else if (contactPosition - offset < 0) {
-        setActiveSection('contact');
-      } else {
+      } else if (aboutPosition - offset < 0 && programsPosition - offset > 0) {
+        setActiveSection('about');
+      } else if (window.scrollY < 100) {
+        // If at the very top, no section is active
         setActiveSection('');
       }
     };
 
     window.addEventListener('scroll', handleScroll);
+    // Trigger once to set initial state
+    handleScroll();
+    
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -53,6 +71,16 @@ const Navbar = ({ scrollToAbout, scrollToPrograms, scrollToExercises, scrollToCo
       window.location.href = `/${path ? path : ''}`;
     }
   };
+
+  // Check if there's already a Plans link in the navigation items
+  // If not, add it between Exercises and Contact
+  const navItems = [
+    { name: 'About', onClick: scrollToAbout },
+    { name: 'Programs', onClick: scrollToPrograms },
+    { name: 'Exercises', onClick: scrollToExercises },
+    { name: 'Plans', onClick: scrollToPlans },
+    { name: 'Contact', onClick: scrollToContact },
+  ];
 
   return (
     <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900 shadow-lg border-b border-gray-800' : 'bg-gray-900/95 border-b border-gray-800/50'}`}>
@@ -83,6 +111,12 @@ const Navbar = ({ scrollToAbout, scrollToPrograms, scrollToExercises, scrollToCo
               className={`text-white transition-colors border-b-2 pb-1 ${activeSection === 'exercises' ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
             >
               Exercises
+            </button>
+            <button 
+              onClick={() => handleNavigation(scrollToPlans, '#plans', 'plans')} 
+              className={`text-white transition-colors border-b-2 pb-1 ${activeSection === 'plans' ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+            >
+              Plans
             </button>
             <button 
               onClick={() => handleNavigation(scrollToContact, '#contact', 'contact')} 
@@ -140,6 +174,12 @@ const Navbar = ({ scrollToAbout, scrollToPrograms, scrollToExercises, scrollToCo
                 className={`text-white py-2 transition-colors ${activeSection === 'exercises' ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
               >
                 Exercises
+              </button>
+              <button 
+                onClick={() => handleNavigation(scrollToPlans, '#plans', 'plans')} 
+                className={`text-white py-2 transition-colors ${activeSection === 'plans' ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+              >
+                Plans
               </button>
               <button 
                 onClick={() => handleNavigation(scrollToContact, '#contact', 'contact')} 

@@ -13,7 +13,7 @@ const ExerciseSidebar = ({
 }) => {
   return (
     <aside className={`md:w-1/4 md:block ${showFilters ? 'block' : 'hidden'}`}>
-      <div className="bg-gray-800 rounded-lg p-5 shadow-lg">
+      <div className="bg-gray-800 rounded-lg p-5 shadow-lg sticky top-4 md:min-h-[calc(100vh-8rem)]">
         {/* Breadcrumb Navigation */}
         <div className="flex items-center space-x-2 text-sm text-gray-400 mb-6">
           <span>{selectedCategory}</span>

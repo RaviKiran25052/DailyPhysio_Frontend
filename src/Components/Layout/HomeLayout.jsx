@@ -5,6 +5,7 @@ import Hero from '../HomePage/Hero';
 import TrustedBy from '../HomePage/TrustedBy';
 import PopularClasses from '../HomePage/PopularClasses';
 import FeaturedCourses from '../HomePage/FeaturedCourses';
+import MembershipPlans from '../HomePage/MembershipPlans';
 import CallToAction from '../HomePage/CallToAction';
 import Footer from '../HomePage/Footer';
 import Login from '../HomePage/Login';
@@ -16,12 +17,14 @@ const HomeLayout = () => {
   // State for login modal
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
+  const [isPro, setIsPro] = useState(false);
   const [isModalMounted, setIsModalMounted] = useState(false);
 
   // Create refs for each section to scroll to
   const aboutRef = useRef(null);
   const programsRef = useRef(null);
   const exercisesRef = useRef(null);
+  const plansRef = useRef(null);
   const contactRef = useRef(null);
 
   // Check URL for login parameter
@@ -43,8 +46,9 @@ const HomeLayout = () => {
   };
 
   // Function to open the login modal
-  const openLoginModal = (loginMode = true) => {
+  const openLoginModal = (loginMode = true, proSignup = false) => {
     setIsLogin(loginMode);
+    setIsPro(proSignup);
     setShowLoginModal(true);
     setIsModalMounted(true);
     // Prevent scrolling when modal is open
@@ -77,6 +81,7 @@ const HomeLayout = () => {
         scrollToAbout={() => scrollToSection(aboutRef)} 
         scrollToPrograms={() => scrollToSection(programsRef)} 
         scrollToExercises={() => scrollToSection(exercisesRef)}
+        scrollToPlans={() => scrollToSection(plansRef)}
         scrollToContact={() => scrollToSection(contactRef)}
         openLoginModal={openLoginModal}
       />
@@ -96,6 +101,10 @@ const HomeLayout = () => {
       
       <div ref={exercisesRef} id="exercises">
         <FeaturedCourses />
+      </div>
+      
+      <div ref={plansRef} id="plans">
+        <MembershipPlans openLoginModal={openLoginModal} />
       </div>
       
       <CallToAction />
@@ -122,7 +131,7 @@ const HomeLayout = () => {
               >
                 <X size={18} />
               </button>
-              <Login initialMode={isLogin} />
+              <Login initialMode={isLogin} isPro={isPro} />
             </div>
           </div>
         </>
