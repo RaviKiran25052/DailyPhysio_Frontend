@@ -69,12 +69,12 @@ const CourseCard = ({ course }) => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-indigo-900/70 via-indigo-1000/120 to-purple-900/2 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-purple-500/10 transition flex-shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]">
-      <img src={course.image} alt={course.title} className="w-full h-40 object-cover" />
-      <div className="p-4">
+    <div className="bg-gradient-to-br from-indigo-900/70 via-indigo-1000/120 to-purple-900/2 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-purple-500/10 transition flex-shrink-0 w-[calc(50%-8px)] sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] snap-start">
+      <img src={course.image} alt={course.title} className="w-full h-32 object-cover" />
+      <div className="p-3">
         <span className="text-xs text-purple-400 font-medium">{course.category}</span>
-        <h3 className="text-lg font-medium mt-1 text-white">{course.title}</h3>
-        <div className="mt-3 flex justify-between items-center">
+        <h3 className="text-lg font-medium mt-0.5 text-white">{course.title}</h3>
+        <div className="mt-2 flex justify-between items-center">
           <span className="text-xs text-gray-400">{course.difficulty}</span>
           <button 
             onClick={() => handleViewExercise(course.id)}
@@ -124,7 +124,8 @@ const FeaturedCourses = () => {
   const scroll = (direction) => {
     const { current } = carouselRef;
     if (current) {
-      const cardWidth = current.clientWidth / (window.innerWidth >= 1024 ? 4 : 2);
+      // Always scroll by one card width - on mobile: 50% of container, on desktop: 25%
+      const cardWidth = window.innerWidth >= 1024 ? current.clientWidth / 4 : current.clientWidth / 2;
       const scrollAmount = direction === 'left' ? -cardWidth : cardWidth;
       current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
@@ -142,7 +143,7 @@ const FeaturedCourses = () => {
         <div className="relative mb-8">
           <div 
             ref={carouselRef}
-            className="flex overflow-x-auto gap-6 pb-4 scrollbar-hide scroll-smooth snap-x"
+            className="flex overflow-x-auto gap-4 sm:gap-6 pb-4 scrollbar-hide scroll-smooth snap-x"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {courseData.map(course => (
