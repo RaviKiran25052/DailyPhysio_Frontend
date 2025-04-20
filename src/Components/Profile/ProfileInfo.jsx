@@ -25,12 +25,12 @@ const ProfileInfo = ({ user }) => {
         {/* Avatar */}
         <div className="absolute -top-12 left-6 w-24 h-24 rounded-full border-4 border-gray-800 bg-gray-700 flex items-center justify-center overflow-hidden">
           <span className="text-3xl text-purple-400 font-bold">
-            {user.fullName.split(' ').map(name => name[0]).join('')}
+            {user.fullName.split(' ').map(name => name[0]).join('').toUpperCase()}
           </span>
         </div>
         
         {/* Name and Details - Adjusted for better spacing */}
-        <div className="mt-16 pl-32"> {/* Increased top margin and added left padding */}
+        <div className="pl-32"> {/* Increased top margin and added left padding */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <h1 className="text-2xl font-bold text-white">{user.fullName}</h1>
             <div className="mt-2 md:mt-0 flex items-center space-x-2">
@@ -83,24 +83,6 @@ const ProfileInfo = ({ user }) => {
               </svg>
               Therapist
             </p>
-          </div>
-        </div>
-        
-        {/* Bio */}
-        <div className="mt-6 bg-gray-700 p-4 rounded-lg">
-          <h3 className="text-purple-400 font-medium mb-2">About</h3>
-          <p className="text-gray-300 text-sm">{user.bio}</p>
-        </div>
-        
-        {/* Skills/Specialties */}
-        <div className="mt-6">
-          <h3 className="text-purple-400 font-medium mb-2">Specialties</h3>
-          <div className="flex flex-wrap gap-2">
-            <span className="px-3 py-1 bg-purple-900 text-purple-100 rounded-full text-xs">Physical Therapy</span>
-            <span className="px-3 py-1 bg-purple-900 text-purple-100 rounded-full text-xs">Orthopedics</span>
-            <span className="px-3 py-1 bg-purple-900 text-purple-100 rounded-full text-xs">Sports Medicine</span>
-            <span className="px-3 py-1 bg-purple-900 text-purple-100 rounded-full text-xs">Rehabilitation</span>
-            <span className="px-3 py-1 bg-purple-900 text-purple-100 rounded-full text-xs">Geriatrics</span>
           </div>
         </div>
       </div>

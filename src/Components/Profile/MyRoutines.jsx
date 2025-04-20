@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 const MyRoutines = () => {
   const [activeTab, setActiveTab] = useState('private');

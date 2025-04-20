@@ -1,15 +1,6 @@
 import React from 'react';
 
-const MembershipPlans = ({ openLoginModal }) => {
-  const handleFreePlanClick = () => {
-    // Open signup modal for free plan
-    openLoginModal(false);
-  };
-
-  const handleProPlanClick = () => {
-    // Open signup modal for pro plan with a flag
-    openLoginModal(false, true); // The second parameter can indicate it's a pro signup
-  };
+const MembershipPlans = () => {
 
   return (
     <div className="py-16 bg-gray-900 text-white">
@@ -26,40 +17,40 @@ const MembershipPlans = ({ openLoginModal }) => {
 
         <div className="max-w-6xl mx-auto">
           <div className="h-1 bg-gradient-to-r from-purple-500 to-purple-300 mb-12 rounded-full"></div>
-          
+
           <div className="grid md:grid-cols-2 gap-8">
             {/* Free Plan */}
             <div className="bg-gray-800 rounded-xl p-8 shadow-lg border border-gray-700 flex flex-col">
               <h3 className="text-3xl font-bold mb-6">Free</h3>
-              
+
               <div className="mb-8">
                 <div className="text-4xl font-bold">$0.00</div>
                 <div className="text-gray-400 mt-1">Single member</div>
               </div>
-              
+
               <div className="flex-grow"></div>
-              
-              <button 
-                onClick={handleFreePlanClick}
+
+              <button
+                // onClick={handleFreePlanClick}
                 className="w-full py-3 px-6 bg-gray-600 hover:bg-gray-500 rounded-xl text-white text-lg font-medium transition duration-300"
               >
                 Free Plan
               </button>
             </div>
-            
+
             {/* Pro Plan */}
             <div className="bg-gray-800 rounded-xl p-8 shadow-lg border border-purple-900 flex flex-col relative overflow-hidden">
               {/* PRO Badge */}
               <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-bold py-1 px-3 rounded-md transform rotate-0 uppercase text-sm">
                 PRO
               </div>
-              
+
               <h3 className="text-3xl font-bold mb-6">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-purple-300">
                   Pro
                 </span>
               </h3>
-              
+
               <div className="mb-8">
                 <div className="flex items-baseline">
                   <div className="text-4xl font-bold">$7</div>
@@ -72,22 +63,26 @@ const MembershipPlans = ({ openLoginModal }) => {
                   $7/month or $70/year
                 </div>
               </div>
-              
+
               <div className="flex-grow"></div>
-              
-              <button 
-                onClick={handleProPlanClick}
+
+              <button
+                // onClick={handleProPlanClick}
                 className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 rounded-xl text-white text-lg font-medium transition duration-300"
               >
-                Pro Plan
+                Upgrade to Pro
               </button>
-              
+
               <div className="mt-4 text-center text-sm text-gray-400">
-                Want to Upgrade an existing account or upgrade Other Members? Please <span className="text-blue-400 hover:underline cursor-pointer">Log in</span> First
+                Want to Upgrade an existing account or upgrade Other Members? Please{' '}
+                <a href="/" className="text-blue-400 hover:underline cursor-pointer">
+                  Log in
+                </a>{' '}
+                First
               </div>
             </div>
           </div>
-          
+
           <div className="mt-12 pt-12 border-t border-gray-700">
             <div className="grid md:grid-cols-2 gap-8">
               <div>
@@ -113,7 +108,7 @@ const MembershipPlans = ({ openLoginModal }) => {
                   </li>
                 </ul>
               </div>
-              
+
               <div>
                 <h4 className="text-xl font-semibold mb-4 text-purple-400">Pro Features</h4>
                 <ul className="space-y-2 text-gray-300">

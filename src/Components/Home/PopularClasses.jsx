@@ -9,7 +9,7 @@ const FeatureCard = ({ icon: Icon, title, description }) => {
       </div>
       <h3 className="text-lg font-medium mb-2 text-white">{title}</h3>
       <p className="text-gray-400 mb-2">{description}</p>
-      <a href="#" className="text-purple-400 text-sm flex items-center">
+      <a href="/" className="text-purple-400 text-sm flex items-center">
         Learn more <ChevronRight className="h-4 w-4 ml-1" />
       </a>
     </div>

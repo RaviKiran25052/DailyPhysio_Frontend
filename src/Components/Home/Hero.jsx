@@ -1,25 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
-const Hero = ({ scrollToExercises, openLoginModal }) => {
-  const navigate = useNavigate();
-
-  // Handling button clicks
-  const handleGetStarted = () => {
-    openLoginModal(false); // Open sign up modal
-  };
-
-  const handleViewExercises = () => {
-    // If we have a scroll function, use it; otherwise navigate to exercises page
-    if (scrollToExercises) {
-      scrollToExercises();
-    } else {
-      navigate('/exercises');
-    }
-  };
+const Hero = () => {
 
   return (
-    <div className="bg-gray-900 relative overflow-hidden pt-24">
+    <div className="bg-gray-900 relative overflow-hidden">
       {/* Purple gradient focused at top center */}
       <div className="absolute w-full h-full inset-0">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-purple-600/30 rounded-full blur-[120px] opacity-70"></div>
@@ -38,13 +22,13 @@ const Hero = ({ scrollToExercises, openLoginModal }) => {
           </p>
           <div className="flex flex-wrap gap-4">
             <button 
-              onClick={handleGetStarted}
+              // onClick={handleGetStarted}
               className="px-6 py-3 bg-purple-600 rounded-md hover:bg-purple-700 transition text-white font-medium"
             >
               Get Started
             </button>
             <button 
-              onClick={handleViewExercises}
+              // onClick={handleViewExercises}
               className="px-6 py-3 border border-purple-600 rounded-md hover:bg-purple-600/10 transition text-white font-medium"
             >
               View Exercises

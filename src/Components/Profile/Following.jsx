@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaUsers, FaCheckCircle, FaUserMinus } from 'react-icons/fa';
+import { FaCheckCircle, FaUserMinus } from 'react-icons/fa';
 
 const Following = () => {
   // Mock data for following

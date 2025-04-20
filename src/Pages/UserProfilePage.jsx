@@ -1,26 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import Header from '../Components/UserProfile/Header';
-import Sidebar from '../Components/UserProfile/Sidebar';
-import ProfileInfo from '../Components/UserProfile/ProfileInfo';
-import MyExercises from '../Components/UserProfile/ProfileSections/MyExercises';
-import MyFavorites from '../Components/UserProfile/ProfileSections/MyFavorites';
-import MyRoutines from '../Components/UserProfile/ProfileSections/MyRoutines';
-import Following from '../Components/UserProfile/ProfileSections/Following';
-import AccountSettings from '../Components/UserProfile/ProfileSections/AccountSettings';
+import { useLocation } from 'react-router-dom';
+import Sidebar from '../Components/Profile/Sidebar';
+import ProfileInfo from '../Components/Profile/ProfileInfo';
+import MyExercises from '../Components/Profile/MyExercises';
+import MyFavorites from '../Components/Profile/MyFavorites';
+import MyRoutines from '../Components/Profile/MyRoutines';
+import Following from '../Components/Profile/Following';
+import AccountSettings from '../Components/Profile/AccountSettings';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_API_URL;
 
 const UserProfilePage = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   
-  // Prepare user data with the correct structure for ProfileInfo
+  // State for active tab
+  const [activeTab, setActiveTab] = useState('profile');
+  
+  // State for user data
   const [userData, setUserData] = useState({
-    name: 'Dr. Sarah Johnson',
-    email: 'sarah.johnson@example.com',
-    joined: 'January 2023',
-    location: 'Boston, MA',
-    role: 'Physical Therapist',
-    organization: 'ExerciseMD Medical Center'
+    name: '',
+    email: '',
+    joined: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' }), // Current date formatted
+    location: 'Not specified',
+    role: 'Member',
+    organization: 'ExerciseMD'
   });
   
   // Convert to the format expected by ProfileInfo
@@ -31,72 +36,125 @@ const UserProfilePage = () => {
     organization: userData.organization,
     joined: userData.joined,
     location: userData.location,
-    bio: 'Dedicated healthcare professional with expertise in physical therapy and rehabilitation.'
+    bio: 'ExerciseMD member'
   };
 
   useEffect(() => {
-    // Check if user is logged in by looking for data in session storage
-    const loggedInUser = sessionStorage.getItem('userData');
-    if (!loggedInUser) {
-      // If no user data, redirect to login (or use mock data in development)
-      // navigate('/login');
+    // Check if user is logged in by looking for token and fullName in localStorage
+    const token = localStorage.getItem('token');
+    const fullNameJSON = localStorage.getItem('fullName');
+    
+    if (!token || !fullNameJSON) {
+      // If no token or name, redirect to home with login parameter
+      toast.error('Please login to access your profile');
+      return;
+    }
+
+    try {
+      // Load user data from localStorage
+      const fullName = fullNameJSON;
+      
+      // Get email from localStorage if available, or use a placeholder
+      const email = localStorage.getItem('email') ? 
+        JSON.parse(localStorage.getItem('email')) : 
+        'member@exercisemd.com';
+      
+      setUserData(prevData => ({
+        ...prevData,
+        name: fullName,
+        email: email,
+      }));
+
+      // Ideally, fetch the complete user profile from the backend API here
+      // This would use the token to authenticate the API request
+      const fetchUserData = async () => {
+        try {
+          // Example API call to get user data
+          const parsedToken = token;
+          const response = await axios.get(`${API_URL}/users/profile`, {
+            headers: { Authorization: `Bearer ${parsedToken}` }
+          });
+          
+          if (response.status === 200) {
+            // Update with real data from backend
+            setUserData({
+              name: response.data.fullName,
+              email: response.data.email,
+              joined: response.data.joinedDate,
+              location: response.data.location || 'Not specified',
+              role: response.data.role || 'Member',
+              organization: response.data.organization || 'ExerciseMD'
+            });
+          }
+        } catch (apiError) {
+          console.error('Error fetching profile data:', apiError);
+          // We continue with localStorage data if API fails
+        }
+      };
+
+      // Uncomment to enable API fetch when ready
+      fetchUserData();
+
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      toast.error('Error loading profile data');
+    }
+
+    // Check URL parameters for any actions (like upgrade or specific tab)
+    const queryParams = new URLSearchParams(location.search);
+    const shouldUpgrade = queryParams.get('upgrade');
+    const tab = queryParams.get('tab');
+    
+    if (shouldUpgrade === 'pro') {
+      // Set active tab to settings
+      toast.info('Welcome to your Pro membership upgrade page!');
+      setActiveTab('settings');
+    } else if (tab) {
+      // Set the active tab based on the query parameter
+      setActiveTab(tab);
     }
 
     // Reset scroll position when component mounts or path changes
     window.scrollTo(0, 0);
-  }, [location.pathname, navigate]);
+  }, [location.search]);
 
-  // Determine which content to render based on the current path
+  // Render content based on the active tab
   const renderContent = () => {
-    const path = location.pathname;
-    
-    if (path === '/profile' || path === '/mystuff') {
-      return <ProfileInfo user={userForProfileInfo} />;
-    } else if (path === '/myexercises') {
-      return <MyExercises userData={userData} />;
-    } else if (path === '/routines') {
-      return <MyRoutines userData={userData} />;
-    } else if (path === '/favorites') {
-      return <MyFavorites userData={userData} />;
-    } else if (path === '/following') {
-      return <Following userData={userData} />;
-    } else if (path === '/settings') {
-      return <AccountSettings userData={userData} updateUserData={setUserData} />;
-    } else if (path === '/create') {
-      // Just show a placeholder for create exercise without any stats
-      return (
-        <div className="bg-gray-800 rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-white mb-4">Create Exercise</h2>
-          <p className="text-gray-300">Create exercise form will be implemented here.</p>
-        </div>
-      );
-    } else {
-      // Default to profile info if path doesn't match
-      return <ProfileInfo user={userForProfileInfo} />;
+    switch (activeTab) {
+      case 'profile':
+        return <ProfileInfo user={userForProfileInfo} />;
+      case 'myexercises':
+        return <MyExercises userData={userData} />;
+      case 'routines':
+        return <MyRoutines userData={userData} />;
+      case 'favorites':
+        return <MyFavorites userData={userData} />;
+      case 'following':
+        return <Following userData={userData} />;
+      case 'settings':
+        return <AccountSettings userData={userData} updateUserData={setUserData} />;
+      case 'create':
+        return (
+          <div className="bg-gray-800 rounded-lg p-6">
+            <h2 className="text-2xl font-bold text-white mb-4">Create Exercise</h2>
+            <p className="text-gray-300">Create exercise form will be implemented here.</p>
+          </div>
+        );
+      default:
+        return <ProfileInfo user={userForProfileInfo} />;
     }
-  };
-
-  // Determine which section is active based on current path
-  const getCurrentPath = () => {
-    const path = location.pathname;
-    if (path === '/profile' || path === '/mystuff') return 'profile';
-    if (path === '/myexercises') return 'myexercises';
-    if (path === '/routines') return 'routines';
-    if (path === '/favorites') return 'favorites';
-    if (path === '/following') return 'following';
-    if (path === '/create') return 'create';
-    if (path === '/settings') return 'settings';
-    return 'profile';
   };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <Header userData={userData} />
-      
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-1/4">
-            <Sidebar userData={userData} currentPath={getCurrentPath()} />
+            <Sidebar 
+              userData={userData} 
+              currentPath={activeTab} 
+              setActiveTab={setActiveTab} 
+            />
           </div>
           
           <div className="lg:w-3/4">

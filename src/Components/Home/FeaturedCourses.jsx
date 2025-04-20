@@ -1,65 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const courseData = [
-  {
-    id: 1,
-    title: 'Knee Rehabilitation',
-    category: 'Rehabilitation',
-    image: '/assets/routine.jpg',
-    difficulty: 'Beginner'
-  },
-  {
-    id: 2,
-    title: 'Shoulder Mobility',
-    category: 'Mobility',
-    image: '/assets/routine.jpg',
-    difficulty: 'Intermediate'
-  },
-  {
-    id: 3,
-    title: 'Lower Back Strength',
-    category: 'Strength',
-    image: '/assets/routine.jpg',
-    difficulty: 'All Levels'
-  },
-  {
-    id: 4,
-    title: 'Post-Surgery Recovery',
-    category: 'Rehabilitation',
-    image: '/assets/routine.jpg',
-    difficulty: 'Beginner'
-  },
-  {
-    id: 5,
-    title: 'Balance & Coordination',
-    category: 'Functional',
-    image: '/assets/routine.jpg',
-    difficulty: 'Intermediate'
-  },
-  {
-    id: 6,
-    title: 'Sports Injury Prevention',
-    category: 'Prevention',
-    image: '/assets/routine.jpg',
-    difficulty: 'Advanced'
-  },
-  {
-    id: 7,
-    title: 'Neck Pain Relief',
-    category: 'Pain Management',
-    image: '/assets/routine.jpg',
-    difficulty: 'All Levels'
-  },
-  {
-    id: 8,
-    title: 'Full Body Conditioning',
-    category: 'Conditioning',
-    image: '/assets/routine.jpg',
-    difficulty: 'Intermediate'
-  },
-];
+const API_URL = process.env.REACT_APP_API_URL;
 
 const CourseCard = ({ course }) => {
   const navigate = useNavigate();
@@ -70,14 +14,14 @@ const CourseCard = ({ course }) => {
 
   return (
     <div className="bg-gradient-to-br from-indigo-900/70 via-indigo-1000/120 to-purple-900/2 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-purple-500/10 transition flex-shrink-0 w-[calc(50%-8px)] sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] snap-start">
-      <img src={course.image} alt={course.title} className="w-full h-32 object-cover" />
+      <img src={course.image || '/assets/routine.jpg'} alt={course.title} className="w-full h-32 object-cover" />
       <div className="p-3">
         <span className="text-xs text-purple-400 font-medium">{course.category}</span>
         <h3 className="text-lg font-medium mt-0.5 text-white">{course.title}</h3>
         <div className="mt-2 flex justify-between items-center">
-          <span className="text-xs text-gray-400">{course.difficulty}</span>
+          <span className="text-xs text-gray-400">{course.subCategory}</span>
           <button 
-            onClick={() => handleViewExercise(course.id)}
+            onClick={() => handleViewExercise(course._id)}
             className="bg-purple-600 hover:bg-purple-700 transition text-white text-sm py-1 px-3 rounded"
           >
             View
@@ -93,6 +37,18 @@ const FeaturedCourses = () => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const navigate = useNavigate();
+
+  const [featuredExercises, setFeaturedExercises] = useState([]);
+
+  useEffect(() => {
+    const fetchExercise = async () => {
+      const response = await axios.get(`${API_URL}/exercises/featured`);
+      console.log(response.data);
+      setFeaturedExercises(response.data.exercises);
+    };
+
+    fetchExercise();
+  }, []);
 
   const checkScrollButtons = () => {
     const { current } = carouselRef;
@@ -119,7 +75,7 @@ const FeaturedCourses = () => {
         window.removeEventListener('resize', checkScrollButtons);
       };
     }
-  }, []);
+  }, [featuredExercises]);
 
   const scroll = (direction) => {
     const { current } = carouselRef;
@@ -146,7 +102,7 @@ const FeaturedCourses = () => {
             className="flex overflow-x-auto gap-4 sm:gap-6 pb-4 scrollbar-hide scroll-smooth snap-x"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {courseData.map(course => (
+            {featuredExercises.map(course => (
               <CourseCard key={course.id} course={course} />
             ))}
           </div>
