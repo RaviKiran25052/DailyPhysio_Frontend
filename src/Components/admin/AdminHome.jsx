@@ -6,6 +6,7 @@ import {
   FaUserMd, 
   FaSignOutAlt 
 } from 'react-icons/fa';
+import axios from 'axios';
 
 const AdminHome = () => {
   const navigate = useNavigate();
@@ -15,16 +16,37 @@ const AdminHome = () => {
     therapists: 0
   });
   const [loading, setLoading] = useState(true);
+  const [adminInfo, setAdminInfo] = useState(null);
 
   useEffect(() => {
+    // Check if admin is logged in
+    const loggedInAdmin = localStorage.getItem('adminInfo') 
+      ? JSON.parse(localStorage.getItem('adminInfo')) 
+      : sessionStorage.getItem('adminInfo')
+      ? JSON.parse(sessionStorage.getItem('adminInfo'))
+      : null;
+
+    if (!loggedInAdmin) {
+      navigate('/admin/login');
+      return;
+    }
+
+    setAdminInfo(loggedInAdmin);
+
     // Fetch statistics from the backend
     const fetchStats = async () => {
       try {
-        // Replace with actual API calls to your backend
-        // Example:
-        // const exercisesCount = await fetch('/api/exercises/count');
-        // const usersCount = await fetch('/api/users/count?role=isUser');
-        // const therapistsCount = await fetch('/api/users/count?role=isTherapist');
+        // Configure headers with token
+        const config = {
+          headers: {
+            Authorization: `Bearer ${loggedInAdmin.token}`,
+          },
+        };
+
+        // In a real application, you would fetch actual data:
+        // const { data: exercisesData } = await axios.get('/hep2go/exercises/count', config);
+        // const { data: usersData } = await axios.get('/hep2go/users/count?role=isUser', config);
+        // const { data: therapistsData } = await axios.get('/hep2go/users/count?role=isTherapist', config);
         
         // Mock data for demonstration
         setTimeout(() => {
@@ -38,16 +60,22 @@ const AdminHome = () => {
       } catch (error) {
         console.error('Error fetching stats:', error);
         setLoading(false);
+        
+        // If token is invalid, redirect to login
+        if (error.response && error.response.status === 401) {
+          handleLogout();
+        }
       }
     };
 
     fetchStats();
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
-    // Implement logout logic
-    // For example: authService.logout();
-    navigate('/login');
+    // Remove admin info from storage
+    localStorage.removeItem('adminInfo');
+    sessionStorage.removeItem('adminInfo');
+    navigate('/admin/login');
   };
 
   return (
@@ -55,17 +83,22 @@ const AdminHome = () => {
       {/* Header */}
       <header className="bg-gray-800 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <Link to="/admin">
+          <Link to="/admin/home">
             <h1 className="text-2xl font-bold text-purple-500">ExerciseMD Admin</h1>
           </Link>
           
-          <button
-            onClick={handleLogout}
-            className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-          >
-            <FaSignOutAlt className="mr-2" />
-            Logout
-          </button>
+          <div className="flex items-center">
+            {adminInfo && (
+              <span className="text-gray-300 mr-4">Welcome, {adminInfo.fullName}</span>
+            )}
+            <button
+              onClick={handleLogout}
+              className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+            >
+              <FaSignOutAlt className="mr-2" />
+              Logout
+            </button>
+          </div>
         </div>
       </header>
 

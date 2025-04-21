@@ -9,11 +9,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import HomePage from './Pages/HomePage';
 import Adminlogin from './Components/admin/Adminlogin';
 import AdminHome from './Components/admin/AdminHome';
+import AdminExerciseList from './Components/admin/AdminExerciseList';
 
 // Wrapper component to check current route
 const AppContent = () => {
   const location = useLocation();
-  const isAdminPage = location.pathname === '/login' || location.pathname === '/adminhome';
+  const isAdminPage = location.pathname === '/admin/login' || location.pathname === '/admin/home' || location.pathname === '/admin/exercises';
   
   return (
     <>
@@ -25,8 +26,9 @@ const AppContent = () => {
           <Route path="/exercises" element={<ExercisesPage />} />
           <Route path="/exercise/:id" element={<ExerciseDetailPage />} />
           <Route path="/profile" element={<UserProfilePage />} />
-          <Route path="/login" element={<Adminlogin />} />
-          <Route path="/adminhome" element={<AdminHome />} />
+          <Route path="/admin/login" element={<Adminlogin />} />
+          <Route path="/admin/home" element={<AdminHome />} />
+        <Route path="/admin/exercises" element={<AdminExerciseList />} />
         </Routes>
       </main>
     </>
