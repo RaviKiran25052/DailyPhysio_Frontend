@@ -106,7 +106,7 @@ const AdminHome = () => {
     };
 
     fetchStats();
-  }, [navigate, handleLogout]);
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">

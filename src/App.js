@@ -10,11 +10,12 @@ import HomePage from './Pages/HomePage';
 import Adminlogin from './Components/admin/Adminlogin';
 import AdminHome from './Components/admin/AdminHome';
 import AdminExerciseList from './Components/admin/AdminExerciseList';
+import UserManagement from './Components/admin/UserManagement';
 
 // Wrapper component to check current route
 const AppContent = () => {
   const location = useLocation();
-  const isAdminPage = location.pathname === '/admin/login' || location.pathname === '/admin/home' || location.pathname === '/admin/exercises';
+  const isAdminPage = location.pathname === '/admin/login' || location.pathname === '/admin/home' || location.pathname === '/admin/exercises' || location.pathname === '/admin/users';
   
   return (
     <>
@@ -29,6 +30,7 @@ const AppContent = () => {
           <Route path="/admin/login" element={<Adminlogin />} />
           <Route path="/admin/home" element={<AdminHome />} />
         <Route path="/admin/exercises" element={<AdminExerciseList />} />
+        <Route path="/admin/users" element={<UserManagement />} />
         </Routes>
       </main>
     </>
