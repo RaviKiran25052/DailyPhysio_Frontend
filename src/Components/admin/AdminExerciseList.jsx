@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaPlus, FaArrowLeft, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import AdminExerciseForm from './AdminExerciseForm';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const AdminExerciseList = () => {
   const navigate = useNavigate();
@@ -14,7 +17,10 @@ const AdminExerciseList = () => {
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = window.innerWidth < 768 ? 5 : 10;
+  const itemsPerPage = window.innerWidth < 768 ? 8 : 15;
+  const [adminToken, setAdminToken] = useState('');
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalExercises, setTotalExercises] = useState(0);
 
   useEffect(() => {
     // Check if admin is logged in
@@ -29,8 +35,10 @@ const AdminExerciseList = () => {
       return;
     }
 
+    setAdminToken(loggedInAdmin.token);
+
     // Fetch exercises
-    fetchExercises();
+    fetchExercises(loggedInAdmin.token);
 
     // Add window resize listener for responsive pagination
     const handleResize = () => {
@@ -41,87 +49,79 @@ const AdminExerciseList = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [navigate]);
 
-  // Apply search filter
+  // Apply search filter - modified to use backend search
   useEffect(() => {
-    if (searchTerm.trim() === '') {
-      setFilteredExercises(exercises);
-    } else {
-      const filtered = exercises.filter(exercise => 
-        exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (exercise.category && exercise.category.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (exercise.position && exercise.position.toLowerCase().includes(searchTerm.toLowerCase()))
-      );
-      setFilteredExercises(filtered);
+    // Only search if there's a token available
+    if (adminToken && searchTerm.trim() !== '') {
+      const delayDebounceFn = setTimeout(() => {
+        fetchExercisesWithSearch(adminToken, searchTerm);
+      }, 500);
+      
+      return () => clearTimeout(delayDebounceFn);
+    } else if (adminToken && searchTerm.trim() === '') {
+      // If search term is cleared, fetch all exercises
+      fetchExercises(adminToken);
     }
-    setCurrentPage(1); // Reset to first page on search
-  }, [searchTerm, exercises]);
+  }, [searchTerm, adminToken]);
 
-  const fetchExercises = async () => {
+  const fetchExercises = async (token, page = 1) => {
     try {
-      // Mock data for demonstration
-      setTimeout(() => {
-        const mockExercises = [
-          {
-            id: '1',
-            name: 'Exercise Name 1',
-            description: 'Description of exercise 1.',
-            category: 'Strength',
-            position: 'Standing',
-            imageUrl: '/sample-image-1.jpg',
-            videoUrl: '/sample-video-1.mp4'
-          },
-          {
-            id: '2',
-            name: 'Exercise Name 2',
-            description: 'Description of exercise 2.',
-            category: 'Flexibility',
-            position: 'Seated',
-            imageUrl: '/sample-image-2.jpg',
-            videoUrl: '/sample-video-2.mp4'
-          },
-          {
-            id: '3',
-            name: 'Shoulder Stretch',
-            description: 'A gentle stretch for shoulder mobility and pain relief.',
-            category: 'Flexibility',
-            position: 'Standing',
-            imageUrl: '/shoulder-stretch.jpg',
-            videoUrl: '/shoulder-stretch.mp4'
-          },
-          {
-            id: '4',
-            name: 'Knee Rehabilitation',
-            description: 'Exercises designed to strengthen the knee after injury.',
-            category: 'Rehabilitation',
-            position: 'Lying',
-            imageUrl: '/knee-rehab.jpg',
-            videoUrl: '/knee-rehab.mp4'
-          },
-          {
-            id: '5',
-            name: 'Core Strengthening',
-            description: 'Exercises for a strong core and better posture.',
-            category: 'Strength',
-            position: 'Lying',
-            imageUrl: '/core-strength.jpg',
-            videoUrl: '/core-strength.mp4'
-          },
-          {
-            id: '6',
-            name: 'Hip Mobility',
-            description: 'Improve hip joint mobility and reduce stiffness.',
-            category: 'Mobility',
-            position: 'Standing',
-            imageUrl: '/hip-mobility.jpg',
-            videoUrl: '/hip-mobility.mp4'
-          }
-        ];
-        setExercises(mockExercises);
-        setFilteredExercises(mockExercises);
-        setLoading(false);
-      }, 1000);
+      setLoading(true);
+      
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      
+      // Add pagination parameters to the API call
+      const response = await axios.get(
+        `${API_URL}/exercises/all?pageNumber=${page}&pageSize=${itemsPerPage}`, 
+        config
+      );
+      
+      const { exercises: fetchedExercises, pages, total } = response.data;
+      
+      setExercises(fetchedExercises);
+      setFilteredExercises(fetchedExercises);
+      setCurrentPage(page);
+      setTotalPages(pages);
+      setTotalExercises(total);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching exercises:', error);
+      toast.error('Failed to load exercises');
+      setLoading(false);
+    }
+  };
+
+  const fetchExercisesWithSearch = async (token, query, page = 1) => {
+    try {
+      setLoading(true);
+      
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      
+      // Use the keyword parameter for search with pagination
+      const response = await axios.get(
+        `${API_URL}/exercises/all?keyword=${encodeURIComponent(query)}&pageNumber=${page}&pageSize=${itemsPerPage}`, 
+        config
+      );
+      
+      const { exercises: fetchedExercises, pages, total } = response.data;
+      
+      setExercises(fetchedExercises);
+      setFilteredExercises(fetchedExercises);
+      setCurrentPage(page);
+      setTotalPages(pages);
+      setTotalExercises(total);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error searching exercises:', error);
+      toast.error('Failed to search exercises');
       setLoading(false);
     }
   };
@@ -147,41 +147,75 @@ const AdminExerciseList = () => {
   const handleDeleteExercise = async (id) => {
     if (window.confirm('Are you sure you want to delete this exercise?')) {
       try {
-        // Mock deletion
-        setExercises(exercises.filter(exercise => exercise.id !== id));
+        const config = {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        };
         
-        if (selectedExercise && selectedExercise.id === id) {
+        await axios.delete(`${API_URL}/exercises/${id}`, config);
+        
+        toast.success('Exercise deleted successfully');
+        
+        // Refresh the exercise list with a delay to ensure backend is updated
+        refreshExercisesList(currentPage);
+        
+        if (selectedExercise && selectedExercise._id === id) {
           setSelectedExercise(null);
           setShowEditForm(false);
         }
       } catch (error) {
         console.error('Error deleting exercise:', error);
+        toast.error(error.response?.data?.message || 'Failed to delete exercise');
       }
     }
   };
 
-  const handleSaveExercise = (exerciseData, isEdit = false) => {
-    if (isEdit && selectedExercise) {
-      // Handle edit
-      const updatedExercises = exercises.map(ex => {
-        if (ex.id === selectedExercise.id) {
-          return { ...ex, ...exerciseData };
-        }
-        return ex;
-      });
-      setExercises(updatedExercises);
-    } else {
-      // Handle add
-      const newExercise = {
-        id: Date.now().toString(),
-        ...exerciseData
+  const refreshExercisesList = (page = 1) => {
+    setTimeout(() => {
+      fetchExercises(adminToken, page);
+    }, 300);
+  };
+
+  const handleSaveExercise = async (exerciseData, isEdit = false) => {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${adminToken}`,
+        },
       };
-      setExercises([...exercises, newExercise]);
+      
+      if (isEdit && selectedExercise) {
+        // Handle edit
+        await axios.put(
+          `${API_URL}/exercises/${selectedExercise._id}`, 
+          exerciseData, 
+          config
+        );
+        
+        toast.success('Exercise updated successfully');
+      } else {
+        // Handle add
+        await axios.post(
+          `${API_URL}/exercises`, 
+          exerciseData, 
+          config
+        );
+        
+        toast.success('Exercise created successfully');
+      }
+      
+      // Refresh the exercise list with a delay to ensure backend is updated
+      refreshExercisesList(1); // Go back to first page after add/edit
+      
+      setShowAddForm(false);
+      setShowEditForm(false);
+      setSelectedExercise(null);
+    } catch (error) {
+      console.error('Error saving exercise:', error);
+      toast.error(error.response?.data?.message || 'Failed to save exercise');
     }
-    
-    setShowAddForm(false);
-    setShowEditForm(false);
-    setSelectedExercise(null);
   };
 
   const goBack = () => {
@@ -203,17 +237,21 @@ const AdminExerciseList = () => {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+    // Actual search is handled in the useEffect
   };
 
   // Pagination logic
   const indexOfLastExercise = currentPage * itemsPerPage;
   const indexOfFirstExercise = indexOfLastExercise - itemsPerPage;
-  const currentExercises = filteredExercises.slice(indexOfFirstExercise, indexOfLastExercise);
-  const totalPages = Math.ceil(filteredExercises.length / itemsPerPage);
+  const currentExercises = filteredExercises;
 
   const paginate = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
+      if (searchTerm.trim() !== '') {
+        fetchExercisesWithSearch(adminToken, searchTerm, pageNumber);
+      } else {
+        fetchExercises(adminToken, pageNumber);
+      }
     }
   };
 
@@ -251,7 +289,7 @@ const AdminExerciseList = () => {
           <h2 className="text-3xl font-extrabold text-white">
             {showAddForm ? 'Add New Exercise' : 
              showEditForm ? 'Edit Exercise' :
-             selectedExercise ? selectedExercise.name : 
+             selectedExercise ? selectedExercise.title : 
              'Exercise Management'}
           </h2>
           
@@ -278,6 +316,7 @@ const AdminExerciseList = () => {
             exercise={selectedExercise}
             isEdit={showEditForm}
             onSave={handleSaveExercise}
+            adminToken={adminToken}
           />
         )}
         
@@ -287,7 +326,7 @@ const AdminExerciseList = () => {
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-xl font-bold text-purple-400 mb-4">{selectedExercise.name}</h3>
+                  <h3 className="text-xl font-bold text-purple-400 mb-4">{selectedExercise.title}</h3>
                   <p className="text-purple-300 mb-4">{selectedExercise.description}</p>
                   
                   <div className="flex flex-wrap gap-2 mb-6">
@@ -312,7 +351,7 @@ const AdminExerciseList = () => {
                     </button>
                     
                     <button
-                      onClick={() => handleDeleteExercise(selectedExercise.id)}
+                      onClick={() => handleDeleteExercise(selectedExercise._id)}
                       className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                     >
                       Delete
@@ -321,22 +360,22 @@ const AdminExerciseList = () => {
                 </div>
                 
                 <div className="space-y-6">
-                  {selectedExercise.imageUrl && (
+                  {selectedExercise.image && (
                     <div>
                       <h4 className="text-sm font-medium text-purple-400 mb-2">Exercise Image</h4>
                       <img 
-                        src={selectedExercise.imageUrl} 
-                        alt={selectedExercise.name} 
+                        src={selectedExercise.image} 
+                        alt={selectedExercise.title} 
                         className="max-h-64 rounded-md"
                       />
                     </div>
                   )}
                   
-                  {selectedExercise.videoUrl && (
+                  {selectedExercise.video && (
                     <div>
                       <h4 className="text-sm font-medium text-purple-400 mb-2">Exercise Video</h4>
                       <video 
-                        src={selectedExercise.videoUrl} 
+                        src={selectedExercise.video} 
                         controls 
                         className="max-h-64 w-full rounded-md"
                       >
@@ -371,20 +410,18 @@ const AdminExerciseList = () => {
             
             <h3 className="text-2xl font-bold text-white mt-10 mb-6">
               Saved Exercises
-              {filteredExercises.length > 0 && (
-                <span className="text-base ml-2 text-purple-300">({filteredExercises.length} found)</span>
-              )}
+              <span className="text-base ml-2 text-purple-300">({totalExercises} found)</span>
             </h3>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {currentExercises.map((exercise) => (
                 <div 
-                  key={exercise.id}
+                  key={exercise._id}
                   className="bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300 border border-gray-700 hover:border-purple-500"
                   onClick={() => handleViewExercise(exercise)}
                 >
                   <div className="p-6">
-                    <h3 className="text-lg font-semibold text-purple-400">{exercise.name}</h3>
+                    <h3 className="text-lg font-semibold text-purple-400">{exercise.title}</h3>
                     <p className="mt-2 text-white line-clamp-2">{exercise.description}</p>
                     <div className="flex flex-wrap gap-2 mt-4">
                       {exercise.category && (
@@ -403,14 +440,14 @@ const AdminExerciseList = () => {
               ))}
             </div>
             
-            {filteredExercises.length === 0 && (
+            {totalExercises === 0 && (
               <div className="text-center py-12">
                 <p className="text-purple-300">No exercises found. {searchTerm ? 'Try a different search term or ' : ''}Click "Add New Exercise" to create one.</p>
               </div>
             )}
             
             {/* Pagination */}
-            {filteredExercises.length > itemsPerPage && (
+            {totalPages > 1 && (
               <div className="flex justify-center mt-8">
                 <nav className="flex items-center space-x-1">
                   <button
@@ -425,19 +462,44 @@ const AdminExerciseList = () => {
                     Previous
                   </button>
                   
-                  {[...Array(totalPages).keys()].map(number => (
-                    <button
-                      key={number + 1}
-                      onClick={() => paginate(number + 1)}
-                      className={`px-3 py-1 rounded-md ${
-                        currentPage === number + 1
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-800 text-purple-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500'
-                      }`}
-                    >
-                      {number + 1}
-                    </button>
-                  ))}
+                  {/* Render pages smartly for large page counts */}
+                  {[...Array(totalPages).keys()].map(number => {
+                    // Always show first and last page
+                    // Also show 1 page before and after current page
+                    // and use ellipsis for the rest
+                    const pageNumber = number + 1;
+                    
+                    if (
+                      pageNumber === 1 || 
+                      pageNumber === totalPages || 
+                      (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                    ) {
+                      return (
+                        <button
+                          key={pageNumber}
+                          onClick={() => paginate(pageNumber)}
+                          className={`px-3 py-1 rounded-md ${
+                            currentPage === pageNumber
+                              ? 'bg-purple-600 text-white'
+                              : 'bg-gray-800 text-purple-400 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500'
+                          }`}
+                        >
+                          {pageNumber}
+                        </button>
+                      );
+                    } else if (
+                      (pageNumber === 2 && currentPage > 3) ||
+                      (pageNumber === totalPages - 1 && currentPage < totalPages - 2)
+                    ) {
+                      // Show ellipsis for skipped pages
+                      return (
+                        <span key={pageNumber} className="px-2 text-gray-500">...</span>
+                      );
+                    }
+                    
+                    // Don't render other pages
+                    return null;
+                  })}
                   
                   <button
                     onClick={() => paginate(currentPage + 1)}

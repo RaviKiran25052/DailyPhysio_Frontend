@@ -74,6 +74,9 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
       if (selectedPosition !== 'All') {
         setFilteredExercises(exercises.filter(exercise => exercise.position === selectedPosition));
       }
+      if(selectedCategory === "Ankle and Foot"){
+        console.log(exercises.filter(exercise => exercise.position === selectedPosition));
+      }
 
       // Filter by search query
       if (searchQuery.trim() !== '') {

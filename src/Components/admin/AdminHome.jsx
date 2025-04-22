@@ -7,6 +7,9 @@ import {
   FaSignOutAlt 
 } from 'react-icons/fa';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const AdminHome = () => {
   const navigate = useNavigate();
@@ -36,6 +39,8 @@ const AdminHome = () => {
     // Fetch statistics from the backend
     const fetchStats = async () => {
       try {
+        setLoading(true);
+        
         // Configure headers with token
         const config = {
           headers: {
@@ -43,23 +48,48 @@ const AdminHome = () => {
           },
         };
 
-        // In a real application, you would fetch actual data:
-        // const { data: exercisesData } = await axios.get('/hep2go/exercises/count', config);
-        // const { data: usersData } = await axios.get('/hep2go/users/count?role=isUser', config);
-        // const { data: therapistsData } = await axios.get('/hep2go/users/count?role=isTherapist', config);
-        
-        // Mock data for demonstration
-        setTimeout(() => {
+        // First try to fetch from the dedicated stats endpoint
+        try {
+          const { data } = await axios.get(`${API_URL}/admin/stats`, config);
           setStats({
-            exercises: 248,
-            users: 156,
-            therapists: 32
+            exercises: data.exercisesCount || 0,
+            users: data.usersCount || 0,
+            therapists: data.therapistsCount || 0
           });
           setLoading(false);
-        }, 1000);
+        } catch (error) {
+          console.error('Error fetching from stats endpoint:', error);
+          
+          // Fall back to individual endpoints if stats endpoint fails
+          try {
+            // Fetch exercise count
+            const exercisesResponse = await axios.get(`${API_URL}/exercises/all`, config);
+            const exercisesCount = exercisesResponse.data.total || exercisesResponse.data.exercises.length;
+            
+            // Fetch user counts
+            const usersResponse = await axios.get(`${API_URL}/users`, config);
+            const allUsers = usersResponse.data.users || [];
+            
+            // Filter users by role
+            const regularUsers = allUsers.filter(user => user.role === 'isUser').length;
+            const therapists = allUsers.filter(user => user.role === 'isTherapist').length;
+            
+            setStats({
+              exercises: exercisesCount,
+              users: regularUsers,
+              therapists: therapists
+            });
+          } catch (fallbackError) {
+            console.error('Error fetching individual data:', fallbackError);
+            toast.error('Unable to fetch statistics');
+            // Keep the default zeros in the state
+          }
+          setLoading(false);
+        }
       } catch (error) {
         console.error('Error fetching stats:', error);
         setLoading(false);
+        toast.error('Failed to load dashboard data');
         
         // If token is invalid, redirect to login
         if (error.response && error.response.status === 401) {
