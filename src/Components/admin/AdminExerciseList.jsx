@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaPlus, FaArrowLeft, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -9,7 +9,6 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const AdminExerciseList = () => {
   const navigate = useNavigate();
-  const [exercises, setExercises] = useState([]);
   const [filteredExercises, setFilteredExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -76,13 +75,12 @@ const AdminExerciseList = () => {
       
       // Add pagination parameters to the API call
       const response = await axios.get(
-        `${API_URL}/exercises/all?pageNumber=${page}&pageSize=${itemsPerPage}`, 
+        `${API_URL}/exercises?pageNumber=${page}&pageSize=${itemsPerPage}`, 
         config
       );
       
       const { exercises: fetchedExercises, pages, total } = response.data;
       
-      setExercises(fetchedExercises);
       setFilteredExercises(fetchedExercises);
       setCurrentPage(page);
       setTotalPages(pages);
@@ -107,13 +105,12 @@ const AdminExerciseList = () => {
       
       // Use the keyword parameter for search with pagination
       const response = await axios.get(
-        `${API_URL}/exercises/all?keyword=${encodeURIComponent(query)}&pageNumber=${page}&pageSize=${itemsPerPage}`, 
+        `${API_URL}/exercises?keyword=${encodeURIComponent(query)}&pageNumber=${page}&pageSize=${itemsPerPage}`, 
         config
       );
       
       const { exercises: fetchedExercises, pages, total } = response.data;
       
-      setExercises(fetchedExercises);
       setFilteredExercises(fetchedExercises);
       setCurrentPage(page);
       setTotalPages(pages);

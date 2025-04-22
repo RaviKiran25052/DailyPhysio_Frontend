@@ -7,7 +7,6 @@ const API_URL = process.env.REACT_APP_API_URL;
 const Adminlogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
@@ -54,12 +53,7 @@ const Adminlogin = () => {
         return;
       }
 
-      // Store admin info in localStorage
-      if (rememberMe) {
-        localStorage.setItem('adminInfo', JSON.stringify(data));
-      } else {
-        sessionStorage.setItem('adminInfo', JSON.stringify(data));
-      }
+      localStorage.setItem('adminInfo', JSON.stringify(data));
 
       toast.success('Login successful!');
       setLoading(false);
@@ -127,22 +121,6 @@ const Adminlogin = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm placeholder-gray-400 bg-gray-700 text-white focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                 />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-700 rounded bg-gray-700"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
-                  Remember me
-                </label>
               </div>
             </div>
 

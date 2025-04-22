@@ -21,6 +21,13 @@ const AdminHome = () => {
   const [loading, setLoading] = useState(true);
   const [adminInfo, setAdminInfo] = useState(null);
 
+  const handleLogout = () => {
+    // Remove admin info from storage
+    localStorage.clear();
+    sessionStorage.clear();
+    navigate('/admin/login');
+  };
+
   useEffect(() => {
     // Check if admin is logged in
     const loggedInAdmin = localStorage.getItem('adminInfo') 
@@ -99,14 +106,7 @@ const AdminHome = () => {
     };
 
     fetchStats();
-  }, [navigate]);
-
-  const handleLogout = () => {
-    // Remove admin info from storage
-    localStorage.removeItem('adminInfo');
-    sessionStorage.removeItem('adminInfo');
-    navigate('/admin/login');
-  };
+  }, [navigate, handleLogout]);
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">

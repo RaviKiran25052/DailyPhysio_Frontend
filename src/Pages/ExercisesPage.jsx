@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import ExerciseGallery from '../Components/Exercises/ExerciseGallery';
 import ExerciseFooter from '../Components/Exercises/ExerciseFooter';
 import { toast } from 'react-toastify';
-import { Dumbbell } from 'lucide-react';
 
 const ExercisesPage = () => {
   const [selectedExercises, setSelectedExercises] = useState([]);
