@@ -1,0 +1,67 @@
+import React from 'react';
+
+const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm }) => {
+	// Placeholder image for exercises without images
+	const placeholderImage = "/api/placeholder/400/250";
+
+	if (totalExercises === 0) {
+		return (
+			<div className="text-center py-12">
+				<p className="text-purple-300">
+					No exercises found. {searchTerm ? 'Try a different search term or ' : ''}
+					Click "Add New Exercise" to create one.
+				</p>
+			</div>
+		);
+	}
+
+	return (
+		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+			{exercises.map((exercise) => (
+				<div
+					key={exercise._id}
+					className="bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300 border border-gray-700 hover:border-purple-500 flex flex-col"
+					onClick={() => onViewExercise(exercise)}
+				>
+					<div className="relative h-48 overflow-hidden">
+						<img
+							src={exercise.image || placeholderImage}
+							alt={exercise.title}
+							className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+						/>
+						{exercise.isPremium && (
+							<div className="absolute top-3 right-3">
+								<span className="bg-yellow-600 text-yellow-200 px-3 py-1 rounded-full text-xs font-bold shadow-md">
+									PREMIUM
+								</span>
+							</div>
+						)}
+					</div>
+					<div className="p-6 flex-grow">
+						<h3 className="text-lg font-semibold text-purple-400">{exercise.title}</h3>
+						<p className="mt-2 text-white line-clamp-2 text-sm">{exercise.description}</p>
+						<div className="flex flex-wrap gap-2 mt-4">
+							{exercise.category && (
+								<span className="bg-purple-900 text-purple-300 px-2 py-1 rounded-full text-xs">
+									{exercise.category}
+								</span>
+							)}
+							{exercise.position && (
+								<span className="bg-gray-700 text-purple-300 px-2 py-1 rounded-full text-xs">
+									{exercise.position}
+								</span>
+							)}
+							{exercise.isCustom && (
+								<span className="bg-blue-900 text-blue-300 px-2 py-1 rounded-full text-xs">
+									Custom
+								</span>
+							)}
+						</div>
+					</div>
+				</div>
+			))}
+		</div>
+	);
+};
+
+export default ExerciseGrid;
