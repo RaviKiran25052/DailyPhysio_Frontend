@@ -11,11 +11,13 @@ import Adminlogin from './Components/admin/Adminlogin';
 import AdminHome from './Components/admin/AdminHome';
 import AdminExerciseList from './Components/admin/AdminExerciseList';
 import UserManagement from './Components/admin/UserManagement';
+import TherapistManagement from './Components/admin/Therapist/TherapistManagement';
 
 // Wrapper component to check current route
 const AppContent = () => {
   const location = useLocation();
-  const isAdminPage = location.pathname === '/admin/login' || location.pathname === '/admin/home' || location.pathname === '/admin/exercises' || location.pathname === '/admin/users';
+  const isAdminPage = location.pathname === '/admin/login' || location.pathname === '/admin/home' || location.pathname === '/admin/exercises' || location.pathname === '/admin/users'
+  || location.pathname==='/admin/therapists';
   
   return (
     <>
@@ -31,6 +33,7 @@ const AppContent = () => {
           <Route path="/admin/home" element={<AdminHome />} />
         <Route path="/admin/exercises" element={<AdminExerciseList />} />
         <Route path="/admin/users" element={<UserManagement />} />
+        <Route path="/admin/therapists" element={<TherapistManagement />} />
         </Routes>
       </main>
     </>
