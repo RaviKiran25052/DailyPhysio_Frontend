@@ -17,7 +17,7 @@ import TherapistManagement from './Components/admin/Therapist/TherapistManagemen
 const AppContent = () => {
   const location = useLocation();
   const isAdminPage = location.pathname === '/admin/login' || location.pathname === '/admin/home' || location.pathname === '/admin/exercises' || location.pathname === '/admin/users'
-  || location.pathname==='/admin/therapists';
+  || location.pathname==='/admin/therapists' ;
   
   return (
     <>
