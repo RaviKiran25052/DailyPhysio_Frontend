@@ -56,7 +56,7 @@ const TherapistCard = ({ therapist, onEdit, onDelete }) => {
               <FaUserFriends className="text-purple-400" />
               <span className="text-gray-400 font-medium">Consultations</span>
             </div>
-            <span className="text-purple-300 font-semibold">{therapist.consultationCount || 0}</span>
+            <span className="text-purple-300 font-semibold">{therapist.consultationCount}</span>
           </div>
 
           {/* Experience */}
