@@ -12,28 +12,36 @@ import AdminHome from './Components/admin/AdminHome';
 import AdminExerciseList from './Components/admin/AdminExerciseList';
 import UserManagement from './Components/admin/UserManagement';
 import TherapistManagement from './Components/admin/Therapist/TherapistManagement';
+import TherapistRegister from './Components/Therapist/TherapistRegister';
+import TherapistLogin from './Components/Therapist/TherapistLogin';
+import TherapistDashboard from './Components/Therapist/TherapistDashboard';
 
 // Wrapper component to check current route
 const AppContent = () => {
   const location = useLocation();
-  const isAdminPage = location.pathname === '/admin/login' || location.pathname === '/admin/home' || location.pathname === '/admin/exercises' || location.pathname === '/admin/users'
-  || location.pathname==='/admin/therapists';
-  
+  const isAdminPage = location.pathname.startsWith('/admin');
+  const isTherapist = location.pathname.startsWith('/therapist');
+
   return (
     <>
       <ToastContainer position='top-center' theme='dark' pauseOnHover={false} />
-      {!isAdminPage && <Navbar />}
-      <main className={`flex flex-col ${!isAdminPage ? 'mt-16' : ''}`}>
+      {(!isAdminPage && !isTherapist) && <Navbar />}
+      <main className={`flex flex-col ${(!isAdminPage && !isTherapist) ? 'mt-16' : ''}`}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/exercises" element={<ExercisesPage />} />
           <Route path="/exercise/:id" element={<ExerciseDetailPage />} />
           <Route path="/profile" element={<UserProfilePage />} />
+
+          <Route path="/therapist/" element={<TherapistDashboard />} />
+          <Route path="/therapist/register" element={<TherapistRegister />} />
+          <Route path="/therapist/login" element={<TherapistLogin />} />
+
           <Route path="/admin/login" element={<Adminlogin />} />
           <Route path="/admin/home" element={<AdminHome />} />
-        <Route path="/admin/exercises" element={<AdminExerciseList />} />
-        <Route path="/admin/users" element={<UserManagement />} />
-        <Route path="/admin/therapists" element={<TherapistManagement />} />
+          <Route path="/admin/exercises" element={<AdminExerciseList />} />
+          <Route path="/admin/users" element={<UserManagement />} />
+          <Route path="/admin/therapists" element={<TherapistManagement />} />
         </Routes>
       </main>
     </>
