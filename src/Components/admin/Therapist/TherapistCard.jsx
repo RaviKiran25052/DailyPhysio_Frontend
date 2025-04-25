@@ -1,23 +1,9 @@
 import React from 'react';
-import { FaUserMd, FaEdit, FaTrash, FaEnvelope, FaHospital, FaStethoscope, FaUserFriends, FaBell } from 'react-icons/fa';
+import { FaUserMd, FaEdit, FaTrash, FaEnvelope, FaHospital, FaUserFriends } from 'react-icons/fa';
 
 const TherapistCard = ({ therapist, onEdit, onDelete }) => {
   return (
     <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-700 hover:border-purple-500 rounded-2xl shadow-xl hover:shadow-purple-800/50 transition-all duration-300 overflow-hidden relative group p-6">
-
-      {/* Notification Bell */}
-      {therapist.requestCount > 0 && (
-        <div className="absolute top-3 right-3 cursor-pointer">
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/10 border-2 border-purple-500 group-hover:scale-105 transition-transform duration-300">
-            <div className="absolute animate-ping h-full w-full bg-purple-500 opacity-75 rounded-full"></div>
-            <FaBell className="text-white relative z-10" />
-            <span className="absolute -top-2 -right-2 bg-white text-purple-900 text-[10px] font-bold rounded-full px-1.5 py-0.5 shadow">
-              {therapist.requestCount}
-            </span>
-          </div>
-        </div>
-      )}
-
       {/* Header: Icon + Info */}
       <div className="flex items-start mb-4 space-x-4">
         {/* Icon */}
@@ -70,7 +56,7 @@ const TherapistCard = ({ therapist, onEdit, onDelete }) => {
               <FaUserFriends className="text-purple-400" />
               <span className="text-gray-400 font-medium">Consultations</span>
             </div>
-            <span className="text-purple-300 font-semibold">{therapist.consultationCount}</span>
+            <span className="text-purple-300 font-semibold">{therapist.consultationCount || 0}</span>
           </div>
 
           {/* Experience */}

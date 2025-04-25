@@ -23,7 +23,8 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
     experience: '',
     gender: 'male',
     workingAt: '',
-    address: ''
+    address: '',
+    phoneNumber: ''
   });
   const [errors, setErrors] = useState({});
   const [selectedSpecialization, setSelectedSpecialization] = useState('');
@@ -39,7 +40,8 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
         experience: therapist.experience || '',
         gender: therapist.gender || 'male',
         workingAt: therapist.workingAt || '',
-        address: therapist.address || ''
+        address: therapist.address || '',
+        phoneNumber: therapist.phoneNumber || ''
       });
     }
   }, [therapist]);
@@ -51,7 +53,7 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
       ...formData,
       [name]: value
     });
-    
+
     // Clear error for this field
     if (errors[name]) {
       setErrors({
@@ -108,33 +110,33 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
   // Validate form
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
-    
+
     if (formData.specializations.length === 0) {
       newErrors.specializations = 'At least one specialization is required';
     }
-    
+
     if (!formData.experience.trim()) {
       newErrors.experience = 'Experience is required';
     }
-    
+
     if (!formData.workingAt.trim()) {
       newErrors.workingAt = 'Hospital/Clinic name is required';
     }
-    
+
     if (!formData.address.trim()) {
       newErrors.address = 'Address is required';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -142,7 +144,7 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       onSubmit(formData);
     }
@@ -175,9 +177,8 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 bg-gray-700 border ${
-                  errors.name ? 'border-red-500' : 'border-gray-600'
-                } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                className={`w-full px-3 py-2 bg-gray-700 border ${errors.name ? 'border-red-500' : 'border-gray-600'
+                  } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
                 placeholder="Dr. John Smith"
               />
               {errors.name && (
@@ -195,9 +196,8 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 bg-gray-700 border ${
-                  errors.email ? 'border-red-500' : 'border-gray-600'
-                } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                className={`w-full px-3 py-2 bg-gray-700 border ${errors.email ? 'border-red-500' : 'border-gray-600'
+                  } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
                 placeholder="doctor@example.com"
               />
               {errors.email && (
@@ -210,7 +210,7 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
               <label className="block text-sm font-medium text-gray-400 mb-1">
                 Specializations <span className="text-red-500">*</span>
               </label>
-              
+
               <div className="flex flex-wrap gap-2 mb-2">
                 {formData.specializations.map((spec, index) => (
                   <span
@@ -228,7 +228,7 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
                   </span>
                 ))}
               </div>
-              
+
               <div className="flex items-center gap-2 mb-2">
                 <select
                   value={selectedSpecialization}
@@ -248,7 +248,7 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
                   Add
                 </button>
               </div>
-              
+
               {selectedSpecialization === 'Other' && (
                 <div className="mt-2">
                   <input
@@ -260,7 +260,7 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
                   />
                 </div>
               )}
-              
+
               {errors.specializations && (
                 <p className="mt-1 text-sm text-red-500">{errors.specializations}</p>
               )}
@@ -276,9 +276,8 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
                 name="experience"
                 value={formData.experience}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 bg-gray-700 border ${
-                  errors.experience ? 'border-red-500' : 'border-gray-600'
-                } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                className={`w-full px-3 py-2 bg-gray-700 border ${errors.experience ? 'border-red-500' : 'border-gray-600'
+                  } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
                 placeholder="5 years"
               />
               {errors.experience && (
@@ -333,9 +332,8 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
                 name="workingAt"
                 value={formData.workingAt}
                 onChange={handleChange}
-                className={`w-full px-3 py-2 bg-gray-700 border ${
-                  errors.workingAt ? 'border-red-500' : 'border-gray-600'
-                } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                className={`w-full px-3 py-2 bg-gray-700 border ${errors.workingAt ? 'border-red-500' : 'border-gray-600'
+                  } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
                 placeholder="City General Hospital"
               />
               {errors.workingAt && (
@@ -353,13 +351,31 @@ const TherapistForm = ({ therapist, onClose, onSubmit }) => {
                 value={formData.address}
                 onChange={handleChange}
                 rows="3"
-                className={`w-full px-3 py-2 bg-gray-700 border ${
-                  errors.address ? 'border-red-500' : 'border-gray-600'
-                } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                className={`w-full px-3 py-2 bg-gray-700 border ${errors.address ? 'border-red-500' : 'border-gray-600'
+                  } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
                 placeholder="123 Medical Center Blvd, New York, NY"
               ></textarea>
               {errors.address && (
                 <p className="mt-1 text-sm text-red-500">{errors.address}</p>
+              )}
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label className="block text-sm font-medium text-gray-400 mb-1">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                className={`w-full px-3 py-2 bg-gray-700 border ${errors.phoneNumber ? 'border-red-500' : 'border-gray-600'
+                  } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                placeholder="+1 (555) 123-4567"
+              />
+              {errors.phoneNumber && (
+                <p className="mt-1 text-sm text-red-500">{errors.phoneNumber}</p>
               )}
             </div>
           </div>

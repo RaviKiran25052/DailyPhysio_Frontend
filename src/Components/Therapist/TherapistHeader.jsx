@@ -20,8 +20,8 @@ const TherapistHeader = ({ onLogin, onRegister }) => {
 
 	const handleLogout = () => {
 		localStorage.clear();
-		navigate('/therapist/');
 		setShowDropdown(false);
+		window.location.reload();
 	};
 
 	const toggleDropdown = () => {

@@ -15,6 +15,7 @@ import TherapistManagement from './Components/admin/Therapist/TherapistManagemen
 import TherapistRegister from './Components/Therapist/TherapistRegister';
 import TherapistLogin from './Components/Therapist/TherapistLogin';
 import TherapistDashboard from './Components/Therapist/TherapistDashboard';
+import TherapistManagementTable from './Components/admin/Therapist/TherapistManagementTable';
 
 // Wrapper component to check current route
 const AppContent = () => {
@@ -44,6 +45,7 @@ const AppContent = () => {
           <Route path="/admin/exercises" element={<AdminExerciseList />} />
           <Route path="/admin/users" element={<UserManagement />} />
           <Route path="/admin/therapists" element={<TherapistManagement />} />
+          <Route path="/admin/therapists/manage" element={<TherapistManagementTable />} />
         </Routes>
       </main>
     </>

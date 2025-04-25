@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaSearch, FaUserMd, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import { FaArrowLeft, FaBell, FaSearch, FaTools } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import TherapistCard from './TherapistCard';
@@ -14,6 +14,7 @@ const TherapistManagement = () => {
   const navigate = useNavigate();
   const [adminToken, setAdminToken] = useState('');
   const [therapists, setTherapists] = useState([]);
+  const [requestCount, setRequestCount] = useState(0);
   const [filteredTherapists, setFilteredTherapists] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -21,13 +22,43 @@ const TherapistManagement = () => {
   const [deletingTherapist, setDeletingTherapist] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Fetch therapists from the backend
+  const fetchTherapists = async (token) => {
+    try {
+      setLoading(true);
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.get(`${API_URL}/admin/therapists`, config);
+      const fetchedTherapists = response.data.therapists || [];
+
+      setRequestCount(response.data.requestCount || 0);
+      setTherapists(fetchedTherapists);
+      setFilteredTherapists(fetchedTherapists);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching therapists:', error);
+      toast.error('Failed to load therapists');
+      setLoading(false);
+
+      // If the token is invalid, redirect to login
+      if (error.response && error.response.status === 401) {
+        handleLogout();
+      }
+    }
+  };
+  
   // Check for admin authentication and fetch therapists
   useEffect(() => {
-    const loggedInAdmin = localStorage.getItem('adminInfo') 
-      ? JSON.parse(localStorage.getItem('adminInfo')) 
+    const loggedInAdmin = localStorage.getItem('adminInfo')
+      ? JSON.parse(localStorage.getItem('adminInfo'))
       : sessionStorage.getItem('adminInfo')
-      ? JSON.parse(sessionStorage.getItem('adminInfo'))
-      : null;
+        ? JSON.parse(sessionStorage.getItem('adminInfo'))
+        : null;
 
     if (!loggedInAdmin) {
       navigate('/admin/login');
@@ -36,43 +67,13 @@ const TherapistManagement = () => {
 
     setAdminToken(loggedInAdmin.token);
     fetchTherapists(loggedInAdmin.token);
-  }, [navigate]);
-
-  // Fetch therapists from the backend
-  const fetchTherapists = async (token) => {
-    try {
-      setLoading(true);
-      
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      
-      const response = await axios.get(`${API_URL}/admin/therapists`, config);
-      const fetchedTherapists = response.data.therapists || [];
-      console.log(fetchedTherapists);
-      
-      setTherapists(fetchedTherapists);
-      setFilteredTherapists(fetchedTherapists);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching therapists:', error);
-      toast.error('Failed to load therapists');
-      setLoading(false);
-      
-      // If the token is invalid, redirect to login
-      if (error.response && error.response.status === 401) {
-        handleLogout();
-      }
-    }
-  };
+  }, []);
 
   // Handle search functionality
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
-    
+
     if (value === '') {
       setFilteredTherapists(therapists);
     } else {
@@ -93,12 +94,6 @@ const TherapistManagement = () => {
     localStorage.removeItem('adminInfo');
     sessionStorage.removeItem('adminInfo');
     navigate('/admin/login');
-  };
-
-  // Open the form modal for adding a new therapist
-  const handleAddTherapist = () => {
-    setEditingTherapist(null);
-    setIsFormOpen(true);
   };
 
   // Open the form modal for editing a therapist
@@ -129,10 +124,10 @@ const TherapistManagement = () => {
           therapistData,
           config
         );
-        
+
         if (response.data.success) {
           // Update local state
-          const updatedTherapists = therapists.map(t => 
+          const updatedTherapists = therapists.map(t =>
             t._id === editingTherapist._id ? response.data.therapist : t
           );
           setTherapists(updatedTherapists);
@@ -146,7 +141,7 @@ const TherapistManagement = () => {
           therapistData,
           config
         );
-        
+
         if (response.data.success) {
           // Add to local state
           const newTherapist = response.data.therapist;
@@ -159,11 +154,11 @@ const TherapistManagement = () => {
       setIsFormOpen(false);
     } catch (error) {
       console.error('Error saving therapist:', error);
-      const errorMsg = error.response && error.response.data.message 
-        ? error.response.data.message 
+      const errorMsg = error.response && error.response.data.message
+        ? error.response.data.message
         : 'Failed to save therapist';
       toast.error(errorMsg);
-      
+
       // If the token is invalid, redirect to login
       if (error.response && error.response.status === 401) {
         handleLogout();
@@ -180,12 +175,12 @@ const TherapistManagement = () => {
             Authorization: `Bearer ${adminToken}`,
           },
         };
-        
+
         const response = await axios.delete(
           `${API_URL}/admin/therapists/${deletingTherapist._id}`,
           config
         );
-        
+
         if (response.data.success) {
           // Update local state
           const updatedTherapists = therapists.filter(
@@ -198,11 +193,11 @@ const TherapistManagement = () => {
         setDeletingTherapist(null);
       } catch (error) {
         console.error('Error deleting therapist:', error);
-        const errorMsg = error.response && error.response.data.message 
-          ? error.response.data.message 
+        const errorMsg = error.response && error.response.data.message
+          ? error.response.data.message
           : 'Failed to delete therapist';
         toast.error(errorMsg);
-        
+
         // If the token is invalid, redirect to login
         if (error.response && error.response.status === 401) {
           handleLogout();
@@ -216,16 +211,16 @@ const TherapistManagement = () => {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Back button at top of the page */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
-          <button 
+          <button
             onClick={navigateToAdminHome}
             className="flex items-center px-4 py-2 mb-4 sm:mb-0 border border-transparent rounded-md shadow-sm text-sm font-medium text-purple-400 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
           >
             <FaArrowLeft className="mr-2" />
             Back to Home
           </button>
-          
+
           {/* Search and Add buttons */}
-          <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center gap-8">
             <div className="relative w-full sm:w-64 md:w-80">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FaSearch className="text-gray-400" />
@@ -239,19 +234,32 @@ const TherapistManagement = () => {
               />
             </div>
             <button
-              onClick={handleAddTherapist}
-              className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:w-auto w-full justify-center"
+              onClick={() => navigate('/admin/therapists/manage')}
+              className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-100 bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
             >
-              <FaPlus className="mr-2" />
-              Add Therapist
+              <FaTools className="mr-2" />
+              <span className="hidden sm:inline">Manage</span>
             </button>
+            <div className="cursor-pointer">
+              <div onClick={() => navigate('/admin/therapists/manage')} className="relative flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/10 border-2 border-purple-500 group-hover:scale-105 transition-transform duration-300">
+                <FaBell className="text-white relative z-10" />
+                {requestCount > 0 &&
+                  <>
+                    <div className="absolute animate-ping h-full w-full bg-purple-500 opacity-75 rounded-full"></div>
+                    <span className="absolute -top-2 -right-2 bg-white text-purple-900 text-[10px] font-bold rounded-full px-1.5 py-0.5 shadow">
+                      {requestCount}
+                    </span>
+                  </>
+                }
+              </div>
+            </div>
           </div>
         </div>
-        
+
         <div className="mb-8">
           <h2 className="text-3xl font-extrabold text-white">Therapist Management</h2>
         </div>
-        
+
         {/* Therapist Cards */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
@@ -261,9 +269,9 @@ const TherapistManagement = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredTherapists.length > 0 ? (
               filteredTherapists.map(therapist => (
-                <TherapistCard 
-                  key={therapist._id} 
-                  therapist={therapist} 
+                <TherapistCard
+                  key={therapist._id}
+                  therapist={therapist}
                   onEdit={() => handleEditTherapist(therapist)}
                   onDelete={() => handleDeleteClick(therapist)}
                 />
@@ -279,7 +287,7 @@ const TherapistManagement = () => {
 
       {/* Add/Edit Therapist Form Modal */}
       {isFormOpen && (
-        <TherapistForm 
+        <TherapistForm
           therapist={editingTherapist}
           onClose={() => setIsFormOpen(false)}
           onSubmit={handleFormSubmit}

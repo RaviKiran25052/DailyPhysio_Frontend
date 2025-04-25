@@ -142,7 +142,7 @@ const TherapistDashboard = () => {
 			setIsLoggedIn(false);
 			setLoading(false);
 		}
-	}, []);
+	}, [isLoggedIn]);
 
 	const fetchConsultations = async () => {
 		try {
@@ -202,7 +202,10 @@ const TherapistDashboard = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-900 text-white">
-			<TherapistHeader onLogin={() => setShowLoginModal(true)} onRegister={() => setShowRegisterModal(true)} />
+			<TherapistHeader
+				onLogin={() => setShowLoginModal(true)}
+				onRegister={() => setShowRegisterModal(true)}
+			/>
 
 			<main className="container mx-auto px-4 py-8">
 				<div className="flex justify-between items-center mb-8">
