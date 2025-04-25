@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
 
-const TherapistLogin = ({ onClose }) => {
+const TherapistLogin = ({ onClose, onRegister }) => {
 	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		email: '',
@@ -61,13 +61,11 @@ const TherapistLogin = ({ onClose }) => {
 					`${process.env.REACT_APP_API_URL}/therapist/login`,
 					formData
 				);
-
-				// Store user data in localStorage
-				localStorage.setItem('therapistInfo', JSON.stringify(response.data));
-
-				// Close modal and redirect to dashboard
-				onClose();
-				navigate('/therapist/');
+				onClose(response.data.status === 'active', true);
+				if (response.data.status === 'active') {
+					localStorage.setItem('therapistInfo', JSON.stringify(response.data));
+					navigate('/therapist/');
+				}
 			} catch (error) {
 				setError(
 					error.response && error.response.data.message
@@ -86,14 +84,14 @@ const TherapistLogin = ({ onClose }) => {
 	};
 
 	return (
-		<div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50" onClick={onClose}>
+		<div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50" onClick={() => onClose(false, false)}>
 			<div className="bg-gray-800 rounded-lg w-full max-w-md p-8" onClick={stopPropagation}>
 				<div className="flex justify-between items-center mb-6">
 					<h2 className="text-2xl font-bold text-white">
 						Therapist Login
 					</h2>
 					<button
-						onClick={onClose}
+						onClick={() => onClose(false, false)}
 						className="text-gray-400 hover:text-white focus:outline-none"
 					>
 						<FaTimes size={24} />
@@ -184,12 +182,7 @@ const TherapistLogin = ({ onClose }) => {
 						Don't have an account?{' '}
 						<button
 							type="button"
-							onClick={() => {
-								onClose();
-								setTimeout(() => {
-									document.querySelector('[data-modal="register"]')?.click();
-								}, 100);
-							}}
+							onClick={onRegister}
 							className="font-medium text-purple-500 hover:text-purple-400"
 						>
 							Register now

@@ -1,6 +1,5 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaCalendarAlt, FaUser, FaStethoscope, FaMapMarkerAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaStethoscope, FaUser, FaNotesMedical } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ConsultationCard = ({ consultation }) => {
 	const navigate = useNavigate();
@@ -11,53 +10,66 @@ const ConsultationCard = ({ consultation }) => {
 		return new Date(dateString).toLocaleDateString(undefined, options);
 	};
 
+	// Get status color
+	const getStatusColor = (status) => {
+		switch (status) {
+			case 'active':
+				return 'bg-green-900 text-green-300';
+			case 'inactive':
+				return 'bg-gray-900 text-gray-300';
+			default:
+				return 'bg-gray-900 text-gray-300';
+		}
+	};
+
 	return (
 		<div
-			className="bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer"
+			className="bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1"
 			onClick={() => navigate(`/consultation/${consultation._id}`)}
 		>
+			<div className="h-2 bg-purple-600"></div>
 			<div className="p-5 border-b border-gray-700">
 				<div className="flex justify-between items-start">
 					<h3 className="text-lg font-semibold text-white truncate">
-						{consultation.patientName}
+						{consultation.patient_id?.name || "Patient"}
 					</h3>
-					<span className={`px-2 py-1 text-xs rounded-full ${consultation.status === 'Completed' ? 'bg-green-900 text-green-300' : consultation.status === 'Scheduled' ? 'bg-blue-900 text-blue-300' : 'bg-yellow-900 text-yellow-300'}`}>
-						{consultation.status}
+					<span className={`px-3 py-1 text-xs rounded-full ${getStatusColor(consultation.request?.status)}`}>
+						{consultation.request?.status || "Unknown"}
 					</span>
 				</div>
 			</div>
 
-			<div className="p-5 space-y-3">
+			<div className="p-5 space-y-4">
 				<div className="flex items-center text-gray-400">
-					<FaCalendarAlt className="mr-2 text-purple-500" />
-					<span>{formatDate(consultation.date)}</span>
+					<FaCalendarAlt className="mr-3 text-purple-500" />
+					<span>{formatDate(consultation.createdAt)}</span>
 				</div>
 
 				<div className="flex items-center text-gray-400">
-					<FaUser className="mr-2 text-purple-500" />
-					<span>{consultation.patientAge} years, {consultation.patientGender}</span>
+					<FaUser className="mr-3 text-purple-500" />
+					<span>Therapist: {consultation.therapist_id?.name || "Unknown"}</span>
 				</div>
 
 				<div className="flex items-center text-gray-400">
-					<FaStethoscope className="mr-2 text-purple-500" />
-					<span>{consultation.condition}</span>
+					<FaStethoscope className="mr-3 text-purple-500" />
+					<span className="truncate">Active days: {consultation.request?.activeDays || 0}</span>
 				</div>
 
-				{consultation.location && (
+				{consultation.notes && (
 					<div className="flex items-center text-gray-400">
-						<FaMapMarkerAlt className="mr-2 text-purple-500" />
-						<span className="truncate">{consultation.location}</span>
+						<FaNotesMedical className="mr-3 text-purple-500" />
+						<span className="truncate">{consultation.notes}</span>
 					</div>
 				)}
 			</div>
 
-			<div className="bg-gray-900 px-5 py-3">
+			<div className="bg-gray-900 px-5 py-4">
 				<div className="flex justify-between items-center">
 					<span className="text-sm text-gray-400">
-						{consultation.sessionType}
+						Recommended exercises: {consultation.recommendedExercises?.length || 0}
 					</span>
 					<span className="text-purple-500 font-medium">
-						{consultation.duration} min
+						{new Date(consultation.updatedAt || consultation.createdAt).toLocaleDateString()}
 					</span>
 				</div>
 			</div>

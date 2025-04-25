@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
 
@@ -17,8 +16,7 @@ const specializationOptions = [
 	'Other'
 ];
 
-const TherapistRegister = ({ onClose }) => {
-	const navigate = useNavigate();
+const TherapistRegister = ({ onClose, onLogin }) => {
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
@@ -147,21 +145,17 @@ const TherapistRegister = ({ onClose }) => {
 	// Handle form submission
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
 		if (validateForm()) {
 			setLoading(true);
 			setError('');
-
 			try {
 				const { confirmPassword, ...dataToSubmit } = formData;
-				const response = await axios.post(`${process.env.REACT_APP_API_URL}/therapist/register`, dataToSubmit);
+				await axios.post(
+					`${process.env.REACT_APP_API_URL}/therapist/register`,
+					dataToSubmit
+				);
 
-				// Store user data in localStorage
-				localStorage.setItem('therapistInfo', JSON.stringify(response.data));
-
-				// Close modal and redirect to dashboard
-				onClose();
-				navigate('/therapist/');
+				onClose(true);
 			} catch (error) {
 				setError(
 					error.response && error.response.data.message
@@ -180,14 +174,14 @@ const TherapistRegister = ({ onClose }) => {
 	};
 
 	return (
-		<div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 overflow-y-auto" onClick={onClose}>
-			<div className="bg-gray-800 rounded-lg w-full max-w-2xl my-8 mx-4" onClick={stopPropagation}>
+		<div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 overflow-y-auto" onClick={() => onClose(false)}>
+			<div className="bg-gray-800 rounded-lg w-full max-w-2xl mx-4" onClick={stopPropagation}>
 				<div className="p-6 border-b border-gray-700 flex justify-between items-center">
 					<h2 className="text-2xl font-bold text-white">
 						Therapist Registration
 					</h2>
 					<button
-						onClick={onClose}
+						onClick={() => onClose(false)}
 						className="text-gray-400 hover:text-white focus:outline-none"
 					>
 						<FaTimes size={24} />
@@ -473,12 +467,7 @@ const TherapistRegister = ({ onClose }) => {
 						Already have an account?{' '}
 						<button
 							type="button"
-							onClick={() => {
-								onClose();
-								setTimeout(() => {
-									document.querySelector('[data-modal="login"]')?.click();
-								}, 100);
-							}}
+							onClick={onLogin}
 							className="font-medium text-purple-500 hover:text-purple-400"
 						>
 							Login

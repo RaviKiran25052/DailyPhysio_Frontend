@@ -33,9 +33,11 @@ const AppContent = () => {
           <Route path="/exercise/:id" element={<ExerciseDetailPage />} />
           <Route path="/profile" element={<UserProfilePage />} />
 
-          <Route path="/therapist/" element={<TherapistDashboard />} />
-          <Route path="/therapist/register" element={<TherapistRegister />} />
-          <Route path="/therapist/login" element={<TherapistLogin />} />
+          {/* <Route element={<TherapistRouteProtect />}> */}
+            <Route path="/therapist/" element={<TherapistDashboard />} />
+            <Route path="/therapist/register" element={<TherapistRegister />} />
+            <Route path="/therapist/login" element={<TherapistLogin />} />
+          {/* </Route> */}
 
           <Route path="/admin/login" element={<Adminlogin />} />
           <Route path="/admin/home" element={<AdminHome />} />
