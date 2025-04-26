@@ -30,24 +30,23 @@ const TherapistCard = ({ therapist, onEdit, onDelete }) => {
 
       {/* Info Section */}
       <div className="bg-gray-700 bg-opacity-40 p-4 rounded-lg my-6">
-        <div className="grid grid-cols-2 gap-6 text-sm">
-
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Email */}
-          <div>
+          <div className="overflow-hidden">
             <div className="flex items-center space-x-2 mb-1">
-              <FaEnvelope className="text-purple-400" />
+              <FaEnvelope className="text-purple-400 flex-shrink-0" />
               <span className="text-gray-400 font-medium">Email</span>
             </div>
-            <span className="text-gray-300">{therapist.email}</span>
+            <span className="text-gray-300 text-sm truncate block">{therapist.email}</span>
           </div>
 
           {/* Hospital/Clinic */}
-          <div>
+          <div className="overflow-hidden">
             <div className="flex items-center space-x-2 mb-1">
-              <FaHospital className="text-purple-400" />
+              <FaHospital className="text-purple-400 flex-shrink-0" />
               <span className="text-gray-400 font-medium">Hospital/Clinic</span>
             </div>
-            <span className="text-gray-300">{therapist.workingAt}</span>
+            <span className="text-gray-300 text-sm truncate block">{therapist.workingAt}</span>
           </div>
 
           {/* Consultation Count */}
@@ -67,7 +66,6 @@ const TherapistCard = ({ therapist, onEdit, onDelete }) => {
             </div>
             <span className="text-purple-300 italic">{therapist.experience} years</span>
           </div>
-
         </div>
       </div>
 
@@ -93,4 +91,4 @@ const TherapistCard = ({ therapist, onEdit, onDelete }) => {
   );
 };
 
-export default TherapistCard; 
+export default TherapistCard;

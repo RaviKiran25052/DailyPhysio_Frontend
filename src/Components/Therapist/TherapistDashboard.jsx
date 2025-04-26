@@ -210,7 +210,7 @@ const TherapistDashboard = () => {
 			<main className="container mx-auto px-4 py-8">
 				<div className="flex justify-between items-center mb-8">
 					<h1 className="text-3xl font-bold">
-						{isLoggedIn ? 'Your Consultations' : 'Welcome to Hep2Go'}
+						{isLoggedIn ? 'Your Consultations' : 'Welcome to ExerciseMD'}
 					</h1>
 
 					{isLoggedIn && (
@@ -262,10 +262,10 @@ const TherapistDashboard = () => {
 								<path d="M17 2L12 7L7 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
 								<path d="M12 7V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
 							</svg>
-							<span className="text-white font-medium">Hep2Go</span>
+							<span className="text-white font-medium">ExerciseMD</span>
 						</div>
 						<div className="text-gray-400 text-sm">
-							© 2025 Hep2Go. All rights reserved.
+							© 2025 ExerciseMD. All rights reserved.
 						</div>
 					</div>
 				</div>

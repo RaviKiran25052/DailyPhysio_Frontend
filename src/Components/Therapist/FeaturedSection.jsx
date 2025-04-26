@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaCalendarAlt, FaClock, FaNotesMedical, FaUserMd } from 'react-icons/fa';
+import { FaUserPlus, FaClipboardList, FaDumbbell, FaCrown } from 'react-icons/fa';
 
 const FeaturedSection = ({ onLogin, onRegister }) => {
 	return (
@@ -7,7 +7,7 @@ const FeaturedSection = ({ onLogin, onRegister }) => {
 			{/* Hero Section */}
 			<div className="bg-gray-800 rounded-lg p-8 mb-8">
 				<div className="max-w-3xl mx-auto text-center">
-					<h1 className="text-3xl md:text-4xl font-bold text-white mb-6">Elevate Your Physiotherapy Practice with PhysioConnect</h1>
+					<h1 className="text-3xl md:text-4xl font-bold text-white mb-6">Elevate Your Physiotherapy Practice with ExerciseMD</h1>
 					<p className="text-gray-300 text-lg mb-8">Streamline patient care, manage consultations, and deliver personalized treatment plans all in one platform.</p>
 					<div className="flex flex-col sm:flex-row gap-4 justify-center">
 						<button
@@ -26,38 +26,38 @@ const FeaturedSection = ({ onLogin, onRegister }) => {
 				</div>
 			</div>
 
-			{/* Features Section */}
+			{/* Features Section - Updated to match actual functionality */}
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 				<div className="bg-gray-800 p-6 rounded-lg">
 					<div className="text-purple-500 mb-4">
-						<FaUserMd size={28} />
+						<FaUserPlus size={28} />
 					</div>
-					<h3 className="text-xl font-semibold text-white mb-2">Patient Management</h3>
-					<p className="text-gray-400">Organize patient information and medical history in one secure location.</p>
+					<h3 className="text-xl font-semibold text-white mb-2">Patient Consultations</h3>
+					<p className="text-gray-400">Create personalized consultations for patients and manage their treatment journey.</p>
 				</div>
 
 				<div className="bg-gray-800 p-6 rounded-lg">
 					<div className="text-purple-500 mb-4">
-						<FaCalendarAlt size={28} />
+						<FaClipboardList size={28} />
 					</div>
-					<h3 className="text-xl font-semibold text-white mb-2">Appointment Scheduling</h3>
-					<p className="text-gray-400">Easily manage your consultation schedule and reduce no-shows.</p>
+					<h3 className="text-xl font-semibold text-white mb-2">Exercise Assignment</h3>
+					<p className="text-gray-400">Prescribe specific exercises tailored to each patient's rehabilitation needs.</p>
 				</div>
 
 				<div className="bg-gray-800 p-6 rounded-lg">
 					<div className="text-purple-500 mb-4">
-						<FaNotesMedical size={28} />
+						<FaDumbbell size={28} />
 					</div>
-					<h3 className="text-xl font-semibold text-white mb-2">Treatment Plans</h3>
-					<p className="text-gray-400">Create customized exercise programs tailored to each patient's needs.</p>
+					<h3 className="text-xl font-semibold text-white mb-2">Exercise Access Control</h3>
+					<p className="text-gray-400">Manage which exercises patients can access based on their treatment plan.</p>
 				</div>
 
 				<div className="bg-gray-800 p-6 rounded-lg">
 					<div className="text-purple-500 mb-4">
-						<FaClock size={28} />
+						<FaCrown size={28} />
 					</div>
-					<h3 className="text-xl font-semibold text-white mb-2">Progress Tracking</h3>
-					<p className="text-gray-400">Monitor patient recovery with comprehensive progress reports.</p>
+					<h3 className="text-xl font-semibold text-white mb-2">Premium Exercises</h3>
+					<p className="text-gray-400">Unlock advanced exercise routines for patients with specific rehabilitation needs.</p>
 				</div>
 			</div>
 
@@ -69,7 +69,7 @@ const FeaturedSection = ({ onLogin, onRegister }) => {
 							<path d="M464 256h-80v-64c0-35.3 28.7-64 64-64h8c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24h-8c-88.4 0-160 71.6-160 160v240c0 26.5 21.5 48 48 48h128c26.5 0 48-21.5 48-48V304c0-26.5-21.5-48-48-48zm-288 0H96v-64c0-35.3 28.7-64 64-64h8c13.3 0 24-10.7 24-24V56c0-13.3-10.7-24-24-24h-8C71.6 32 0 103.6 0 192v240c0 26.5 21.5 48 48 48h128c26.5 0 48-21.5 48-48V304c0-26.5-21.5-48-48-48z"></path>
 						</svg>
 					</div>
-					<p className="text-xl text-gray-300 italic mb-6">PhysioConnect has transformed my practice. The ability to track patient progress and create custom treatment plans has improved recovery times and increased patient satisfaction.</p>
+					<p className="text-xl text-gray-300 italic mb-6">ExerciseMD has transformed my practice. The ability to assign specific exercises to patients and control their access has improved recovery times and increased patient satisfaction.</p>
 					<div className="font-medium text-white">Dr. Sarah Johnson</div>
 					<div className="text-sm text-gray-400">Physical Therapist, Seattle Rehabilitation Center</div>
 				</div>

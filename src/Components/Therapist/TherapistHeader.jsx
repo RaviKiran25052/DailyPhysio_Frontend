@@ -32,7 +32,7 @@ const TherapistHeader = ({ onLogin, onRegister }) => {
 		<header className="bg-gray-800 shadow-md">
 			<div className="container mx-auto px-4 py-4 flex justify-between items-center">
 				<div onClick={() => navigate('/')} className="cursor-pointer">
-					<h1 className="text-2xl font-bold text-white">PhysioConnect</h1>
+					<h1 className="text-2xl font-bold text-white">ExerciseMD</h1>
 				</div>
 
 				<div className="flex items-center">
