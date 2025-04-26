@@ -12,10 +12,9 @@ import AdminHome from './Components/admin/AdminHome';
 import AdminExerciseList from './Components/admin/AdminExerciseList';
 import UserManagement from './Components/admin/UserManagement';
 import TherapistManagement from './Components/admin/Therapist/TherapistManagement';
-import TherapistRegister from './Components/Therapist/TherapistRegister';
-import TherapistLogin from './Components/Therapist/TherapistLogin';
 import TherapistDashboard from './Components/Therapist/TherapistDashboard';
 import TherapistManagementTable from './Components/admin/Therapist/TherapistManagementTable';
+import TherapistConsultation from './Components/Therapist/TherapistConsultation';
 
 // Wrapper component to check current route
 const AppContent = () => {
@@ -36,8 +35,7 @@ const AppContent = () => {
 
           {/* <Route element={<TherapistRouteProtect />}> */}
             <Route path="/therapist/" element={<TherapistDashboard />} />
-            <Route path="/therapist/register" element={<TherapistRegister />} />
-            <Route path="/therapist/login" element={<TherapistLogin />} />
+            <Route path="/therapist/new-consultation" element={<TherapistConsultation />} />
           {/* </Route> */}
 
           <Route path="/admin/login" element={<Adminlogin />} />

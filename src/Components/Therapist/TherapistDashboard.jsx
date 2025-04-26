@@ -215,7 +215,7 @@ const TherapistDashboard = () => {
 
 					{isLoggedIn && (
 						<button
-							onClick={() => navigate('/new-consultation')}
+							onClick={() => navigate('/therapist/new-consultation')}
 							className="flex items-center gap-2 px-4 py-2 bg-purple-600 rounded-md hover:bg-purple-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 text-white"
 						>
 							<FaPlus size={14} />
@@ -244,7 +244,7 @@ const TherapistDashboard = () => {
 						title="No consultations yet"
 						message="Start by creating your first patient consultation record."
 						buttonText="Create Consultation"
-						onClick={() => navigate('/new-consultation')}
+						onClick={() => navigate('/therapist/new-consultation')}
 						icon={<FaNotesMedical size={48} />}
 					/>
 				) : (
