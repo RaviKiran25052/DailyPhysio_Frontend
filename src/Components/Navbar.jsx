@@ -409,6 +409,7 @@ const Navbar = () => {
       <Login
         isOpen={isAuthPopupOpen}
         isSignIn={isSignIn}
+        onChange={setIsSignIn}
         onClose={() => setIsAuthPopupOpen(false)}
         onAuthSuccess={handleAuthSuccess}
       />
