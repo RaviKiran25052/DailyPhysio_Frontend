@@ -16,7 +16,7 @@ const Sidebar = ({ userData, currentPath, setActiveTab }) => {
           </div>
           <div className="ml-4">
             <h3 className="text-white font-semibold">{userData.fullName}</h3>
-            <p className="text-gray-300 text-sm">{userData.role}</p>
+            <p className="text-gray-300 text-xs">{userData.email}</p>
           </div>
         </div>
       </div>

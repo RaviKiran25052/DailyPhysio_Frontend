@@ -6,6 +6,7 @@ import MyExercises from '../Components/Profile/MyExercises';
 import MyFavorites from '../Components/Profile/MyFavorites';
 import MyRoutines from '../Components/Profile/MyRoutines';
 import Following from '../Components/Profile/Following';
+import CreateExercise from '../Components/Profile/CreateExercise';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
@@ -87,12 +88,7 @@ const UserProfilePage = () => {
       case 'following':
         return <Following userData={userData} />;
       case 'create':
-        return (
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h2 className="text-2xl font-bold text-white mb-4">Create Exercise</h2>
-            <p className="text-gray-300">Create exercise form will be implemented here.</p>
-          </div>
-        );
+        return <CreateExercise />;
       default:
         return <ProfileInfo user={userData} />;
     }

@@ -248,14 +248,6 @@ const Navbar = () => {
                         <User className="mr-2" size={16} />
                         Profile
                       </Link>
-                      <Link
-                        to="/settings"
-                        onClick={() => setDropdownOpen(false)}
-                        className="w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-800 flex items-center"
-                      >
-                        <Settings className="mr-2" size={16} />
-                        Settings
-                      </Link>
                       <button
                         onClick={handleLogout}
                         className="w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-800 flex items-center"
@@ -331,14 +323,6 @@ const Navbar = () => {
                     >
                       <User className="mr-2" size={16} />
                       Profile
-                    </Link>
-                    <Link
-                      to="/settings"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="flex items-center px-3 py-2 text-white hover:bg-gray-800 rounded mt-2"
-                    >
-                      <Settings className="mr-2" size={16} />
-                      Settings
                     </Link>
                     <button
                       onClick={handleLogout}
