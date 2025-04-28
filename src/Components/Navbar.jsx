@@ -156,9 +156,8 @@ const Navbar = () => {
 
   return (
     <header className={`fixed top-0 left-0 bg-gray-900 w-full h-16 z-50 transition-all duration-300 ${isScrolled ? 'shadow-lg border-b border-gray-800' : 'border-b border-gray-800/50'}`}>
-      <div className="mx-auto px-4">
+      <div className="mx-auto px4 md:px-20">
         <div className="flex items-center justify-between py-4">
-          {/* Logo */}
           <Link
             to="/"
             className="text-2xl font-bold"
@@ -168,7 +167,6 @@ const Navbar = () => {
             <span className="text-white">MD</span>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {isLoggedIn ? (
               // Navigation for logged-in users
@@ -229,7 +227,6 @@ const Navbar = () => {
             )}
           </nav>
 
-          {/* Right Side - Auth Buttons or Profile */}
           <div className="hidden md:flex items-center space-x-4">
             {isLoggedIn ? (
               <div className="relative group">
@@ -288,7 +285,6 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-white"
             onClick={() => setIsMenuOpen(!isMenuOpen)}

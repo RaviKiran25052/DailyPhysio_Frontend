@@ -1,70 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../Components/Profile/Sidebar';
 import ProfileInfo from '../Components/Profile/ProfileInfo';
 import MyExercises from '../Components/Profile/MyExercises';
 import MyFavorites from '../Components/Profile/MyFavorites';
 import MyRoutines from '../Components/Profile/MyRoutines';
 import Following from '../Components/Profile/Following';
-import AccountSettings from '../Components/Profile/AccountSettings';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const UserProfilePage = () => {
+  const nav = useNavigate();
   const location = useLocation();
-  
-  // State for active tab
   const [activeTab, setActiveTab] = useState('profile');
-  
-  // State for user data
-  const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    joined: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' }), // Current date formatted
-    location: 'Not specified',
-    role: 'Member',
-    organization: 'ExerciseMD'
-  });
-  
-  // Convert to the format expected by ProfileInfo
-  const userForProfileInfo = {
-    fullName: userData.name,
-    email: userData.email,
-    specialty: userData.role,
-    organization: userData.organization,
-    joined: userData.joined,
-    location: userData.location,
-    bio: 'ExerciseMD member'
-  };
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
-    // Check if user is logged in by looking for token and fullName in localStorage
     const token = localStorage.getItem('token');
     const fullNameJSON = localStorage.getItem('fullName');
     
     if (!token || !fullNameJSON) {
-      // If no token or name, redirect to home with login parameter
-      toast.error('Please login to access your profile');
+      nav('/', { replace: true });
       return;
     }
 
     try {
-      // Load user data from localStorage
-      const fullName = fullNameJSON;
-      
-      // Get email from localStorage if available, or use a placeholder
-      const email = localStorage.getItem('email') ? 
-        JSON.parse(localStorage.getItem('email')) : 
-        'member@exercisemd.com';
-      
-      setUserData(prevData => ({
-        ...prevData,
-        name: fullName,
-        email: email,
-      }));
-
       // Ideally, fetch the complete user profile from the backend API here
       // This would use the token to authenticate the API request
       const fetchUserData = async () => {
@@ -77,14 +39,7 @@ const UserProfilePage = () => {
           
           if (response.status === 200) {
             // Update with real data from backend
-            setUserData({
-              name: response.data.fullName,
-              email: response.data.email,
-              joined: response.data.joinedDate,
-              location: response.data.location || 'Not specified',
-              role: response.data.role || 'Member',
-              organization: response.data.organization || 'ExerciseMD'
-            });
+            setUserData(response.data);
           }
         } catch (apiError) {
           console.error('Error fetching profile data:', apiError);
@@ -122,7 +77,7 @@ const UserProfilePage = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'profile':
-        return <ProfileInfo user={userForProfileInfo} />;
+        return <ProfileInfo user={userData} />;
       case 'myexercises':
         return <MyExercises userData={userData} />;
       case 'routines':
@@ -131,8 +86,6 @@ const UserProfilePage = () => {
         return <MyFavorites userData={userData} />;
       case 'following':
         return <Following userData={userData} />;
-      case 'settings':
-        return <AccountSettings userData={userData} updateUserData={setUserData} />;
       case 'create':
         return (
           <div className="bg-gray-800 rounded-lg p-6">
@@ -141,7 +94,7 @@ const UserProfilePage = () => {
           </div>
         );
       default:
-        return <ProfileInfo user={userForProfileInfo} />;
+        return <ProfileInfo user={userData} />;
     }
   };
 
@@ -149,7 +102,7 @@ const UserProfilePage = () => {
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-1/4">
+          <div className="lg:w-1/4 md:sticky top-24 h-fit">
             <Sidebar 
               userData={userData} 
               currentPath={activeTab} 

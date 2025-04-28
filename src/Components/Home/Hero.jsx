@@ -9,7 +9,7 @@ const Hero = () => {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-purple-600/30 rounded-full blur-[120px] opacity-70"></div>
       </div>
       
-      <div className="container mx-auto px-4 py-16 md:py-24 flex flex-col md:flex-row items-center relative z-10">
+      <div className="container mx-auto py-16 md:py-24 flex flex-col md:flex-row items-center relative z-10">
         {/* Left Content */}
         <div className="w-full md:w-1/2 mb-10 md:mb-0">
           <p className="text-purple-400 uppercase tracking-wider mb-3 font-medium">ExerciseMD PRO is Coming!</p>
@@ -20,20 +20,6 @@ const Hero = () => {
             Access professional exercise programs designed by orthopedic experts.
             Recover better, move better, feel better.
           </p>
-          <div className="flex flex-wrap gap-4">
-            <button 
-              // onClick={handleGetStarted}
-              className="px-6 py-3 bg-purple-600 rounded-md hover:bg-purple-700 transition text-white font-medium"
-            >
-              Get Started
-            </button>
-            <button 
-              // onClick={handleViewExercises}
-              className="px-6 py-3 border border-purple-600 rounded-md hover:bg-purple-600/10 transition text-white font-medium"
-            >
-              View Exercises
-            </button>
-          </div>
         </div>
         
         {/* Right Image Section */}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Dumbbell, Heart, FileText, Users, Plus, Settings } from 'lucide-react';
+import { User, Dumbbell, Heart, FileText, Users, Plus } from 'lucide-react';
 const Sidebar = ({ userData, currentPath, setActiveTab }) => {
   
   const handleTabClick = (tab) => {
@@ -12,10 +12,10 @@ const Sidebar = ({ userData, currentPath, setActiveTab }) => {
       <div className="p-6 bg-gray-700 border-b border-gray-600">
         <div className="flex items-center">
           <div className="h-14 w-14 rounded-full bg-purple-600 flex items-center justify-center text-white text-xl font-bold">
-            {userData.name.charAt(0)}
+            {userData.fullName?.split(' ').map(name => name[0]).join('').toUpperCase()}
           </div>
           <div className="ml-4">
-            <h3 className="text-white font-semibold">{userData.name}</h3>
+            <h3 className="text-white font-semibold">{userData.fullName}</h3>
             <p className="text-gray-300 text-sm">{userData.role}</p>
           </div>
         </div>
@@ -93,18 +93,6 @@ const Sidebar = ({ userData, currentPath, setActiveTab }) => {
             >
               <Plus className="mr-3 text-xl" />
               Create Exercise
-            </button>
-          </li>
-          
-          <li>
-            <button
-              onClick={() => handleTabClick('settings')}
-              className={`w-full text-left px-4 py-2 rounded-md flex items-center ${
-                currentPath === 'settings' ? 'bg-purple-600 text-white' : 'text-gray-300 hover:bg-gray-700'
-              }`}
-            >
-              <Settings className="mr-3 text-xl" />
-              Settings
             </button>
           </li>
         </ul>
