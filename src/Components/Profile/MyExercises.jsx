@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
-  Dumbbell, FileEdit, Globe, Lock
+  Dumbbell, Globe, Lock
 } from 'lucide-react';
 import ExerciseCard from './ExerciseCard';
 import EmptyState from './EmptyState';
@@ -35,7 +35,7 @@ const ErrorState = ({ message, onRetry }) => {
 };
 
 // Main Component
-const MyExercises = ({ userData }) => {
+const MyExercises = () => {
   const [activeExerciseTab, setActiveExerciseTab] = useState('public');
   const [publicExercises, setPublicExercises] = useState([]);
   const [privateExercises, setPrivateExercises] = useState([]);

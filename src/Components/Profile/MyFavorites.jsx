@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MediaCarousel from './MediaCarousel';
 import axios from 'axios';
-import { Trash2 } from 'lucide-react';
+import { Link, SquareArrowOutUpRight, Trash2 } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const MyFavorites = ({ userData }) => {
+const MyFavorites = () => {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -161,10 +161,10 @@ const MyFavorites = ({ userData }) => {
                   {/* Header with Title and Favorite Button */}
                   <div className="flex justify-between items-start mb-3">
                     <h3 
-                      className="font-medium text-white text-lg hover:text-purple-300 cursor-pointer transition"
+                      className="font-medium flex gap-2 text-white text-lg hover:text-purple-300 cursor-pointer transition"
                       onClick={() => handleExerciseClick(favorite._id)}
                     >
-                      {favorite.title}
+                      {favorite.title}<SquareArrowOutUpRight size={14}/>
                     </h3>
                     <button 
                       onClick={(e) => {

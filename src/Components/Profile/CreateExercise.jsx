@@ -9,11 +9,11 @@ export default function CreateExercise() {
 		instruction: '',
 		videos: [],
 		images: [],
-		reps: '',
-		hold: '',
-		complete: 0,
+		reps: 0,
+		hold: 0,
+		set: 0,
 		perform: {
-			count: '',
+			count: 0,
 			type: 'hour'
 		},
 		category: '',
@@ -449,14 +449,14 @@ export default function CreateExercise() {
 
 					<div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
 						<div>
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="complete">
-								Complete (Number)
+							<label className="block text-gray-300 font-medium mb-2" htmlFor="set">
+								Sets
 							</label>
 							<input
 								type="number"
-								id="complete"
-								name="complete"
-								value={exercise.complete}
+								id="set"
+								name="set"
+								value={exercise.set}
 								onChange={handleChange}
 								min="0"
 								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"

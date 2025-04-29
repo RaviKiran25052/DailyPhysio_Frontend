@@ -80,13 +80,13 @@ const UserProfilePage = () => {
       case 'profile':
         return <ProfileInfo user={userData} />;
       case 'myexercises':
-        return <MyExercises userData={userData} />;
+        return <MyExercises />;
       case 'routines':
-        return <MyRoutines userData={userData} />;
+        return <MyRoutines />;
       case 'favorites':
-        return <MyFavorites userData={userData} />;
+        return <MyFavorites />;
       case 'following':
-        return <Following userData={userData} />;
+        return <Following />;
       case 'create':
         return <CreateExercise />;
       default:

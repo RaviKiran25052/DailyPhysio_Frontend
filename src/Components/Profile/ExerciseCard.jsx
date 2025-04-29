@@ -1,9 +1,11 @@
-import { Calendar } from 'lucide-react';
+import { Calendar, SquareArrowOutUpRight } from 'lucide-react';
 import React from 'react';
 import MediaCarousel from './MediaCarousel';
-import { Dumbbell, Eye, Heart, Lock, Globe, Trash2, ChevronRight } from 'lucide-react';
+import { Eye, Heart, Lock, Globe, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ExerciseCard = ({ exercise, onTypeChange, onDelete }) => {
+	const navigate = useNavigate();
 	const formatDate = (dateString) => {
 		const date = new Date(dateString);
 		const now = new Date();
@@ -35,8 +37,12 @@ const ExerciseCard = ({ exercise, onTypeChange, onDelete }) => {
 			<MediaCarousel images={exercise.image} videos={exercise.video} />
 
 			<div className="p-4">
-				<div className="flex justify-between items-start mb-3">
-					<h3 className="font-medium text-white text-lg">{exercise.title}</h3>
+				<div className="flex justify-between items-start mb-3 ">
+					<h3
+						className="font-medium flex gap-2 text-white hover:text-purple-300 cursor-pointer transition text-lg"
+						onClick={() => navigate(`/exercise/${exercise._id}`)}>
+						{exercise.title}<SquareArrowOutUpRight size={14} />
+					</h3>
 					<div className="flex items-center text-xs text-gray-400">
 						<Calendar size={14} className="mr-1" />
 						<span>{formatDate(exercise.createdAt)}</span>
