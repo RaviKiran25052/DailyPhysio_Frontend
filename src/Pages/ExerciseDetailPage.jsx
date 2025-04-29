@@ -20,43 +20,23 @@ const ExerciseDetailPage = () => {
   });
   const [isFavorite, setIsFavorite] = useState(false);
   const [addedToHep, setAddedToHep] = useState(false);
-  const [exercises, setExercises] = useState([]);
+  const [exercise, setExercise] = useState([]);
   const [relatedExercises, setRelatedExercises] = useState([]);
-  const [selectedExercise, setSelectedExercise] = useState({});
+  const [creatorData, setCreatorData] = useState({});
   const [isPro, setIsPro] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchExercise = async () => {
-      const response = await axios.get(`${API_URL}/exercises/all`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = response.data.exercises;
+      const response = await axios.get(`${API_URL}/exercises/getById/${id}`);
+      console.log("data", response.data.creatorData);
+      const data = response.data;
       setIsPro(response.data.membership !== "free");
 
-      setExercises(data);
-      // Find the exercise by ID
-      const foundExercise = data.find(ex => ex._id === id);
-
-      if (foundExercise) {
-        setSelectedExercise(foundExercise);
-
-        // Find related exercises in the same category
-        const related = data
-          .filter(ex =>
-            ex._id !== id &&
-            ex.category === foundExercise.category
-          )
-          .slice(0, 3);
-
-        setRelatedExercises(related);
-      } else {
-        // If exercise not found, prepare to redirect
-        console.error('Exercise not found');
-      }
+      setExercise(data.exercise);
+      setCreatorData(data.creatorData);
+      setRelatedExercises(data.similarExercises);
     };
     fetchExercise();
 
@@ -69,16 +49,16 @@ const ExerciseDetailPage = () => {
   };
 
   const handleAddToHep = () => {
-    if (selectedExercise) {
+    if (exercise) {
       // Get current HEP exercises from localStorage
       const currentHep = JSON.parse(localStorage.getItem('hepExercises') || '[]');
 
       // Check if exercise is already in HEP
-      const exerciseExists = currentHep.some(ex => ex._id === selectedExercise._id);
+      const exerciseExists = currentHep.some(ex => ex._id === exercise._id);
 
       if (!exerciseExists) {
         // Add the exercise to localStorage
-        const updatedHep = [...currentHep, selectedExercise];
+        const updatedHep = [...currentHep, exercise];
         localStorage.setItem('hepExercises', JSON.stringify(updatedHep));
 
         // Show success message
@@ -129,7 +109,7 @@ const ExerciseDetailPage = () => {
     e.preventDefault();
 
     // Get exercise ID from current context or state
-    const exerciseId = selectedExercise._id; // Assuming exerciseData is available in your component
+    const exerciseId = exercise._id; // Assuming exerciseData is available in your component
 
     // Prepare the payload with exercise ID and form data
     const payload = {
@@ -197,7 +177,7 @@ const ExerciseDetailPage = () => {
     );
   }
 
-  if (!selectedExercise) {
+  if (!exercise) {
     return (
       <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
         <h1 className="text-2xl font-bold mb-4">Exercise Not Found</h1>
@@ -232,19 +212,19 @@ const ExerciseDetailPage = () => {
             <div className="mb-4">
               <div className="flex flex-wrap items-center gap-2 mb-2">
                 <span className="text-xs bg-purple-900/60 text-purple-300 px-2 py-1 rounded-full">
-                  {selectedExercise?.category}
+                  {exercise?.category}
                 </span>
                 <span className="text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded-full">
-                  {selectedExercise?.position}
+                  {exercise?.position}
                 </span>
               </div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{selectedExercise?.title}</h1>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{exercise?.title}</h1>
             </div>
 
             {/* Exercise image */}
             <div className="relative rounded-xl overflow-hidden mb-6 border border-gray-800">
               <div className="aspect-[4/2] w-full">
-                <MediaCarousel images={selectedExercise.image} videos={isPro ? selectedExercise.video : []} />
+                <MediaCarousel images={exercise.image} videos={isPro ? exercise.video : []} />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-20"></div>
 
@@ -274,19 +254,19 @@ const ExerciseDetailPage = () => {
               <div className="space-y-2 text-xs sm:text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Category:</span>
-                  <span className="text-purple-300">{selectedExercise?.category}</span>
+                  <span className="text-purple-300">{exercise?.category}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Sub Category:</span>
-                  <span className="text-white">{selectedExercise?.subCategory}</span>
+                  <span className="text-white">{exercise?.subCategory}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Position:</span>
-                  <span className="text-white">{selectedExercise?.position}</span>
+                  <span className="text-white">{exercise?.position}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Created:</span>
-                  <span className="text-gray-300">{selectedExercise?.createdAt?.split('T')[0]}</span>
+                  <span className="text-gray-300">{exercise?.createdAt?.split('T')[0]}</span>
                 </div>
               </div>
             </div>
@@ -295,7 +275,7 @@ const ExerciseDetailPage = () => {
             <div className="bg-gray-800 rounded-xl p-4 sm:p-5 mb-6">
               <h2 className="text-lg sm:text-xl font-bold mb-4 text-white">Instructions</h2>
               <p className="text-sm sm:text-base text-gray-300 mb-4 leading-relaxed">
-                {selectedExercise?.description || `Lying on your back with your knees bent, gently rotate your spine as you move your knees to the side and then reverse directions and move your knees to the other side. Repeat as you move through a comfortable range of motion.`}
+                {exercise?.description || `Lying on your back with your knees bent, gently rotate your spine as you move your knees to the side and then reverse directions and move your knees to the other side. Repeat as you move through a comfortable range of motion.`}
               </p>
             </div>
 
@@ -430,7 +410,7 @@ const ExerciseDetailPage = () => {
                 </h2>
 
                 <div className="space-y-3 sm:space-y-4">
-                  {relatedExercises.length > 0 ? (
+                  {relatedExercises?.length > 0 ? (
                     relatedExercises.map(relatedEx => (
                       <Link
                         key={relatedEx._id}
@@ -474,13 +454,15 @@ const ExerciseDetailPage = () => {
                     <div className='flex items-center gap-3'>
                       <img src="https://cdn-icons-png.flaticon.com/512/10813/10813372.png" width={30} alt="" />
                       <div>
-                        <h3 className='text-sm font-medium text-white'>Dr. John Doe</h3>
-                        <p className='text-xs text-gray-400'>Physiotherapist</p>
+                        <h3 className='text-sm font-medium text-white'>{exercise.custom?.createdBy === "therapist" && "Dr."} {creatorData.name}</h3>
+                        <p className='text-xs text-gray-400'>{creatorData.specializations?.length ? creatorData.specializations.join(" | ") : "Pro User"}</p>
                       </div>
                     </div>
-                    <button className='flex items-center border-2 border-purple-700 hover:bg-purple-800 hover:text-white text-sm rounded-md px-3 py-1'>
-                      <UserPlus className='mr-2' size={16} />Follow
-                    </button>
+                    {exercise.custom?.createdBy === "therapist" &&
+                      <button className='flex items-center border-2 border-purple-700 hover:bg-purple-800 hover:text-white text-sm rounded-md px-3 py-1'>
+                        <UserPlus className='mr-2' size={16} />Follow
+                      </button>
+                    }
                   </div>
                 </div>
                 <button className='border-2 border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
