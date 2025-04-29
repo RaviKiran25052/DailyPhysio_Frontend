@@ -382,7 +382,7 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
 
             {/* Desktop Exercises Grid */}
             {!isMobile && (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                 {currentExercises.map((exercise) => (
                   <ExerciseCard
                     key={exercise.id || exercise._id}

@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronRight, Heart, PlayCircle, Activity, ArrowRight, Save, Plus, Check } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import MediaCarousel from '../Components/Profile/MediaCarousel';
 const API_URL = process.env.REACT_APP_API_URL;
 
 const ExerciseDetailPage = () => {
@@ -22,22 +23,29 @@ const ExerciseDetailPage = () => {
   const [exercises, setExercises] = useState([]);
   const [relatedExercises, setRelatedExercises] = useState([]);
   const [selectedExercise, setSelectedExercise] = useState({});
+  const [isPro, setIsPro] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchExercise = async () => {
-      const response = await axios.get(`${API_URL}/exercises/all`);
+      const response = await axios.get(`${API_URL}/exercises/all`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       const data = response.data.exercises;
-      console.log(data);
+      setIsPro(response.data.membership !== "free");
+
       setExercises(data);
       // Find the exercise by ID
       const foundExercise = data.find(ex => ex._id === id);
-
+      
       if (foundExercise) {
         setSelectedExercise(foundExercise);
 
         // Find related exercises in the same category
-        const related = exercises
+        const related = data
           .filter(ex =>
             ex._id !== id &&
             ex.category === foundExercise.category
@@ -64,22 +72,22 @@ const ExerciseDetailPage = () => {
     if (selectedExercise) {
       // Get current HEP exercises from localStorage
       const currentHep = JSON.parse(localStorage.getItem('hepExercises') || '[]');
-      
+
       // Check if exercise is already in HEP
       const exerciseExists = currentHep.some(ex => ex._id === selectedExercise._id);
-      
+
       if (!exerciseExists) {
         // Add the exercise to localStorage
         const updatedHep = [...currentHep, selectedExercise];
         localStorage.setItem('hepExercises', JSON.stringify(updatedHep));
-        
+
         // Show success message
         toast.success('Added to HEP');
       } else {
         // Show info message if already in HEP
         toast.info('Exercise already in your HEP');
       }
-      
+
       setAddedToHep(true);
 
       // Show temporary visual confirmation
@@ -119,10 +127,10 @@ const ExerciseDetailPage = () => {
   // Submit form data
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Get exercise ID from current context or state
     const exerciseId = selectedExercise._id; // Assuming exerciseData is available in your component
-    
+
     // Prepare the payload with exercise ID and form data
     const payload = {
       exerciseId,
@@ -131,28 +139,28 @@ const ExerciseDetailPage = () => {
       complete: formData.complete,
       perform: formData.perform
     };
-    
+
     const userToken = localStorage.getItem('token');
-    
+
     try {
       const response = await axios.post(`${API_URL}/saved-exercises`, payload, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${userToken}`
         }
-      });      
+      });
       // Show success message
       if (response.status === 201) {
         toast.success('Exercise saved successfully');
       }
-      
-      
-    } catch (error) {      
+
+
+    } catch (error) {
       // Handle different error scenarios based on error response
       if (error.response) {
         const status = error.response.status;
         const errorMessage = error.response.data.message || 'Something went wrong';
-        
+
         // Handle specific error cases
         if (status === 403) {
           if (errorMessage.includes('premium exercise')) {
@@ -176,7 +184,7 @@ const ExerciseDetailPage = () => {
         // Unexpected error
         toast.error('An unexpected error occurred. Please try again.');
       }
-      
+
       console.error('Error saving exercise:', error);
     }
   };
@@ -235,12 +243,8 @@ const ExerciseDetailPage = () => {
 
             {/* Exercise image */}
             <div className="relative rounded-xl overflow-hidden mb-6 border border-gray-800">
-              <div className="aspect-[4/3] w-full">
-                <img
-                  src={selectedExercise?.image || "/assets/routine.jpg"}
-                  alt={selectedExercise?.title}
-                  className="w-full h-full object-cover"
-                />
+              <div className="aspect-[4/2] w-full">
+                <MediaCarousel images={selectedExercise.image} videos={isPro ? selectedExercise.video : []} />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-20"></div>
 
@@ -254,13 +258,15 @@ const ExerciseDetailPage = () => {
               </button>
 
               {/* Video button */}
-              <button
-                className="absolute bottom-3 right-3 flex items-center gap-2 bg-purple-600 hover:bg-purple-700 transition-colors rounded-lg px-3 py-2 text-sm"
-                aria-label="View video"
-              >
-                <PlayCircle size={16} />
-                <span className="hidden sm:inline">View Video</span>
-              </button>
+              {isPro && (
+                <button
+                  className="absolute bottom-3 right-3 flex items-center gap-2 bg-purple-600 hover:bg-purple-700 transition-colors rounded-lg px-3 py-2 text-sm"
+                  aria-label="View video"
+                >
+                  <PlayCircle size={16} />
+                  <span className="hidden sm:inline">View Video</span>
+                </button>
+              )}
             </div>
 
             {/* Exercise instructions */}

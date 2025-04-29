@@ -288,15 +288,15 @@ export default function Following() {
                   <div className="space-y-4">
                     {dummyExercises[therapist._id].map(exercise => (
                       <div key={exercise._id} className="bg-gray-700 p-4 rounded-lg border border-gray-600 relative">
-                        <MediaCarousel images={exercise.image} videos={exercise.video} />
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 onClick={() => navigate(`/exercise/${exercise._id}`)} className="flex gap-2 font-medium cursor-pointer hover:text-purple-300 text-lg">{exercise.title}<SquareArrowOutUpRight size={14} /></h4>
-                          {exercise.isPremium && (
-                            <span className="absolute top-3 left-3 bg-yellow-600 text-yellow-100 px-2 py-1 rounded-full text-xs flex items-center">
-                              <Crown size={12} className="mr-1" /> Premium
-                            </span>
-                          )}
+                        <div className='min-h-[200px]'>
+                          <MediaCarousel images={exercise.image} videos={exercise.video} />
                         </div>
+                        <h4 onClick={() => navigate(`/exercise/${exercise._id}`)} className="flex gap-2 pb-4 font-medium cursor-pointer hover:text-purple-300 text-lg">{exercise.title}<SquareArrowOutUpRight size={14} /></h4>
+                        {exercise.isPremium && (
+                          <span className="absolute top-3 left-3 bg-yellow-600 text-yellow-100 px-2 py-1 rounded-full text-xs flex items-center">
+                            <Crown size={12} className="mr-1" /> Premium
+                          </span>
+                        )}
 
                         <p className="text-gray-300 mb-3">{exercise.description}</p>
 

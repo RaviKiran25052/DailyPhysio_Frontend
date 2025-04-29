@@ -1,5 +1,6 @@
 import React from 'react';
 import { Info, Plus, Check } from 'lucide-react';
+import MediaCarousel from '../Profile/MediaCarousel';
 
 const ExerciseCard = ({
   exercise,
@@ -48,16 +49,11 @@ const ExerciseCard = ({
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-700">
       <div className={`relative ${getImageHeight()} overflow-hidden bg-gray-700`}>
-        <img
-          src={exercise.image || "https://via.placeholder.com/800x600?text=Exercise+Image"}
-          alt={exercise.title || exercise.name || "Exercise"}
-          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-          loading="lazy"
-        />
+        <MediaCarousel images={exercise.image} videos={exercise.video}/>
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
         
         {/* Add to HEP button - positioned at the top-right */}
-        <button
+        {/* <button
           className={`absolute top-2 right-2 p-2 rounded-full transition-colors duration-200 ${isInHEP
               ? 'bg-purple-600 text-white cursor-not-allowed'
               : 'bg-gray-800/80 text-white hover:bg-purple-600/80'
@@ -67,7 +63,7 @@ const ExerciseCard = ({
           title={isInHEP ? "Already added to HEP" : "Add to HEP"}
         >
           {isInHEP ? <Check size={18} /> : <Plus size={18} />}
-        </button>
+        </button> */}
       </div>
       
       <div className="p-3 flex-grow flex flex-col">

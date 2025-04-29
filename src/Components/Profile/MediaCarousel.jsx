@@ -23,7 +23,7 @@ const MediaCarousel = ({ images = [], videos = [] }) => {
 	const hasMultipleItems = mediaItems.length > 1;
 
 	return (
-		<div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-gray-700">
+		<div className="relative w-full h-full mb-4 rounded-lg overflow-hidden bg-gray-700 z-10">
 			{currentItem.type === 'video' ? (
 				<video
 					src={currentItem.url}
@@ -36,7 +36,7 @@ const MediaCarousel = ({ images = [], videos = [] }) => {
 				<img
 					src={currentItem.url}
 					alt="Exercise visual"
-					className="w-full h-full object-cover"
+					className="w-full min-h-full object-cover"
 				/>
 			)}
 

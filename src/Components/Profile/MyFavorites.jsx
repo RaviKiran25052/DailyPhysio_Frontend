@@ -153,7 +153,9 @@ const MyFavorites = () => {
               >
                 {/* Media Carousel */}
                 {(favorite.video.length > 0 || favorite.image.length > 0) && (
+                  <div className='min-h-[200px]'>
                   <MediaCarousel videos={favorite.video} images={favorite.image} />
+                  </div>
                 )}
                 
                 {/* Content Area */}
