@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ChevronRight, Heart, PlayCircle, Activity, ArrowRight, Save, Plus, Check } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Heart, PlayCircle, Activity, ArrowRight, Save, Plus, Check, UserPlus } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import MediaCarousel from '../Components/Profile/MediaCarousel';
@@ -40,7 +40,7 @@ const ExerciseDetailPage = () => {
       setExercises(data);
       // Find the exercise by ID
       const foundExercise = data.find(ex => ex._id === id);
-      
+
       if (foundExercise) {
         setSelectedExercise(foundExercise);
 
@@ -213,7 +213,7 @@ const ExerciseDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen px-2 md:px-16 bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center mb-4">
           <button
@@ -267,6 +267,28 @@ const ExerciseDetailPage = () => {
                   <span className="hidden sm:inline">View Video</span>
                 </button>
               )}
+            </div>
+
+            <div className="mb-6 bg-gray-800 rounded-xl p-4">
+              <h3 className="text-base sm:text-lg font-medium mb-3">Exercise Details</h3>
+              <div className="space-y-2 text-xs sm:text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Category:</span>
+                  <span className="text-purple-300">{selectedExercise?.category}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Sub Category:</span>
+                  <span className="text-white">{selectedExercise?.subCategory}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Position:</span>
+                  <span className="text-white">{selectedExercise?.position}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-400">Created:</span>
+                  <span className="text-gray-300">{selectedExercise?.createdAt?.split('T')[0]}</span>
+                </div>
+              </div>
             </div>
 
             {/* Exercise instructions */}
@@ -400,69 +422,68 @@ const ExerciseDetailPage = () => {
 
           {/* Right column - Related exercises */}
           <div className="w-full lg:w-1/3 mt-6 lg:mt-0">
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 sm:p-5 lg:sticky lg:top-20">
-              <h2 className="text-lg sm:text-xl font-bold mb-4 flex justify-between items-center">
-                <span>Similar Exercises</span>
-                <Activity size={20} className="text-purple-400" />
-              </h2>
+            <div className=' flex flex-col gap-4 lg:sticky lg:top-20'>
+              <div className="bg-gray-800 rounded-xl p-4 sm:p-5">
+                <h2 className="text-lg sm:text-xl font-bold mb-4 flex justify-between items-center">
+                  <span>Similar Exercises</span>
+                  <Activity size={20} className="text-purple-400" />
+                </h2>
 
-              <div className="space-y-3 sm:space-y-4">
-                {relatedExercises.length > 0 ? (
-                  relatedExercises.map(relatedEx => (
-                    <Link
-                      key={relatedEx._id}
-                      to={`/exercise/${relatedEx._id}`}
-                      className="flex items-center p-2 sm:p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors"
-                    >
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0">
-                        <img
-                          src={relatedEx.image}
-                          alt={relatedEx.title}
-                          className="w-full h-full object-cover rounded-md"
-                        />
-                      </div>
-                      <div className="flex-1 mx-2 sm:mx-3">
-                        <h3 className="font-medium text-white text-xs sm:text-sm">{relatedEx.title}</h3>
-                        <p className="text-xs text-gray-400 truncate">{relatedEx.category}</p>
-                      </div>
-                      <ChevronRight size={16} className="text-gray-400 flex-shrink-0" />
-                    </Link>
-                  ))
-                ) : (
-                  <p className="text-gray-400 text-sm">No related exercises found.</p>
-                )}
+                <div className="space-y-3 sm:space-y-4">
+                  {relatedExercises.length > 0 ? (
+                    relatedExercises.map(relatedEx => (
+                      <Link
+                        key={relatedEx._id}
+                        to={`/exercise/${relatedEx._id}`}
+                        className="flex items-center p-2 sm:p-3 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors"
+                      >
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0">
+                          <img
+                            src={relatedEx.image}
+                            alt={relatedEx.title}
+                            className="w-full h-full object-cover rounded-md"
+                          />
+                        </div>
+                        <div className="flex-1 mx-2 sm:mx-3">
+                          <h3 className="font-medium text-white text-xs sm:text-sm">{relatedEx.title}</h3>
+                          <p className="text-xs text-gray-400 truncate">{relatedEx.category}</p>
+                        </div>
+                        <ChevronRight size={16} className="text-gray-400 flex-shrink-0" />
+                      </Link>
+                    ))
+                  ) : (
+                    <p className="text-gray-400 text-sm">No related exercises found.</p>
+                  )}
+                </div>
+
+                <div className="mt-5 sm:mt-6">
+                  <Link
+                    to="/exercises"
+                    className="w-full flex items-center justify-center gap-2 py-2 border border-purple-500 text-purple-400 hover:bg-purple-600/20 transition-colors rounded-lg text-sm"
+                  >
+                    View All Exercises
+                    <ArrowRight size={14} />
+                  </Link>
+                </div>
               </div>
-
-              <div className="mt-5 sm:mt-6">
-                <Link
-                  to="/exercises"
-                  className="w-full flex items-center justify-center gap-2 py-2 border border-purple-500 text-purple-400 hover:bg-purple-600/20 transition-colors rounded-lg text-sm"
-                >
-                  View All Exercises
-                  <ArrowRight size={14} />
-                </Link>
-              </div>
-
-              <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-gray-700">
-                <h3 className="text-base sm:text-lg font-medium mb-3">Exercise Details</h3>
-                <div className="space-y-2 text-xs sm:text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Category:</span>
-                    <span className="text-purple-300">{selectedExercise?.category}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Sub Category:</span>
-                    <span className="text-white">{selectedExercise?.subCategory}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Position:</span>
-                    <span className="text-white">{selectedExercise?.position}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Created:</span>
-                    <span className="text-gray-300">{selectedExercise?.createdAt?.split('T')[0]}</span>
+              <div className='w-full h-[2px] rounded-md bg-gray-500/50' />
+              <div className='bg-gray-800 rounded-xl p-4 flex flex-col gap-4'>
+                <div className='flex flex-col gap-2'>
+                  <h2 className='text-purple-500'>Created By:</h2>
+                  <div className='flex items-center justify-between gap-2'>
+                    <div className='flex items-center gap-3'>
+                      <img src="https://cdn-icons-png.flaticon.com/512/10813/10813372.png" width={30} alt="" />
+                      <div>
+                        <h3 className='text-sm font-medium text-white'>Dr. John Doe</h3>
+                        <p className='text-xs text-gray-400'>Physiotherapist</p>
+                      </div>
+                    </div>
+                    <button className='flex items-center border-2 border-purple-700 hover:bg-purple-800 hover:text-white text-sm rounded-md px-3 py-1'>
+                      <UserPlus className='mr-2' size={16} />Follow
+                    </button>
                   </div>
                 </div>
+                <button className='border-2 border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
               </div>
             </div>
           </div>
