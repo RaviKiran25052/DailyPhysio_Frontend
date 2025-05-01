@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ExerciseSidebar from './ExerciseSidebar';
 import ExerciseControls from './ExerciseControls';
 import ExerciseCard from './ExerciseCard';
@@ -34,9 +34,14 @@ const allPositions = [
 
 const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const carouselRef = useRef(null);
+  
+  // Check if we have category in location state (from Featured Courses)
+  const initialCategory = location.state?.selectedCategory || 'Ankle and Foot';
+
   const [exercises, setExercises] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('Ankle and Foot');
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
   const [selectedPosition, setSelectedPosition] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -50,6 +55,24 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
   const [hepExercises, setHepExercises] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  // If we came from featured exercises, show a notification
+  const [showFeaturedNotification, setShowFeaturedNotification] = useState(!!location.state?.fromFeatured);
+
+  // Clear location state after using it
+  useEffect(() => {
+    if (location.state) {
+      // Replace the current history entry to remove the state
+      navigate(location.pathname, { replace: true });
+      
+      // If we came from featured, show notification for 5 seconds
+      if (location.state.fromFeatured) {
+        setTimeout(() => {
+          setShowFeaturedNotification(false);
+        }, 5000);
+      }
+    }
+  }, [location.state, navigate]);
 
   // Fixed exercises per page: 8 on desktop
   const exercisesPerPage = 8;
@@ -338,6 +361,24 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
               setSearchQuery={setSearchQuery}
               handleSearch={handleSearch}
             />
+
+            {/* Featured navigation notification */}
+            {showFeaturedNotification && (
+              <div className="bg-indigo-900/80 border-l-4 border-purple-500 p-3 mb-4 text-sm flex items-center justify-between">
+                <div className="flex items-center">
+                  <span className="text-purple-300 mr-2">💫</span>
+                  <span className="text-gray-200">
+                    Showing exercises in the <span className="font-semibold text-purple-300">{selectedCategory}</span> category
+                  </span>
+                </div>
+                <button 
+                  onClick={() => setShowFeaturedNotification(false)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  &times;
+                </button>
+              </div>
+            )}
 
             {/* Info banner for non-pro users */}
             {!isProUser && selectedExercises.length === 1 && (

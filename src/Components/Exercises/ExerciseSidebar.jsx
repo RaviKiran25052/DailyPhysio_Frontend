@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChevronRight, Filter } from 'lucide-react';
 
 const positions = ["All", "Kneeling", "Prone", "Quadruped", "Side Lying", "Sitting", "Standing", "Supine"];
@@ -56,6 +56,18 @@ const ExerciseSidebar = ({
   const [hoverCategory, setHoverCategory] = useState(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const [hoverTimeout, setHoverTimeout] = useState(null);
+  const selectedCategoryRef = useRef(null);
+
+  // Scroll to selected category when component mounts or category changes
+  useEffect(() => {
+    if (selectedCategoryRef.current) {
+      // Smooth scroll the category into view
+      selectedCategoryRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  }, [selectedCategory]);
 
   const handleCategoryMouseEnter = (category, event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -163,6 +175,7 @@ const ExerciseSidebar = ({
                     onClick={() => handleCategoryClick(category)}
                     onMouseEnter={(e) => handleCategoryMouseEnter(category, e)}
                     onMouseLeave={handleCategoryMouseLeave}
+                    ref={selectedCategory === category ? selectedCategoryRef : null}
                   >
                     {category}
                   </button>
