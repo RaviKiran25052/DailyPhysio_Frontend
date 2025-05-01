@@ -6,7 +6,7 @@ import ExerciseCard from './ExerciseCard';
 import axios from 'axios';
 import { ChevronDown, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || '';
 
 // List of all possible categories and positions for dropdowns
 const allCategories = [
@@ -37,6 +37,7 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
   const carouselRef = useRef(null);
   const [exercises, setExercises] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('Ankle and Foot');
+  const [selectedSubCategory, setSelectedSubCategory] = useState('');
   const [selectedPosition, setSelectedPosition] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredExercises, setFilteredExercises] = useState([]);
@@ -48,61 +49,53 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [hepExercises, setHepExercises] = useState([]);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fixed exercises per page: 8 on desktop
   const exercisesPerPage = 8;
 
-  useEffect(() => {
-    const fetchExercise = async () => {
-      const response = await axios.get(`${API_URL}/exercises/category/${selectedCategory}`);
-      const data = response.data.exercises;
-      console.log(response.data);
-      setExercises(data);
-      setFilteredExercises(data);
-    };
-    fetchExercise();
-  }, [selectedCategory]);
-
-  useEffect(() => {
-    const filterExercises = () => {
-      // Filter by category
-      if (selectedCategory !== 'All') {
-        setFilteredExercises(exercises.filter(exercise => exercise.category === selectedCategory));
-      }
-
-      // Filter by position
-      if (selectedPosition !== 'All') {
-        setFilteredExercises(exercises.filter(exercise => exercise.position === selectedPosition));
-      }
-      if(selectedCategory === "Ankle and Foot"){
-        console.log(exercises.filter(exercise => exercise.position === selectedPosition));
-      }
-
-      // Filter by search query
-      if (searchQuery.trim() !== '') {
-        const query = searchQuery.toLowerCase();
-        setFilteredExercises(exercises.filter(exercise =>
-          exercise.name.toLowerCase().includes(query)
-        ));
-      }
-
+  // Fetch exercises with filters
+  const fetchExercises = async () => {
+    setIsLoading(true);
+    try {
+      // Build query parameters
+      const params = {};
+      if (selectedCategory !== 'All') params.category = selectedCategory;
+      if (selectedSubCategory) params.subcategory = selectedSubCategory;
+      if (selectedPosition !== 'All') params.position = selectedPosition;
+      if (searchQuery.trim()) params.search = searchQuery.trim();
+      
+      // Get token for authentication if available
+      const token = localStorage.getItem('token') || '';
+      
+      // Make API request
+      const response = await axios.get(`${API_URL}/api/exercises/filters`, {
+        params,
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
+      
+      setExercises(response.data);
+      setFilteredExercises(response.data);
       setCurrentPage(1);
-      setScrollPosition(0);
-      if (carouselRef.current) {
-        carouselRef.current.scrollLeft = 0;
-      }
-    };
+    } catch (error) {
+      console.error('Error fetching exercises:', error);
+      setExercises([]);
+      setFilteredExercises([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    filterExercises();
+  // Fetch exercises when filters change
+  useEffect(() => {
+    fetchExercises();
+  }, [selectedCategory, selectedSubCategory, selectedPosition]);
 
-    // Add window resize listener to adjust items per page
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [selectedCategory, selectedPosition, searchQuery]);
+  // Handle search
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    fetchExercises();
+  };
 
   // Load HEP exercises from localStorage
   useEffect(() => {
@@ -120,6 +113,16 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
     return () => {
       window.removeEventListener('storage', loadHepExercises);
     };
+  }, []);
+
+  // Add event listener for window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // Check if an exercise is in the HEP
@@ -142,7 +145,13 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
   // Handle category selection in mobile dropdown
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
+    setSelectedSubCategory('');
     setShowCategoryDropdown(false);
+  };
+
+  // Handle subcategory selection in mobile dropdown
+  const handleSubCategorySelect = (subCategory) => {
+    setSelectedSubCategory(subCategory);
   };
 
   // Handle position selection in mobile dropdown
@@ -240,6 +249,12 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
                 <div className="flex-1 flex items-center">
                   <span className="text-sm font-medium text-purple-300">{selectedCategory}</span>
                   <ChevronDown size={14} className="mx-1 text-gray-500" />
+                  {selectedSubCategory && (
+                    <>
+                      <span className="text-sm font-medium text-purple-300">{selectedSubCategory}</span>
+                      <ChevronDown size={14} className="mx-1 text-gray-500" />
+                    </>
+                  )}
                   <span className="text-sm font-medium text-gray-200">{selectedPosition}</span>
                 </div>
               </div>
@@ -303,6 +318,8 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
             <ExerciseSidebar
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
+              selectedSubCategory={selectedSubCategory}
+              setSelectedSubCategory={setSelectedSubCategory}
               selectedPosition={selectedPosition}
               setSelectedPosition={setSelectedPosition}
               showFilters={true}
@@ -317,6 +334,9 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
               filteredExercises={filteredExercises}
               layoutSize={layoutSize}
               setLayoutSize={setLayoutSize}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              handleSearch={handleSearch}
             />
 
             {/* Info banner for non-pro users */}
@@ -327,8 +347,15 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
               </div>
             )}
 
+            {/* Loading indicator */}
+            {isLoading && (
+              <div className="flex justify-center items-center py-10">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+              </div>
+            )}
+
             {/* Mobile Carousel */}
-            {isMobile && filteredExercises.length > 0 && (
+            {isMobile && filteredExercises.length > 0 && !isLoading && (
               <div className="relative mb-6">
                 <div 
                   ref={carouselRef}
@@ -381,7 +408,7 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
             )}
 
             {/* Desktop Exercises Grid */}
-            {!isMobile && (
+            {!isMobile && filteredExercises.length > 0 && !isLoading && (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                 {currentExercises.map((exercise) => (
                   <ExerciseCard
@@ -397,14 +424,14 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
             )}
 
             {/* No results message */}
-            {filteredExercises.length === 0 && (
+            {filteredExercises.length === 0 && !isLoading && (
               <div className="text-center py-12">
                 <p className="text-gray-400 text-lg">No exercises found. Try adjusting your filters.</p>
               </div>
             )}
 
             {/* Pagination for Desktop */}
-            {!isMobile && totalPages > 1 && (
+            {!isMobile && totalPages > 1 && !isLoading && (
               <div className="flex justify-center mb-6">
                 <div className="flex flex-wrap justify-center gap-2">
                   {/* Previous button */}

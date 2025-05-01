@@ -46,7 +46,9 @@ const ExerciseSidebar = ({
   selectedCategory, 
   setSelectedCategory, 
   selectedPosition, 
-  setSelectedPosition, 
+  setSelectedPosition,
+  selectedSubCategory,
+  setSelectedSubCategory,
   showFilters,
   showPositionDropdown,
   setShowPositionDropdown 
@@ -99,20 +101,22 @@ const ExerciseSidebar = ({
     }
   };
 
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+    setSelectedSubCategory(''); // Reset subcategory when category changes
+  };
+
   const handleSubCategoryClick = (subCategory) => {
-    // Here you would handle the subcategory selection
-    console.log(`Selected subcategory: ${subCategory} from category ${hoverCategory}`);
+    // Set the selected subcategory
+    setSelectedSubCategory(subCategory);
     
-    // Clear any hover timeout
+    // Clear hover states
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
       setHoverTimeout(null);
     }
     
     setHoverCategory(null);
-    
-    // You would typically handle the actual selection here
-    // For example, updating a parent state or navigating
   };
 
   return (
@@ -135,6 +139,10 @@ const ExerciseSidebar = ({
           <div className="flex-1 flex items-center">
             <span className="text-sm font-medium text-purple-300">{selectedCategory}</span>
             <ChevronRight size={14} className="mx-1 text-gray-500" />
+            <span className="text-sm font-medium text-gray-200">
+              {selectedSubCategory ? selectedSubCategory : 'All'}
+            </span>
+            <ChevronRight size={14} className="mx-1 text-gray-500" />
             <span className="text-sm font-medium text-gray-200">{selectedPosition}</span>
           </div>
         </div>
@@ -152,7 +160,7 @@ const ExerciseSidebar = ({
                         ? 'bg-purple-600 text-white font-medium' 
                         : 'hover:bg-gray-700 text-gray-300'
                     }`}
-                    onClick={() => setSelectedCategory(category)}
+                    onClick={() => handleCategoryClick(category)}
                     onMouseEnter={(e) => handleCategoryMouseEnter(category, e)}
                     onMouseLeave={handleCategoryMouseLeave}
                   >
@@ -163,6 +171,24 @@ const ExerciseSidebar = ({
             </ul>
           </div>
         </div>
+
+        {/* Selected Subcategory Display */}
+        {selectedSubCategory && (
+          <div className="mb-5">
+            <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Subcategory</h3>
+            <div className="bg-gray-700/30 rounded-lg p-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-purple-300">{selectedSubCategory}</span>
+                <button 
+                  onClick={() => setSelectedSubCategory('')} 
+                  className="text-xs text-gray-400 hover:text-white"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Positions */}
         <div>
@@ -205,7 +231,7 @@ const ExerciseSidebar = ({
             <div className="col-span-2 mb-1">
               <button
                 className="w-full text-left px-3 py-2 text-sm bg-purple-600 hover:bg-purple-700 rounded-md text-white font-medium"
-                onClick={() => handleSubCategoryClick('All')}
+                onClick={() => handleSubCategoryClick('')}
               >
                 All
               </button>
@@ -213,7 +239,11 @@ const ExerciseSidebar = ({
             {validSubCategories[hoverCategory].map(subCategory => (
               <button
                 key={subCategory}
-                className="text-left px-3 py-2 text-sm bg-gray-700 hover:bg-gray-600 rounded-md text-gray-200 hover:text-white transition-colors"
+                className={`text-left px-3 py-2 text-sm rounded-md text-gray-200 hover:text-white transition-colors ${
+                  selectedSubCategory === subCategory
+                    ? 'bg-purple-600 hover:bg-purple-700 font-medium' 
+                    : 'bg-gray-700 hover:bg-gray-600'
+                }`}
                 onClick={() => handleSubCategoryClick(subCategory)}
               >
                 {subCategory}
