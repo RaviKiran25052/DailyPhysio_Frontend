@@ -158,8 +158,6 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
       password: '',
       confirmPassword: ''
     });
-
-    toast.success(`Welcome${isSignIn ? ' back' : ''}, ${userData.fullName}!`);
   };
 
   if (!isOpen) return null;

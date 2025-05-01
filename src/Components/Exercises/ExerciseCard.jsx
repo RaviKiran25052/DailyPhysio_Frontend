@@ -1,5 +1,5 @@
 import React from 'react';
-import { Info, Plus, Check } from 'lucide-react';
+import { Info, Plus, Check, Crown } from 'lucide-react';
 import MediaCarousel from '../Profile/MediaCarousel';
 
 const ExerciseCard = ({
@@ -28,12 +28,12 @@ const ExerciseCard = ({
   };
 
   // Determine image height based on layout size
-  const getImageHeight = () => {
+  const getLayout = () => {
     // For mobile carousel view, use a consistent height
     if (window.innerWidth < 768) {
       return 'h-40';
     }
-    
+
     // For desktop, adjust based on layout size
     switch (layoutSize) {
       case 'small':
@@ -48,10 +48,15 @@ const ExerciseCard = ({
 
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-700">
-      <div className={`relative ${getImageHeight()} overflow-hidden bg-gray-700`}>
-        <MediaCarousel images={exercise.image} videos={exercise.video}/>
+      <div className={`relative ${getLayout()} overflow-hidden bg-gray-700`}>
+        <MediaCarousel images={exercise.image} videos={exercise.video} />
+        {exercise.isPremium &&
+          <div className='absolute top-2 left-2 bg-yellow-500 rounded-md z-10 p-1'>
+            <Crown size={16} className='text-gray-800' />
+          </div>
+        }
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-        
+
         {/* Add to HEP button - positioned at the top-right */}
         {/* <button
           className={`absolute top-2 right-2 p-2 rounded-full transition-colors duration-200 ${isInHEP
@@ -65,12 +70,12 @@ const ExerciseCard = ({
           {isInHEP ? <Check size={18} /> : <Plus size={18} />}
         </button> */}
       </div>
-      
+
       <div className="p-3 flex-grow flex flex-col">
         <h3 className="text-lg font-semibold mb-2 text-white line-clamp-1">
           {exercise.title || exercise.name || "Unnamed Exercise"}
         </h3>
-        
+
         {/* Make categories and positions visible on all screens */}
         <div className="mb-2 flex flex-wrap gap-1">
           {exercise.category && (
@@ -84,11 +89,11 @@ const ExerciseCard = ({
             </span>
           )}
         </div>
-        
+
         <p className="text-sm text-gray-400 line-clamp-2 mb-3 flex-grow">
           {exercise.description || "No description available."}
         </p>
-        
+
         <div className="flex justify-between items-center mt-auto">
           <button
             className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors duration-200 p-1 rounded-md hover:bg-gray-700/50"
@@ -97,12 +102,12 @@ const ExerciseCard = ({
             <Info size={16} />
             <span>Details</span>
           </button>
-          
+
           {/* Mobile-only button for adding to HEP */}
           <button
             className={`md:hidden flex items-center gap-1 p-1 rounded-md ${isInHEP
-                ? 'text-purple-300 bg-purple-900/20'
-                : 'text-gray-400 hover:text-purple-300 hover:bg-gray-700/50'
+              ? 'text-purple-300 bg-purple-900/20'
+              : 'text-gray-400 hover:text-purple-300 hover:bg-gray-700/50'
               } transition-colors duration-200`}
             onClick={handleAddToHEP}
             disabled={isInHEP}

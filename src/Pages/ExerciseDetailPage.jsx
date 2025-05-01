@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import MediaCarousel from '../Components/Profile/MediaCarousel';
 const API_URL = process.env.REACT_APP_API_URL;
 
-const ExerciseDetailPage = () => {
+const ExerciseDetailPage = ({ userData }) => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -29,19 +29,20 @@ const ExerciseDetailPage = () => {
 
   useEffect(() => {
     const fetchExercise = async () => {
-      const response = await axios.get(`${API_URL}/exercises/getById/${id}`);
-      console.log("data", response.data.creatorData);
+      const response = await axios.get(`${API_URL}/exercises/${id}`);
+      console.log("data", response.data);
       const data = response.data;
       setIsPro(response.data.membership !== "free");
+console.log(data.creatorData);
 
       setExercise(data.exercise);
       setCreatorData(data.creatorData);
-      setRelatedExercises(data.similarExercises);
+      setRelatedExercises(data.relatedExercises);
     };
     fetchExercise();
 
     setLoading(false);
-  }, [id]);
+  }, []);
 
 
   const toggleFavorite = () => {
@@ -458,14 +459,16 @@ const ExerciseDetailPage = () => {
                         <p className='text-xs text-gray-400'>{creatorData.specializations?.length ? creatorData.specializations.join(" | ") : "Pro User"}</p>
                       </div>
                     </div>
-                    {exercise.custom?.createdBy === "therapist" &&
+                    {exercise.custom?.createdBy === "therapist" && userData.membership?.type !== "free" &&
                       <button className='flex items-center border-2 border-purple-700 hover:bg-purple-800 hover:text-white text-sm rounded-md px-3 py-1'>
                         <UserPlus className='mr-2' size={16} />Follow
                       </button>
                     }
                   </div>
                 </div>
-                <button className='border-2 border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
+                {userData.membership?.type !== "free" &&
+                  <button className='border-2 border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
+                }
               </div>
             </div>
           </div>

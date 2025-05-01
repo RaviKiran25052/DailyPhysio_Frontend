@@ -147,7 +147,6 @@ const ExerciseSidebar = ({
 
         {/* Current Selection Display */}
         <div className="flex flex-wrap items-center gap-2 mb-4 px-2 py-3 bg-gray-700/50 rounded-lg">
-          <span className="text-xs font-medium text-gray-400">Selected:</span>
           <div className="flex-1 flex items-center">
             <span className="text-sm font-medium text-purple-300">{selectedCategory}</span>
             <ChevronRight size={14} className="mx-1 text-gray-500" />

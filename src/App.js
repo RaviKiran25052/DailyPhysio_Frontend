@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import ExercisesPage from './Pages/ExercisesPage';
 import ExerciseDetailPage from './Pages/ExerciseDetailPage';
@@ -15,12 +15,41 @@ import TherapistManagement from './Components/admin/Therapist/TherapistManagemen
 import TherapistDashboard from './Components/Therapist/TherapistDashboard';
 import TherapistManagementTable from './Components/admin/Therapist/TherapistManagementTable';
 import TherapistConsultation from './Components/Therapist/TherapistConsultation';
+import axios from 'axios';
+
+const API_URL = process.env.REACT_APP_API_URL;
 
 // Wrapper component to check current route
 const AppContent = () => {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin');
   const isTherapist = location.pathname.startsWith('/therapist');
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const fetchUserData = async () => {
+        try {
+          const parsedToken = token;
+          const response = await axios.get(`${API_URL}/users/profile`, {
+            headers: { Authorization: `Bearer ${parsedToken}` }
+          });
+
+          if (response.status === 200) {
+            setUserData(response.data);
+          }
+        } catch (apiError) {
+          console.error('Error fetching profile data:', apiError);
+        }
+      };
+      fetchUserData();
+
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+    }
+  }, []);
 
   return (
     <>
@@ -30,12 +59,12 @@ const AppContent = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/exercises" element={<ExercisesPage />} />
-          <Route path="/exercise/:id" element={<ExerciseDetailPage />} />
-          <Route path="/profile" element={<UserProfilePage />} />
+          <Route path="/exercise/:id" element={<ExerciseDetailPage userData={userData} />} />
+          <Route path="/profile" element={<UserProfilePage userData={userData} />} />
 
           {/* <Route element={<TherapistRouteProtect />}> */}
-            <Route path="/therapist/" element={<TherapistDashboard />} />
-            <Route path="/therapist/new-consultation" element={<TherapistConsultation />} />
+          <Route path="/therapist/" element={<TherapistDashboard />} />
+          <Route path="/therapist/new-consultation" element={<TherapistConsultation />} />
           {/* </Route> */}
 
           <Route path="/admin/login" element={<Adminlogin />} />
