@@ -1,7 +1,7 @@
 import React from 'react';
 import { Plus } from 'lucide-react';
 
-const MyRoutines = () => {
+const MyRoutines = ({ user }) => {
   // Mock data for routines based on corrected schema understanding
   const routines = [
     {

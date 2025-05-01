@@ -18,7 +18,7 @@ const UserProfilePage = ({ userData }) => {
       case 'myexercises':
         return <MyExercises />;
       case 'routines':
-        return <MyRoutines />;
+        return <MyRoutines user={userData} />;
       case 'favorites':
         return <MyFavorites />;
       case 'following':
