@@ -64,7 +64,7 @@ const FeaturedCourses = () => {
     const fetchExercise = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`${API_URL}/api/exercises/featured`);
+        const response = await axios.get(`${API_URL}/exercises/featured`);
         console.log('Featured exercises response:', response.data);
         
         // Check the structure of the response and extract exercises accordingly
