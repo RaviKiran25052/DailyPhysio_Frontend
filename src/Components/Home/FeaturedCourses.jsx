@@ -8,8 +8,14 @@ const API_URL = process.env.REACT_APP_API_URL;
 const CourseCard = ({ course }) => {
   const navigate = useNavigate();
 
-  const handleViewExercise = (id) => {
-    navigate(`/exercise/${id}`);
+  const handleViewExercise = (exercise) => {
+    // Navigate to exercises page with the category of this exercise
+    navigate('/exercises', { 
+      state: { 
+        selectedCategory: exercise.category,
+        fromFeatured: true 
+      } 
+    });
   };
 
   return (
@@ -21,7 +27,7 @@ const CourseCard = ({ course }) => {
         <div className="mt-2 flex justify-between items-center">
           <span className="text-xs text-gray-400">{course.subCategory}</span>
           <button 
-            onClick={() => handleViewExercise(course._id)}
+            onClick={() => handleViewExercise(course)}
             className="bg-purple-600 hover:bg-purple-700 transition text-white text-sm py-1 px-3 rounded"
           >
             View
