@@ -57,6 +57,7 @@ const ExerciseSidebar = ({
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const [hoverTimeout, setHoverTimeout] = useState(null);
   const selectedCategoryRef = useRef(null);
+  const popupRef = useRef(null);
 
   // Scroll to selected category when component mounts or category changes
   useEffect(() => {
@@ -68,6 +69,39 @@ const ExerciseSidebar = ({
       });
     }
   }, [selectedCategory]);
+
+  // Add a buffer zone around the popup
+  const handleMouseMove = (e) => {
+    if (!hoverCategory || !popupRef.current) return;
+    
+    const popup = popupRef.current.getBoundingClientRect();
+    const buffer = 30; // Buffer zone in pixels
+    
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+    
+    // Check if mouse is moving toward the popup
+    const isMovingTowardPopup = 
+      // Moving right toward popup
+      (mouseX < popup.left && mouseX > popup.left - buffer && 
+       mouseY > popup.top - buffer && mouseY < popup.bottom + buffer);
+      
+    if (isMovingTowardPopup) {
+      // Clear any timeout that would close the popup
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        setHoverTimeout(null);
+      }
+    }
+  };
+
+  useEffect(() => {
+    // Add mousemove listener to track mouse movement
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [hoverCategory, hoverTimeout]);
 
   const handleCategoryMouseEnter = (category, event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -94,6 +128,7 @@ const ExerciseSidebar = ({
     // Clear any existing timeout
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
     }
   };
 
@@ -119,7 +154,12 @@ const ExerciseSidebar = ({
   };
 
   const handleSubCategoryClick = (subCategory) => {
-    // Set the selected subcategory
+    // First change the selected category to the hover category
+    if (hoverCategory) {
+      setSelectedCategory(hoverCategory);
+    }
+    
+    // Then set the selected subcategory
     setSelectedSubCategory(subCategory);
     
     // Clear hover states
@@ -228,6 +268,7 @@ const ExerciseSidebar = ({
       {/* Subcategories Popup */}
       {hoverCategory && validSubCategories[hoverCategory] && (
         <div 
+          ref={popupRef}
           className="fixed bg-gray-900 shadow-xl rounded-lg p-2 z-50 w-64 overflow-y-auto max-h-96 border border-purple-500/30"
           style={{
             top: `${hoverPosition.y}px`,
@@ -243,7 +284,11 @@ const ExerciseSidebar = ({
             <div className="col-span-2 mb-1">
               <button
                 className="w-full text-left px-3 py-2 text-sm bg-purple-600 hover:bg-purple-700 rounded-md text-white font-medium"
-                onClick={() => handleSubCategoryClick('')}
+                onClick={() => {
+                  setSelectedCategory(hoverCategory);
+                  setSelectedSubCategory('');
+                  setHoverCategory(null);
+                }}
               >
                 All
               </button>
@@ -252,7 +297,7 @@ const ExerciseSidebar = ({
               <button
                 key={subCategory}
                 className={`text-left px-3 py-2 text-sm rounded-md text-gray-200 hover:text-white transition-colors ${
-                  selectedSubCategory === subCategory
+                  selectedCategory === hoverCategory && selectedSubCategory === subCategory
                     ? 'bg-purple-600 hover:bg-purple-700 font-medium' 
                     : 'bg-gray-700 hover:bg-gray-600'
                 }`}
