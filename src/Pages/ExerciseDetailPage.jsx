@@ -10,7 +10,7 @@ const ExerciseDetailPage = ({ userData }) => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
@@ -19,13 +19,13 @@ const ExerciseDetailPage = ({ userData }) => {
   const [relatedExercises, setRelatedExercises] = useState([]);
   const [creatorData, setCreatorData] = useState({});
   const [isPro, setIsPro] = useState(false);
-  
+
   // Routine popup state
   const [showRoutinePopup, setShowRoutinePopup] = useState(false);
-  
+
   // Check if we have routine data from location state
   const routineData = location.state?.routineData;
-  
+
   // Form data - initialize with routine data if available
   const [formData, setFormData] = useState({
     reps: routineData?.reps || 1,
@@ -42,14 +42,14 @@ const ExerciseDetailPage = ({ userData }) => {
   const checkFavoriteStatus = async () => {
     const token = localStorage.getItem('token');
     if (!token) return;
-    
+
     try {
       const response = await axios.get(`${API_URL}/user/favorites`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      
+
       const favorites = response.data;
       const isFav = favorites.some(fav => fav.exerciseId === id);
       setIsFavorite(isFav);
@@ -70,13 +70,13 @@ const ExerciseDetailPage = ({ userData }) => {
         setExercise(data.exercise);
         setCreatorData(data.creatorData);
         setRelatedExercises(data.relatedExercises);
-        
+
         // Update form data with exercise title
         setFormData(prev => ({
           ...prev,
           name: data.exercise.title || 'Exercise Routine'
         }));
-        
+
         // Check favorite status
         await checkFavoriteStatus();
       } catch (error) {
@@ -86,7 +86,7 @@ const ExerciseDetailPage = ({ userData }) => {
         setLoading(false);
       }
     };
-    
+
     fetchExercise();
   }, [id]);
 
@@ -100,10 +100,10 @@ const ExerciseDetailPage = ({ userData }) => {
     }
 
     setIsLoadingFavorite(true);
-    
+
     try {
       await axios.post(
-        `${API_URL}/exercises/favorite/${id}`, 
+        `${API_URL}/exercises/favorite/${id}`,
         {},
         {
           headers: {
@@ -111,7 +111,7 @@ const ExerciseDetailPage = ({ userData }) => {
           }
         }
       );
-      
+
       setIsFavorite(true);
       toast.success('Added to favorites');
     } catch (error) {
@@ -187,7 +187,7 @@ const ExerciseDetailPage = ({ userData }) => {
   // Submit form data to create a routine
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Check if user is logged in
     const token = localStorage.getItem('token');
     if (!token) {
@@ -212,13 +212,13 @@ const ExerciseDetailPage = ({ userData }) => {
           Authorization: `Bearer ${token}`
         }
       });
-      
+
       // Show success message
       toast.success('Routine saved successfully');
-      
+
       // Close the popup
       setShowRoutinePopup(false);
-      
+
     } catch (error) {
       console.error('Error saving routine:', error);
       toast.error('Failed to save routine. Please try again.');
@@ -274,36 +274,38 @@ const ExerciseDetailPage = ({ userData }) => {
                   {exercise?.position}
                 </span>
               </div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{exercise?.title}</h1>
+              <div className="flex justify-between">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{exercise?.title}</h1>
+                {/* Favorite button */}
+                <button
+                  onClick={toggleFavorite}
+                  disabled={isLoadingFavorite || isFavorite}
+                  className={` p-2 z-10 rounded-full transition-all duration-200 ${isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite
+                    ? 'bg-gray-800/80 cursor-default'
+                    : 'bg-gray-800/80 hover:bg-purple-900/80'
+                    }`}
+                  aria-label={isFavorite ? "Added to favorites" : "Add to favorites"}
+                >
+                  {isLoadingFavorite ? (
+                    <div className="w-5 h-5 border-2 border-t-transparent border-purple-500 rounded-full animate-spin"></div>
+                  ) : (
+                    <Heart
+                      size={20}
+                      className={isFavorite ? "text-purple-500 fill-purple-500" : "text-gray-300"}
+                    />
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Exercise image */}
             <div className="relative rounded-xl overflow-hidden mb-6 border border-gray-800">
+
               <div className="aspect-[4/2] w-full">
                 <MediaCarousel images={exercise.image} videos={isPro ? exercise.video : []} />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-20"></div>
 
-              {/* Favorite button */}
-              <button
-                onClick={toggleFavorite}
-                disabled={isLoadingFavorite || isFavorite}
-                className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-200 ${
-                  isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite 
-                    ? 'bg-gray-800/80 cursor-default' 
-                    : 'bg-gray-800/80 hover:bg-purple-900/80'
-                }`}
-                aria-label={isFavorite ? "Added to favorites" : "Add to favorites"}
-              >
-                {isLoadingFavorite ? (
-                  <div className="w-5 h-5 border-2 border-t-transparent border-purple-500 rounded-full animate-spin"></div>
-                ) : (
-                  <Heart 
-                    size={20} 
-                    className={isFavorite ? "text-purple-500 fill-purple-500" : "text-gray-300"} 
-                  />
-                )}
-              </button>
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-20"></div>
 
               {/* Video button */}
               {isPro && exercise.video && exercise.video.length > 0 && (
@@ -378,25 +380,23 @@ const ExerciseDetailPage = ({ userData }) => {
             {creatorData && (
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 mb-6">
                 <h2 className="text-lg font-semibold mb-4">Creator</h2>
-                <div className="flex items-center">
+                <div className="flex items-center mb-4">
                   <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
                     {creatorData.name ? creatorData.name.charAt(0) : 'A'}
                   </div>
                   <div className="ml-3">
-                    <div className="font-medium">{creatorData.name || 'HEP Admin'}</div>
-                    <div className="text-xs text-gray-400">
-                      {creatorData.specializations?.join(', ') || 'Physical Therapy'}
-                    </div>
+                    <h3 className='text-sm font-medium text-white'>{exercise.custom?.createdBy === "therapist" && "Dr."} {creatorData.name}</h3>
+                    <p className='text-xs text-gray-400'>{creatorData.specializations?.length ? creatorData.specializations.join(" | ") : (exercise.custom?.createdBy === "admin" ? "Admin" : "Pro User")}</p>
                   </div>
-                  {creatorData.id && (
-                    <button className="ml-auto p-2 text-xs border border-purple-600 hover:bg-purple-600 rounded-lg transition-colors flex items-center gap-1">
-                      <UserPlus size={14} />
-                      <span className="hidden sm:inline">
-                        {creatorData.following ? 'Following' : 'Follow'}
-                      </span>
+                  {exercise.custom?.createdBy === "therapist" && userData.membership?.type !== "free" &&
+                    <button className='flex items-center border-2 border-purple-700 hover:bg-purple-800 hover:text-white text-sm rounded-md px-3 py-1'>
+                      <UserPlus className='mr-2' size={16} />{creatorData.following ? 'Following' : 'Follow'}
                     </button>
-                  )}
+                  }
                 </div>
+                {userData.membership?.type !== "free" &&
+                  <button className='border-2 w-full border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
+                }
               </div>
             )}
 
@@ -442,15 +442,15 @@ const ExerciseDetailPage = ({ userData }) => {
       {showRoutinePopup && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md relative">
-            <button 
+            <button
               onClick={() => setShowRoutinePopup(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-white"
             >
               <X size={20} />
             </button>
-            
+
             <h2 className="text-xl font-bold mb-6">Save Routine</h2>
-            
+
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -465,7 +465,7 @@ const ExerciseDetailPage = ({ userData }) => {
                   required
                 />
               </div>
-              
+
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -478,11 +478,11 @@ const ExerciseDetailPage = ({ userData }) => {
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
                     {[...Array(20)].map((_, i) => (
-                      <option key={`reps-${i+1}`} value={i+1}>{i+1}</option>
+                      <option key={`reps-${i + 1}`} value={i + 1}>{i + 1}</option>
                     ))}
                   </select>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Hold (seconds)
@@ -494,11 +494,11 @@ const ExerciseDetailPage = ({ userData }) => {
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
                     {[...Array(30)].map((_, i) => (
-                      <option key={`hold-${i+1}`} value={i+1}>{i+1}</option>
+                      <option key={`hold-${i + 1}`} value={i + 1}>{i + 1}</option>
                     ))}
                   </select>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Complete
@@ -510,11 +510,11 @@ const ExerciseDetailPage = ({ userData }) => {
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                   >
                     {[...Array(10)].map((_, i) => (
-                      <option key={`complete-${i+1}`} value={i+1}>{i+1}</option>
+                      <option key={`complete-${i + 1}`} value={i + 1}>{i + 1}</option>
                     ))}
                   </select>
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Perform
@@ -527,7 +527,7 @@ const ExerciseDetailPage = ({ userData }) => {
                       className="w-1/2 px-2 py-2 bg-gray-700 border border-gray-600 rounded-l text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                     >
                       {[...Array(10)].map((_, i) => (
-                        <option key={`count-${i+1}`} value={i+1}>{i+1}</option>
+                        <option key={`count-${i + 1}`} value={i + 1}>{i + 1}</option>
                       ))}
                     </select>
                     <select
@@ -543,7 +543,7 @@ const ExerciseDetailPage = ({ userData }) => {
                   </div>
                 </div>
               </div>
-              
+
               <button
                 type="submit"
                 className="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-medium transition-colors"

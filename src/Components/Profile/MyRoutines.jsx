@@ -57,7 +57,7 @@ const MyRoutines = ({ user }) => {
   };
 
   const handleViewRoutine = (routine) => {
-    navigate(`/exercise/${routine.exerciseId}`, {
+    navigate(`/exercise/${routine.exerciseId._id}`, {
       state: {
         routineData: {
           reps: routine.reps,
@@ -193,12 +193,6 @@ const MyRoutines = ({ user }) => {
         <h1 className="text-xl font-bold">
           My Routines
         </h1>
-        <button
-          className="px-3 py-2 text-sm bg-purple-600 hover:bg-purple-700 rounded-lg flex items-center justify-center space-x-2 transition"
-        >
-          <Plus size={20} />
-          <span>Create New Routine</span>
-        </button>
       </div>
 
       {/* Routines List */}
