@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, User, Briefcase, Phone, MapPin, Award, ChevronDown, ChevronUp, Trash2, BookOpen, Play, Image, Lock, Tag, UserMinus, SquareArrowOutUpRight, Crown } from 'lucide-react';
+import { User, Briefcase, Phone, MapPin, Award, BookOpen, UserMinus, SquareArrowOutUpRight, Crown, ChevronLeft, Tag } from 'lucide-react';
 import MediaCarousel from './MediaCarousel';
 import { useNavigate } from 'react-router-dom';
 
@@ -150,176 +150,217 @@ const dummyExercises = {
 export default function Following() {
   const [therapists, setTherapists] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [expandedTherapist, setExpandedTherapist] = useState(null);
+  const [viewingExercisesFor, setViewingExercisesFor] = useState(null);
   const navigate = useNavigate();
+
+  // CSS for transitions
+  const styles = {
+    therapistsView: {
+      opacity: viewingExercisesFor ? '0' : '1',
+      transform: viewingExercisesFor ? 'translateY(-20px)' : 'translateY(0)',
+      transition: 'opacity 300ms ease, transform 300ms ease',
+      position: viewingExercisesFor ? 'absolute' : 'relative',
+      visibility: viewingExercisesFor ? 'hidden' : 'visible',
+      width: '100%',
+      zIndex: viewingExercisesFor ? '0' : '1',
+    },
+    exercisesView: {
+      opacity: viewingExercisesFor ? '1' : '0',
+      transform: viewingExercisesFor ? 'translateY(0)' : 'translateY(20px)',
+      transition: 'opacity 300ms ease, transform 300ms ease',
+      visibility: viewingExercisesFor ? 'visible' : 'hidden',
+      position: viewingExercisesFor ? 'relative' : 'absolute',
+      width: '100%',
+      zIndex: viewingExercisesFor ? '1' : '0',
+    },
+    backButton: {
+      transform: viewingExercisesFor ? 'translateX(0)' : 'translateX(-20px)',
+      opacity: viewingExercisesFor ? '1' : '0',
+      transition: 'transform 300ms ease, opacity 300ms ease',
+      marginRight: '1rem',
+      backgroundColor: '#6D28D9', // purple-700
+      padding: '0.5rem',
+      borderRadius: '9999px',
+      cursor: 'pointer',
+    }
+  };
 
   // Fetch therapists data
   useEffect(() => {
     // In a real app, this would use axios to fetch from an API
-    // const API_URL = process.env.REACT_APP_API_URL;
-    // axios.get(`${API_URL}/therapists`)
-    //   .then(response => {
-    //     setTherapists(response.data);
-    //     setLoading(false);
-    //   })
-    //   .catch(err => {
-    //     setError('Failed to fetch therapists');
-    //     setLoading(false);
-    //   });
-
     // Using dummy data for now
     setTherapists(dummyTherapists);
     setLoading(false);
   }, []);
 
   // Delete therapist handler
-  const handleDelete = (id) => {
+  const handleDelete = (id, e) => {
+    e.stopPropagation(); // Prevent triggering showExercises
     // In a real app, this would make an API call
-    // axios.delete(`${API_URL}/therapists/${id}`)
-    //   .then(() => {
-    //     setTherapists(therapists.filter(therapist => therapist._id !== id));
-    //   })
-    //   .catch(err => {
-    //     setError('Failed to delete therapist');
-    //   });
-
-    // Using dummy data for now
     setTherapists(therapists.filter(therapist => therapist._id !== id));
   };
 
-  // Toggle exercises view
-  const toggleExercises = (id) => {
-    setExpandedTherapist(expandedTherapist === id ? null : id);
+  // Show exercises for a specific therapist
+  const showExercises = (therapistId) => {
+    setViewingExercisesFor(therapistId);
+  };
+
+  // Go back to therapists view
+  const goBackToTherapists = () => {
+    setViewingExercisesFor(null);
+  };
+
+  // Get current therapist name
+  const getCurrentTherapistName = () => {
+    const therapist = therapists.find(t => t._id === viewingExercisesFor);
+    return therapist ? therapist.name : '';
   };
 
   if (loading) return <div className="flex justify-center p-8">Loading therapists...</div>;
-  if (error) return <div className="text-red-500 p-8">{error}</div>;
 
   return (
-    <div className="bg-gray-900 min-h-screen p-6">
-      <h1 className="text-3xl font-bold text-white mb-8">Therapists you Follow</h1>
+    <div className="bg-gray-900 relative p-6">
+      {/* Header */}
+      <div className="flex items-center mb-8">
+        <button 
+          onClick={goBackToTherapists}
+          className="focus:outline-none"
+          style={styles.backButton}
+          aria-label="Back to therapists"
+        >
+          <ChevronLeft size={20} color="white" />
+        </button>
+        <h1 className="text-3xl font-bold text-white">
+          {viewingExercisesFor 
+            ? `${getCurrentTherapistName()}'s Exercises` 
+            : 'Therapists you Follow'
+          }
+        </h1>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {therapists.map(therapist => (
-          <div key={therapist._id} className="bg-gray-800 rounded-lg overflow-hidden shadow-lg relative">
-            {/* Therapist Header */}
-            <div className="bg-purple-700 p-4 flex justify-between items-center">
-              <h2 className="text-xl font-semibold text-white">{therapist.name}</h2>
-              <button
-                onClick={() => handleDelete(therapist._id)}
-                className="text-white bg-gray-900 text-sm flex px-3 py-2 rounded-md hover:text-red-500 transition"
-                aria-label="Delete therapist"
-              >
-                <UserMinus size={16} className='mr-2' />Unfollow
-              </button>
-            </div>
-
-            {/* Therapist Basic Info */}
-            <div className="p-4 text-gray-200">
-              <div className="flex items-center gap-2 mb-2">
-                <User size={16} className="text-purple-400" />
-                <span>{therapist.email}</span>
-              </div>
-
-              <div className="flex items-center gap-2 mb-2">
-                <Briefcase size={16} className="text-purple-400" />
-                <span>{therapist.workingAt}</span>
-              </div>
-
-              <div className="flex items-center gap-2 mb-2">
-                <Phone size={16} className="text-purple-400" />
-                <span>{therapist.phoneNumber}</span>
-              </div>
-
-              <div className="flex items-center gap-2 mb-2">
-                <MapPin size={16} className="text-purple-400" />
-                <span className="line-clamp-1">{therapist.address}</span>
-              </div>
-
-              <div className="flex items-center gap-2 mb-4">
-                <Award size={16} className="text-purple-400" />
-                <span>{therapist.experience}</span>
-              </div>
-
-              <div className="mb-4">
-                <p className="text-sm text-gray-400 mb-1">Specializations:</p>
-                <div className="flex flex-wrap gap-2">
-                  {therapist.specializations.map((spec, index) => (
-                    <span
-                      key={index}
-                      className="bg-purple-900 text-purple-200 px-2 py-1 rounded-full text-xs"
-                    >
-                      {spec}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <button
-                onClick={() => toggleExercises(therapist._id)}
-                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center w-full transition"
-              >
-                <BookOpen size={16} className="mr-2" />
-                View Exercises
-                <ChevronUp size={16} className="ml-2" />
-              </button>
-            </div>
-
-            {/* Exercises Panel - Slides up from bottom */}
-            <div
-              className={`absolute inset-0 bg-gray-800 transition-transform duration-300 ease-in-out transform ${expandedTherapist === therapist._id ? 'translate-y-0' : 'translate-y-full'
-                }`}
-              style={{ height: '100%' }}
+      {/* Therapists Grid */}
+      <div style={styles.therapistsView}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {therapists.map(therapist => (
+            <div 
+              key={therapist._id} 
+              className="bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer"
+              onClick={() => showExercises(therapist._id)}
             >
+              {/* Therapist Header */}
               <div className="bg-purple-700 p-4 flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-white">Exercises</h3>
+                <h2 className="text-xl font-semibold text-white">{therapist.name}</h2>
                 <button
-                  onClick={() => toggleExercises(therapist._id)}
-                  className="text-white hover:text-gray-200 transition"
-                  aria-label="Close exercises"
+                  onClick={(e) => handleDelete(therapist._id, e)}
+                  className="text-white bg-gray-900 text-sm flex px-3 py-2 rounded-md hover:text-red-500 transition"
+                  aria-label="Delete therapist"
                 >
-                  <ChevronDown size={20} />
+                  <UserMinus size={16} className='mr-2' />Unfollow
                 </button>
               </div>
 
-              <div className="p-4 h-[calc(100%-60px)] overflow-y-auto max-h-full">
-                {dummyExercises[therapist._id]?.length > 0 ? (
-                  <div className="space-y-4">
-                    {dummyExercises[therapist._id].map(exercise => (
-                      <div key={exercise._id} className="bg-gray-700 p-4 rounded-lg border border-gray-600 relative">
-                        <div className='min-h-[200px]'>
-                          <MediaCarousel images={exercise.image} videos={exercise.video} />
-                        </div>
-                        <h4 onClick={() => navigate(`/exercise/${exercise._id}`)} className="flex gap-2 pb-4 font-medium cursor-pointer hover:text-purple-300 text-lg">{exercise.title}<SquareArrowOutUpRight size={14} /></h4>
-                        {exercise.isPremium && (
-                          <span className="absolute top-3 left-3 bg-yellow-600 text-yellow-100 px-2 py-1 rounded-full text-xs flex items-center">
-                            <Crown size={12} className="mr-1" /> Premium
-                          </span>
-                        )}
+              {/* Therapist Basic Info */}
+              <div className="p-4 text-gray-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <User size={16} className="text-purple-400" />
+                  <span>{therapist.email}</span>
+                </div>
 
-                        <p className="text-gray-300 mb-3">{exercise.description}</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <Briefcase size={16} className="text-purple-400" />
+                  <span>{therapist.workingAt}</span>
+                </div>
 
-                        <div className="flex items-center gap-2 mb-2 text-sm text-gray-400">
-                          <Tag size={14} className="text-purple-400" />
-                          <span>{exercise.category} / {exercise.subcategory}</span>
-                        </div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Phone size={16} className="text-purple-400" />
+                  <span>{therapist.phoneNumber}</span>
+                </div>
 
-                        <div className="flex items-center gap-2 mb-3 text-sm text-gray-400">
-                          <User size={14} className="text-purple-400" />
-                          <span>Position: {exercise.position}</span>
-                        </div>
-                      </div>
+                <div className="flex items-center gap-2 mb-2">
+                  <MapPin size={16} className="text-purple-400" />
+                  <span className="line-clamp-1">{therapist.address}</span>
+                </div>
+
+                <div className="flex items-center gap-2 mb-4">
+                  <Award size={16} className="text-purple-400" />
+                  <span>{therapist.experience}</span>
+                </div>
+
+                <div className="mb-4">
+                  <p className="text-sm text-gray-400 mb-1">Specializations:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {therapist.specializations.map((spec, index) => (
+                      <span
+                        key={index}
+                        className="bg-purple-900 text-purple-200 px-2 py-1 rounded-full text-xs"
+                      >
+                        {spec}
+                      </span>
                     ))}
                   </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center h-64 text-gray-400">
-                    <BookOpen size={48} className="mb-4 opacity-50" />
-                    <p>No exercises available for this therapist.</p>
-                  </div>
-                )}
+                </div>
+
+                <button
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded flex items-center justify-center w-full transition"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    showExercises(therapist._id);
+                  }}
+                >
+                  <BookOpen size={16} className="mr-2" />
+                  View Exercises
+                </button>
               </div>
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Exercises Grid */}
+      <div style={styles.exercisesView}>
+        {therapists.map(therapist => (
+          <div key={therapist._id} style={{ display: viewingExercisesFor === therapist._id ? 'block' : 'none' }}>
+            {dummyExercises[therapist._id]?.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {dummyExercises[therapist._id].map(exercise => (
+                  <div key={exercise._id} className="bg-gray-800 p-4 rounded-lg border border-gray-600 relative">
+                    <div className='min-h-[200px]'>
+                      <MediaCarousel images={exercise.image} videos={exercise.video} />
+                    </div>
+                    <h4 
+                      onClick={() => navigate(`/exercise/${exercise._id}`)} 
+                      className="flex gap-2 pb-4 font-medium cursor-pointer hover:text-purple-300 text-lg text-white"
+                    >
+                      {exercise.title}
+                      <SquareArrowOutUpRight size={14} />
+                    </h4>
+                    
+                    {exercise.isPremium && (
+                      <span className="absolute top-3 left-3 bg-yellow-600 text-yellow-100 px-2 py-1 rounded-full text-xs flex items-center">
+                        <Crown size={12} className="mr-1" /> Premium
+                      </span>
+                    )}
+
+                    <p className="text-gray-300 mb-3">{exercise.description}</p>
+
+                    <div className="flex items-center gap-2 mb-2 text-sm text-gray-400">
+                      <Tag size={14} className="text-purple-400" />
+                      <span>{exercise.category} / {exercise.subcategory}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 mb-3 text-sm text-gray-400">
+                      <User size={14} className="text-purple-400" />
+                      <span>Position: {exercise.position}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-64 bg-gray-800 rounded-lg p-6 text-gray-400">
+                <BookOpen size={48} className="mb-4 opacity-50" />
+                <p>No exercises available for this therapist.</p>
+              </div>
+            )}
           </div>
         ))}
       </div>

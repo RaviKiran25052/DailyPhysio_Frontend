@@ -106,7 +106,7 @@ const UserProfilePage = () => {
             />
           </div>
           
-          <div className="lg:w-3/4">
+          <div className="flex-1">
             {renderContent()}
           </div>
         </div>
