@@ -26,7 +26,7 @@ const MyFavorites = () => {
     try {
       /*
       // Actual API call - commented out for development
-      const response = await axios.get(`${API_URL}/api/favorites`, {
+      const response = await axios.get(`${API_URL}/favorites`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -49,7 +49,7 @@ const MyFavorites = () => {
     try {
       /*
       // Actual API call - commented out for development
-      await axios.delete(`${API_URL}/api/favorites/${id}`, {
+      await axios.delete(`${API_URL}/favorites/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }

@@ -2,7 +2,7 @@ import React from 'react';
 
 const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm }) => {
 	// Placeholder image for exercises without images
-	const placeholderImage = "/api/placeholder/400/250";
+	const placeholderImage = "/placeholder/400/250";
 
 	if (totalExercises === 0) {
 		return (

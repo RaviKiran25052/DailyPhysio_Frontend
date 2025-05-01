@@ -1,6 +1,10 @@
-import React from 'react';
-import { Info, Plus, Check, Crown } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Info, Plus, Check, Crown, Heart } from 'lucide-react';
 import MediaCarousel from '../Profile/MediaCarousel';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+
+const API_URL = process.env.REACT_APP_API_URL || '';
 
 const ExerciseCard = ({
   exercise,
@@ -9,6 +13,9 @@ const ExerciseCard = ({
   addExerciseToHEP,
   isInHEP = false
 }) => {
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
+
   // Handle view details click
   const handleViewDetails = (e) => {
     e.stopPropagation(); // Prevent the card click event
@@ -24,6 +31,46 @@ const ExerciseCard = ({
     e.stopPropagation();
     if (addExerciseToHEP && !isInHEP) {
       addExerciseToHEP(exercise);
+    }
+  };
+
+  // Handle favorite toggle
+  const handleToggleFavorite = async (e) => {
+    e.stopPropagation(); // Prevent the card click event
+
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.warning('Please login to add this exercise to favorites');
+      return;
+    }
+
+    setIsLoadingFavorite(true);
+    
+    try {
+      await axios.post(
+        `${API_URL}/exercises/favorite/${exercise._id}`, 
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
+      setIsFavorite(true);
+      toast.success('Added to favorites');
+    } catch (error) {
+      if (error.response?.status === 400) {
+        // Already in favorites
+        setIsFavorite(true);
+        toast.info('Already in your favorites');
+      } else {
+        console.error('Error adding to favorites:', error);
+        toast.error('Failed to add to favorites');
+      }
+    } finally {
+      setIsLoadingFavorite(false);
     }
   };
 
@@ -57,18 +104,26 @@ const ExerciseCard = ({
         }
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
-        {/* Add to HEP button - positioned at the top-right */}
-        {/* <button
-          className={`absolute top-2 right-2 p-2 rounded-full transition-colors duration-200 ${isInHEP
-              ? 'bg-purple-600 text-white cursor-not-allowed'
-              : 'bg-gray-800/80 text-white hover:bg-purple-600/80'
-            }`}
-          onClick={handleAddToHEP}
-          disabled={isInHEP}
-          title={isInHEP ? "Already added to HEP" : "Add to HEP"}
+        {/* Favorite Button */}
+        <button
+          className={`absolute top-2 right-2 z-11 p-2 rounded-full transition-all duration-200 ${
+            isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite 
+              ? 'bg-gray-800/80 cursor-default' 
+              : 'bg-gray-800/80 hover:bg-purple-900/80'
+          }`}
+          onClick={handleToggleFavorite}
+          disabled={isLoadingFavorite || isFavorite}
+          title={isFavorite ? "Added to favorites" : "Add to favorites"}
         >
-          {isInHEP ? <Check size={18} /> : <Plus size={18} />}
-        </button> */}
+          {isLoadingFavorite ? (
+            <div className="w-5 h-5 border-2 border-t-transparent border-purple-500 rounded-full animate-spin"></div>
+          ) : (
+            <Heart 
+              size={18} 
+              className={isFavorite ? "text-purple-500 fill-purple-500" : "text-white"} 
+            />
+          )}
+        </button>
       </div>
 
       <div className="p-3 flex-grow flex flex-col">
