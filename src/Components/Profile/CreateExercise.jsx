@@ -260,7 +260,7 @@ export default function CreateExercise() {
 			const token = localStorage.getItem('token');
 			
 			// Send request to backend
-			const response = await axios.post(`${BASE_URL}/api/exercises/add`, formData, {
+			const response = await axios.post(`${BASE_URL}/exercises/add`, formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
 					Authorization: `Bearer ${token}`

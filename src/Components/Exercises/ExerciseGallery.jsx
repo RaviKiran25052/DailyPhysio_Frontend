@@ -69,7 +69,7 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
       const token = localStorage.getItem('token') || '';
       
       // Make API request
-      const response = await axios.get(`${API_URL}/api/exercises/filters`, {
+      const response = await axios.get(`${API_URL}/exercises/filters`, {
         params,
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });

@@ -14,7 +14,7 @@ const CourseCard = ({ course }) => {
 
   return (
     <div className="bg-gradient-to-br from-indigo-900/70 via-indigo-1000/120 to-purple-900/2 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-purple-500/10 transition flex-shrink-0 w-[calc(50%-8px)] sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] snap-start">
-      <img src={course.image || '/assets/routine.jpg'} alt={course.title} className="w-full h-32 object-cover" />
+      <img src={course?.image[0] || '/assets/routine.jpg'} alt={course.title} className="w-full h-32 object-cover" />
       <div className="p-3">
         <span className="text-xs text-purple-400 font-medium">{course.category}</span>
         <h3 className="text-lg font-medium mt-0.5 text-white">{course.title}</h3>
