@@ -1,6 +1,8 @@
 import { Cross, X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { FiSave, FiPlusCircle, FiX, FiCheck, FiVideo, FiImage, FiTag, FiList } from 'react-icons/fi';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateExercise() {
 	const [exercise, setExercise] = useState({
@@ -29,6 +31,10 @@ export default function CreateExercise() {
 	const [videoFiles, setVideoFiles] = useState([]);
 	const [imageFiles, setImageFiles] = useState([]);
 	const [selectedVideoPreview, setSelectedVideoPreview] = useState(null);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
+	
+	const navigate = useNavigate();
 
 	const positions = ["Kneeling", "Prone", "Quadruped", "Side Lying", "Sitting", "Standing", "Supine"];
 
@@ -63,6 +69,30 @@ export default function CreateExercise() {
 		'Special': ['Amputee', 'Aquatics', 'Cardio', 'Miscellaneous', 'Modalities', 'Neuro', 'Oculomotor',
 			'Pediatric', 'Vestibular', 'Yoga']
 	};
+
+	// Get the token from localStorage
+	const getToken = () => {
+		return localStorage.getItem('token');
+	};
+
+	// Configure axios with auth headers
+	const api = axios.create({
+		baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api'
+	});
+
+	// Add auth token to requests
+	api.interceptors.request.use(
+		(config) => {
+			const token = getToken();
+			if (token) {
+				config.headers.Authorization = `Bearer ${token}`;
+			}
+			return config;
+		},
+		(error) => {
+			return Promise.reject(error);
+		}
+	);
 
 	useEffect(() => {
 		if (exercise.category) {
@@ -178,23 +208,74 @@ export default function CreateExercise() {
 		}));
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
+		setLoading(true);
+		setError(null);
 
-		// Prepare final data with actual position value
-		const finalExercise = { ...exercise };
-		if (exercise.position === 'Other') {
-			finalExercise.position = exercise.customPosition;
+		try {
+			// Prepare final data with actual position value
+			const finalPosition = exercise.position === 'Other' ? exercise.customPosition : exercise.position;
+			
+			// Create FormData object for file uploads
+			const formData = new FormData();
+			
+			// Add exercise data as JSON string
+			formData.append('title', exercise.title);
+			formData.append('description', exercise.description);
+			formData.append('instruction', exercise.instruction);
+			formData.append('reps', exercise.reps);
+			formData.append('hold', exercise.hold);
+			formData.append('set', exercise.set);
+			formData.append('perform[count]', exercise.perform.count);
+			formData.append('perform[type]', exercise.perform.type);
+			formData.append('category', exercise.category);
+			formData.append('subCategory', exercise.subCategory);
+			formData.append('position', finalPosition);
+			formData.append('isPremium', exercise.isPremium);
+			formData.append('type', exercise.type);
+			
+			// Add image files
+			imageFiles.forEach((imageData, index) => {
+				formData.append('images', imageData.file);
+			});
+			
+			// Add video files
+			videoFiles.forEach((videoData, index) => {
+				formData.append('videos', videoData.file);
+			});
+			
+			// Send data to the server
+			const response = await api.post('/exercises/add', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			});
+			
+			// Handle success
+			console.log('Exercise created:', response.data);
+			alert('Exercise created successfully!');
+			
+			// Redirect to exercises page or detail page
+			navigate('/exercises');
+			
+		} catch (error) {
+			console.error('Error creating exercise:', error);
+			setError(error.response?.data?.message || 'Failed to create exercise. Please try again.');
+		} finally {
+			setLoading(false);
 		}
-
-		console.log('Exercise created:', finalExercise);
-		// Here you would typically send the data and files to your backend
-		alert('Exercise created successfully!');
 	};
 
 	return (
 		<div className="max-w-4xl mx-auto p-6 bg-gray-800 rounded-xl shadow-lg text-gray-200">
 			<h1 className="text-3xl font-bold text-center text-purple-400 mb-8">Create New Exercise</h1>
+
+			{error && (
+				<div className="bg-red-500 text-white p-3 rounded-lg mb-6">
+					{error}
+				</div>
+			)}
 
 			<form onSubmit={handleSubmit} className="space-y-6">
 				{/* Basic Info Section */}
@@ -335,24 +416,6 @@ export default function CreateExercise() {
 						</div>
 					</div>
 
-					{/* <div className="mt-6 flex items-center">
-						<label className="flex items-center cursor-pointer">
-							<span className="mr-3 text-gray-300 font-medium">Premium Exercise</span>
-							<div className="relative">
-								<input
-									type="checkbox"
-									id="isPremium"
-									name="isPremium"
-									checked={exercise.isPremium}
-									onChange={handleChange}
-									className="sr-only"
-								/>
-								<div className={`block w-14 h-8 rounded-full transition ${exercise.isPremium ? 'bg-purple-600' : 'bg-gray-500'}`}></div>
-								<div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform ${exercise.isPremium ? 'translate-x-6' : ''}`}></div>
-							</div>
-						</label>
-
-					</div> */}
 					<div className="mt-6">
 						<div className="flex items-center">
 							<span className="text-gray-300 font-medium mr-4">Type:</span>
@@ -379,6 +442,24 @@ export default function CreateExercise() {
 								<span className="ml-2 text-gray-300">Private</span>
 							</label>
 						</div>
+					</div>
+					
+					<div className="mt-6 flex items-center">
+						<label className="flex items-center cursor-pointer">
+							<span className="mr-3 text-gray-300 font-medium">Premium Exercise</span>
+							<div className="relative">
+								<input
+									type="checkbox"
+									id="isPremium"
+									name="isPremium"
+									checked={exercise.isPremium}
+									onChange={handleChange}
+									className="sr-only"
+								/>
+								<div className={`block w-14 h-8 rounded-full transition ${exercise.isPremium ? 'bg-purple-600' : 'bg-gray-500'}`}></div>
+								<div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform ${exercise.isPremium ? 'translate-x-6' : ''}`}></div>
+							</div>
+						</label>
 					</div>
 				</div>
 
@@ -581,9 +662,22 @@ export default function CreateExercise() {
 				<div className="flex justify-end">
 					<button
 						type="submit"
-						className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-gray-800 flex items-center"
+						disabled={loading}
+						className={`px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-gray-800 flex items-center ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
 					>
-						<FiSave className="mr-2" /> Create Exercise
+						{loading ? (
+							<>
+								<svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+									<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+									<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+								</svg>
+								Processing...
+							</>
+						) : (
+							<>
+								<FiSave className="mr-2" /> Create Exercise
+							</>
+						)}
 					</button>
 				</div>
 			</form>
