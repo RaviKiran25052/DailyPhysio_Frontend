@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, ChevronRight, Heart, PlayCircle, Activity, ArrowRight, Save, Plus, Check, UserPlus, X } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Heart, PlayCircle, Activity, Save, UserPlus, X } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import MediaCarousel from '../Components/Profile/MediaCarousel';
@@ -14,7 +14,6 @@ const ExerciseDetailPage = ({ userData }) => {
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
-  const [addedToHep, setAddedToHep] = useState(false);
   const [exercise, setExercise] = useState([]);
   const [relatedExercises, setRelatedExercises] = useState([]);
   const [creatorData, setCreatorData] = useState({});
@@ -44,15 +43,14 @@ const ExerciseDetailPage = ({ userData }) => {
     if (!token) return;
 
     try {
-      const response = await axios.get(`${API_URL}/user/favorites`, {
+      const response = await axios.get(`${API_URL}/exercises/favorites/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
       const favorites = response.data;
-      const isFav = favorites.some(fav => fav.exerciseId === id);
-      setIsFavorite(isFav);
+      setIsFavorite(favorites.isFavorite);
     } catch (error) {
       console.error('Error checking favorite status:', error);
     }
@@ -62,11 +60,8 @@ const ExerciseDetailPage = ({ userData }) => {
     const fetchExercise = async () => {
       try {
         const response = await axios.get(`${API_URL}/exercises/${id}`);
-        console.log("data", response.data);
         const data = response.data;
         setIsPro(response.data.membership !== "free");
-        console.log(data.creatorData);
-
         setExercise(data.exercise);
         setCreatorData(data.creatorData);
         setRelatedExercises(data.relatedExercises);
@@ -103,7 +98,7 @@ const ExerciseDetailPage = ({ userData }) => {
 
     try {
       await axios.post(
-        `${API_URL}/exercises/favorite/${id}`,
+        `${API_URL}/exercises/favorites/${id}`,
         {},
         {
           headers: {
@@ -125,35 +120,6 @@ const ExerciseDetailPage = ({ userData }) => {
       }
     } finally {
       setIsLoadingFavorite(false);
-    }
-  };
-
-  const handleAddToHep = () => {
-    if (exercise) {
-      // Get current HEP exercises from localStorage
-      const currentHep = JSON.parse(localStorage.getItem('hepExercises') || '[]');
-
-      // Check if exercise is already in HEP
-      const exerciseExists = currentHep.some(ex => ex._id === exercise._id);
-
-      if (!exerciseExists) {
-        // Add the exercise to localStorage
-        const updatedHep = [...currentHep, exercise];
-        localStorage.setItem('hepExercises', JSON.stringify(updatedHep));
-
-        // Show success message
-        toast.success('Added to HEP');
-      } else {
-        // Show info message if already in HEP
-        toast.info('Exercise already in your HEP');
-      }
-
-      setAddedToHep(true);
-
-      // Show temporary visual confirmation
-      setTimeout(() => {
-        setAddedToHep(false);
-      }, 2000);
     }
   };
 
@@ -206,7 +172,7 @@ const ExerciseDetailPage = ({ userData }) => {
     };
 
     try {
-      const response = await axios.post(`${API_URL}/routines`, payload, {
+      await axios.post(`${API_URL}/routines`, payload, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
