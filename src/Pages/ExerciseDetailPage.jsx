@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, ChevronRight, Heart, PlayCircle, Activity, Save, UserPlus, X } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Heart, PlayCircle, Activity, Save, UserPlus, X, CheckCircle, UserMinus } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import MediaCarousel from '../Components/Profile/MediaCarousel';
@@ -14,6 +14,7 @@ const ExerciseDetailPage = ({ userData }) => {
   const [loading, setLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
+  const [isLoadingFollow, setIsLoadingFollow] = useState(false);
   const [exercise, setExercise] = useState([]);
   const [relatedExercises, setRelatedExercises] = useState([]);
   const [creatorData, setCreatorData] = useState({});
@@ -121,6 +122,74 @@ const ExerciseDetailPage = ({ userData }) => {
       }
     } finally {
       setIsLoadingFavorite(false);
+    }
+  };
+
+  const toggleFollow = async () => {
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.warning('Please login to follow this creator');
+      return;
+    }
+
+    if (!creatorData || !creatorData.id) {
+      toast.error('Creator information not available');
+      return;
+    }
+
+    setIsLoadingFollow(true);
+
+    try {
+      if (creatorData.isFollowing) {
+        // Unfollow the creator
+        await axios.delete(
+          `${API_URL}/users/following/${creatorData.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        
+        setCreatorData({
+          ...creatorData,
+          isFollowing: false
+        });
+        
+        toast.success('Unfollowed successfully');
+      } else {
+        // Follow the creator
+        await axios.post(
+          `${API_URL}/users/following`,
+          { therapistId: creatorData.id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        
+        setCreatorData({
+          ...creatorData,
+          isFollowing: true
+        });
+        
+        toast.success('Following successfully');
+      }
+    } catch (error) {
+      console.error('Error toggling follow status:', error);
+      toast.error(error.response?.data?.message || 'Failed to update follow status');
+    } finally {
+      setIsLoadingFollow(false);
+    }
+  };
+
+  const viewCreatorExercises = () => {
+    if (creatorData && creatorData.id) {
+      navigate(`/creator-exercises/${creatorData.id}`, {
+        state: { creatorName: creatorData.name }
+      });
     }
   };
 
@@ -248,19 +317,12 @@ const ExerciseDetailPage = ({ userData }) => {
                   onClick={toggleFavorite}
                   disabled={isLoadingFavorite || isFavorite}
                   className={` p-2 z-10 rounded-full transition-all duration-200 ${isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite
-                    ? 'bg-gray-800/80 cursor-default'
-                    : 'bg-gray-800/80 hover:bg-purple-900/80'
+                    ? 'bg-red-500 text-white hover:bg-red-600'
+                    : 'bg-gray-700/50 text-white hover:bg-gray-600'
                     }`}
-                  aria-label={isFavorite ? "Added to favorites" : "Add to favorites"}
+                  aria-label={isFavorite ? 'Saved to favorites' : 'Add to favorites'}
                 >
-                  {isLoadingFavorite ? (
-                    <div className="w-5 h-5 border-2 border-t-transparent border-purple-500 rounded-full animate-spin"></div>
-                  ) : (
-                    <Heart
-                      size={20}
-                      className={isFavorite ? "text-purple-500 fill-purple-500" : "text-gray-300"}
-                    />
-                  )}
+                  <Heart size={20} fill={isFavorite ? 'white' : 'none'} />
                 </button>
               </div>
             </div>
@@ -347,17 +409,47 @@ const ExerciseDetailPage = ({ userData }) => {
             {creatorData && (
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 mb-6">
                 <h2 className="text-lg font-semibold mb-4">Creator</h2>
-                <div className="flex items-center mb-4">
-                  <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                    {creatorData.name ? creatorData.name.charAt(0) : 'A'}
-                  </div>
-                  <div className="ml-3">
-                    <h3 className='text-sm font-medium text-white'>{exercise.custom?.createdBy === "therapist" && "Dr."} {creatorData.name}</h3>
-                    <p className='text-xs text-gray-400'>{creatorData.specializations?.length ? creatorData.specializations.join(" | ") : (exercise.custom?.createdBy === "admin" ? "Admin" : "Pro User")}</p>
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex items-center mb-4">
+                    <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                      {creatorData.name ? creatorData.name.charAt(0) : 'A'}
+                    </div>
+                    <div className="ml-3">
+                      <h3 className='text-sm font-medium text-white'>{exercise.custom?.createdBy === "therapist" && "Dr."} {creatorData.name}</h3>
+                      <p className='text-xs text-gray-400'>{creatorData.specializations?.length ? creatorData.specializations.join(" | ") : (exercise.custom?.createdBy === "admin" ? "Admin" : "Pro User")}</p>
+                    </div>
                   </div>
                   {exercise.custom?.createdBy === "therapist" && userData.membership?.type !== "free" &&
-                    <button className='flex items-center border-2 border-purple-700 hover:bg-purple-800 hover:text-white text-sm rounded-md px-3 py-1'>
-                      <UserPlus className='mr-2' size={16} />{creatorData.following ? 'Following' : 'Follow'}
+                    <button
+                      onClick={toggleFollow}
+                      disabled={isLoadingFollow}
+                      className={`flex items-center text-sm px-3 py-1 rounded-full transition-colors ${
+                        isLoadingFollow 
+                          ? 'bg-gray-700 text-gray-300 cursor-wait' 
+                          : creatorData.isFollowing
+                            ? 'bg-green-600 hover:bg-green-700 text-white'
+                            : 'bg-purple-600 hover:bg-purple-700 text-white'
+                      }`}
+                    >
+                      {isLoadingFollow ? (
+                        <span className="flex items-center">
+                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Loading...
+                        </span>
+                      ) : creatorData.isFollowing ? (
+                        <>
+                          <CheckCircle size={16} className="mr-1" />
+                          Following
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus size={16} className="mr-1" />
+                          Follow
+                        </>
+                      )}
                     </button>
                   }
                 </div>
