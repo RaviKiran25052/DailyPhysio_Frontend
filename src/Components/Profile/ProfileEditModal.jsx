@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ModalBackdrop from './ModalBackdrop';
 
-const ProfileEditModal = ({ isOpen, onClose, profileData, onProfileChange, onSubmit }) => {
+const ProfileEditModal = ({ isOpen, onClose, profileData, onProfileChange, onSubmit, loading }) => {
 	const [showConfirmation, setShowConfirmation] = useState(false);
 
 	const handleSubmit = (e) => {
@@ -13,7 +13,7 @@ const ProfileEditModal = ({ isOpen, onClose, profileData, onProfileChange, onSub
 
 	return (
 		<>
-			<ModalBackdrop onClose={onClose}>
+			<ModalBackdrop onClose={loading ? null : onClose}>
 				<h2 className="text-xl font-bold text-white mb-4">Edit Profile</h2>
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<div>
@@ -25,6 +25,7 @@ const ProfileEditModal = ({ isOpen, onClose, profileData, onProfileChange, onSub
 							value={profileData.fullName}
 							onChange={onProfileChange}
 							className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+							disabled={loading}
 						/>
 					</div>
 					<div>
@@ -36,6 +37,7 @@ const ProfileEditModal = ({ isOpen, onClose, profileData, onProfileChange, onSub
 							value={profileData.email}
 							onChange={onProfileChange}
 							className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+							disabled={loading}
 						/>
 					</div>
 
@@ -44,12 +46,14 @@ const ProfileEditModal = ({ isOpen, onClose, profileData, onProfileChange, onSub
 							type="button"
 							onClick={onClose}
 							className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
+							disabled={loading}
 						>
 							Cancel
 						</button>
 						<button
 							type="submit"
 							className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-500 transition"
+							disabled={loading}
 						>
 							Save Changes
 						</button>
@@ -58,7 +62,7 @@ const ProfileEditModal = ({ isOpen, onClose, profileData, onProfileChange, onSub
 			</ModalBackdrop>
 
 			{showConfirmation && (
-				<ModalBackdrop onClose={() => setShowConfirmation(false)}>
+				<ModalBackdrop onClose={loading ? null : () => setShowConfirmation(false)}>
 					<div className="text-center">
 						<svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-yellow-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -69,6 +73,7 @@ const ProfileEditModal = ({ isOpen, onClose, profileData, onProfileChange, onSub
 							<button
 								onClick={() => setShowConfirmation(false)}
 								className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
+								disabled={loading}
 							>
 								Cancel
 							</button>
@@ -78,9 +83,18 @@ const ProfileEditModal = ({ isOpen, onClose, profileData, onProfileChange, onSub
 									setShowConfirmation(false);
 									onClose();
 								}}
-								className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-500 transition"
+								className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-500 transition flex items-center justify-center"
+								disabled={loading}
 							>
-								Confirm
+								{loading ? (
+									<>
+										<svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+											<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+											<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+										</svg>
+										Saving...
+									</>
+								) : 'Confirm'}
 							</button>
 						</div>
 					</div>

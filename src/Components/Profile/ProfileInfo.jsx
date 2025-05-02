@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import AccountInformation from './AccountInformation';
 import ProfileAvatar from './ProfileAvatar';
 import PasswordChangeModal from './PasswordChangeModal';
@@ -6,11 +7,15 @@ import ProfileEditModal from './ProfileEditModal';
 import ImageUploadModal from './ImageUploadModal';
 import AccountDetails from './AccountDetails';
 import MembershipInformation from './MembershipInformation';
+import { toast } from 'react-toastify';
+
+const API_URL = process.env.REACT_APP_API_URL;
 
 const ProfileInfo = ({ user }) => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showProfileEditModal, setShowProfileEditModal] = useState(false);
   const [showImageUploadModal, setShowImageUploadModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [profileData, setProfileData] = useState({
     fullName: user?.fullName || '',
     email: user?.email || '',
@@ -36,10 +41,32 @@ const ProfileInfo = ({ user }) => {
     });
   };
 
-  const handlePasswordSubmit = (passwordData) => {
-    // Handle password change logic here
-    console.log('Password change submitted', passwordData);
-    setShowPasswordModal(false);
+  const handlePasswordSubmit = async (passwordData) => {
+    if (passwordData.new !== passwordData.confirm) {
+      toast.error('New passwords do not match');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`${API_URL}/user/profile`, 
+        { password: passwordData.new }, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
+      toast.success('Password updated successfully');
+      setShowPasswordModal(false);
+    } catch (error) {
+      console.error('Error updating password:', error);
+      toast.error(error.response?.data?.message || 'Failed to update password');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleProfileChange = (e) => {
@@ -49,9 +76,40 @@ const ProfileInfo = ({ user }) => {
     });
   };
 
-  const handleProfileSubmit = () => {
-    // Handle profile update logic here
-    console.log('Profile update submitted', profileData);
+  const handleProfileSubmit = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(`${API_URL}/users/profile`, 
+        { 
+          fullName: profileData.fullName,
+          email: profileData.email
+        }, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      console.log(user)
+      console.log(response.data)
+      // Update localStorage with new user data
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      userData.fullName = response.data.fullName;
+      userData.email = response.data.email;
+      localStorage.setItem('userData', JSON.stringify(userData));
+      
+      toast.success('Profile updated successfully');
+      setShowProfileEditModal(false);
+      
+      // Refresh the page to update the UI
+      window.location.reload();
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error(error.response?.data?.message || 'Failed to update profile');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleImageUpload = (e) => {
@@ -138,6 +196,7 @@ const ProfileInfo = ({ user }) => {
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
         onSubmit={handlePasswordSubmit}
+        loading={loading}
       />
 
       {/* Profile Edit Modal with Confirmation */}
@@ -147,6 +206,7 @@ const ProfileInfo = ({ user }) => {
         profileData={profileData}
         onProfileChange={handleProfileChange}
         onSubmit={handleProfileSubmit}
+        loading={loading}
       />
 
       {/* Image Upload Modal */}
