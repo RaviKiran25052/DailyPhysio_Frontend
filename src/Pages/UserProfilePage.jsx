@@ -26,7 +26,7 @@ const UserProfilePage = ({ userData }) => {
       case 'create':
         return <CreateExercise />;
       default:
-        return <ProfileInfo user={userData} />;
+        return <ProfileInfo/>;
     }
   };
 

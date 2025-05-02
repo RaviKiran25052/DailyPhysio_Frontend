@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AccountInformation from './AccountInformation';
 import ProfileAvatar from './ProfileAvatar';
@@ -11,25 +11,47 @@ import { toast } from 'react-toastify';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const ProfileInfo = ({ user }) => {
+const ProfileInfo = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showProfileEditModal, setShowProfileEditModal] = useState(false);
   const [showImageUploadModal, setShowImageUploadModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState({});
   const [profileData, setProfileData] = useState({
-    fullName: user?.fullName || '',
-    email: user?.email || '',
+    fullName: '',
+    email: '',
   });
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
-  if (!user) {
-    return (
-      <div className="bg-gray-800 rounded-xl shadow-lg p-6">
-        <p className="text-gray-400">User information not available</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const fetchUserData = async () => {
+        try {
+          const parsedToken = token;
+          const response = await axios.get(`${API_URL}/users/profile`, {
+            headers: { Authorization: `Bearer ${parsedToken}` }
+          });
+
+          if (response.status === 200) {
+            setUserData(response.data);
+            setProfileData({
+              fullName: response.data.fullName,
+              email: response.data.email,
+            });
+          }
+        } catch (apiError) {
+          console.error('Error fetching profile data:', apiError);
+        }
+      };
+      fetchUserData();
+
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+    }
+  }, []);
 
   // Format date to be more readable
   const formatDate = (dateString) => {
@@ -50,7 +72,7 @@ const ProfileInfo = ({ user }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`${API_URL}/user/profile`, 
+      await axios.put(`${API_URL}/users/profile`, 
         { password: passwordData.new }, 
         {
           headers: {
@@ -91,14 +113,8 @@ const ProfileInfo = ({ user }) => {
           }
         }
       );
-      console.log(user)
       console.log(response.data)
-      // Update localStorage with new user data
-      const userData = JSON.parse(localStorage.getItem('userData'));
-      userData.fullName = response.data.fullName;
-      userData.email = response.data.email;
-      localStorage.setItem('userData', JSON.stringify(userData));
-      
+      localStorage.setItem('fullName', profileData.fullName);
       toast.success('Profile updated successfully');
       setShowProfileEditModal(false);
       
@@ -120,7 +136,7 @@ const ProfileInfo = ({ user }) => {
     // Keep the preview to show in the UI (in a real app you'd update user.profileImage)
   };
 
-  const createdAtFormatted = formatDate(user.createdAt);
+  const createdAtFormatted = formatDate(userData.createdAt);
 
   return (
     <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
@@ -131,7 +147,7 @@ const ProfileInfo = ({ user }) => {
       <div className="px-6 pt-0 pb-6 relative">
         {/* Avatar with Edit Button */}
         <ProfileAvatar
-          user={user}
+          user={userData}
           imagePreview={imagePreview}
           openImageUploadModal={() => setShowImageUploadModal(true)}
         />
@@ -139,7 +155,7 @@ const ProfileInfo = ({ user }) => {
         {/* Name and Details */}
         <div className="pl-32">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <h1 className="text-2xl font-bold text-white">{user.fullName}</h1>
+            <h1 className="text-2xl font-bold text-white">{userData.fullName}</h1>
             <div className="mt-2 md:mt-0 flex items-center space-x-2">
               <button
                 onClick={() => setShowProfileEditModal(true)}
@@ -151,7 +167,7 @@ const ProfileInfo = ({ user }) => {
           </div>
 
           <p className="text-gray-400 mt-1">
-            {user.email}
+            {userData.email}
           </p>
           <p className="text-gray-400 mt-1">
             Created: {createdAtFormatted}
@@ -164,25 +180,25 @@ const ProfileInfo = ({ user }) => {
           <div className="space-y-4">
             {/* Account Information */}
             <AccountInformation
-              user={user}
+              user={userData}
               openPasswordChangeModal={() => setShowPasswordModal(true)}
             />
 
             {/* Account Details */}
-            <AccountDetails user={user} formatDate={formatDate} />
+            <AccountDetails user={userData} formatDate={formatDate} />
           </div>
 
           {/* Right Column */}
           <div className="space-y-4">
             {/* Membership Information */}
-            <MembershipInformation user={user} formatDate={formatDate} />
+            <MembershipInformation user={userData} formatDate={formatDate} />
 
             {/* Payment History */}
             <div className="bg-gray-700 p-4 rounded-lg">
               <h3 className="text-purple-400 font-medium mb-2">Payment History</h3>
               <div className="bg-gray-600 rounded-md p-3 text-center">
                 <p className="text-gray-400 text-sm">No payment receipts available</p>
-                {user.membership?.type === 'free' && (
+                {userData.membership?.type === 'free' && (
                   <p className="text-gray-400 text-xs mt-1">Upgrade to Pro to see your payment history</p>
                 )}
               </div>

@@ -63,6 +63,7 @@ const ExerciseDetailPage = ({ userData }) => {
         const data = response.data;
         setIsPro(response.data.membership !== "free");
         setExercise(data.exercise);
+        
         setCreatorData(data.creatorData);
         setRelatedExercises(data.relatedExercises);
 
