@@ -17,6 +17,7 @@ import TherapistManagementTable from './Components/admin/Therapist/TherapistMana
 import TherapistConsultation from './Components/Therapist/TherapistConsultation';
 import axios from 'axios';
 import CreateExercise from './Components/Profile/CreateExercise';
+import CreatorExercisesPage from './Pages/CreatorExercisesPage';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -63,7 +64,7 @@ const AppContent = () => {
           <Route path="/exercise/:id" element={<ExerciseDetailPage userData={userData} />} />
           <Route path="/profile" element={<UserProfilePage userData={userData} />} />
           <Route path="/creator/exercises" element={<CreateExercise />} />
-          <Route path="/creator/exercise/:id" element={<CreateExercise />} />
+          <Route path="/creator/exercise/:creatorId" element={<CreatorExercisesPage />} />
 
           {/* <Route element={<TherapistRouteProtect />}> */}
           <Route path="/therapist/" element={<TherapistDashboard />} />

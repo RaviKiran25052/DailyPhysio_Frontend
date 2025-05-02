@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, Eye, Heart, Filter } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Eye, Heart } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import MediaCarousel from '../Components/Profile/MediaCarousel';
@@ -10,27 +10,31 @@ const API_URL = process.env.REACT_APP_API_URL || '';
 const CreatorExercisesPage = () => {
   const { creatorId } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  const creatorName = location.state?.creatorName || 'Creator';
-
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [categories, setCategories] = useState([]);
+  const [creatorName, setCreatorName] = useState("");
 
   useEffect(() => {
     const fetchExercises = async () => {
       setLoading(true);
       try {
         // Get exercises created by this creator
-        const response = await axios.get(`${API_URL}/exercises/creator/${creatorId}`);
+        const response = await axios.get(`${API_URL}/exercises/creator/${creatorId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         const data = response.data;
-        
-        setExercises(data);
-        
+        console.log(data);
+
+        setExercises(data.exercises);
+        setCreatorName(data.creatorName)
+
         // Extract unique categories
-        const uniqueCategories = [...new Set(data.map(ex => ex.category))];
+        const uniqueCategories = [...new Set(data.exercises.map(ex => ex.category))];
         setCategories(uniqueCategories);
       } catch (err) {
         console.error('Error fetching creator exercises:', err);
@@ -81,10 +85,9 @@ const CreatorExercisesPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen px-16 bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-6">
         {/* Header with back button */}
-        <div className="flex items-center mb-6">
           <button
             onClick={() => navigate(-1)}
             className="flex items-center text-gray-300 hover:text-purple-400 transition-colors mr-4"
@@ -92,8 +95,7 @@ const CreatorExercisesPage = () => {
             <ArrowLeft size={20} className="mr-2" />
             <span>Back</span>
           </button>
-          <h1 className="text-2xl font-bold">{creatorName}'s Exercises</h1>
-        </div>
+          <h1 className="text-2xl my-6 font-bold">{creatorName}'s Exercises</h1>
 
         {/* Categories filter */}
         {categories.length > 1 && (
@@ -101,11 +103,10 @@ const CreatorExercisesPage = () => {
             <div className="flex space-x-2 pb-2">
               <button
                 onClick={() => setActiveCategory('all')}
-                className={`px-3 py-2 rounded-md whitespace-nowrap ${
-                  activeCategory === 'all'
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                }`}
+                className={`px-3 py-2 rounded-md whitespace-nowrap ${activeCategory === 'all'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                  }`}
               >
                 All Categories
               </button>
@@ -113,11 +114,10 @@ const CreatorExercisesPage = () => {
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
-                  className={`px-3 py-2 rounded-md whitespace-nowrap ${
-                    activeCategory === category
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                  }`}
+                  className={`px-3 py-2 rounded-md whitespace-nowrap ${activeCategory === category
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                    }`}
                 >
                   {category}
                 </button>
@@ -145,12 +145,12 @@ const CreatorExercisesPage = () => {
                     </div>
                   )}
                 </div>
-                
+
                 {/* Content */}
                 <div className="p-4">
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="text-lg font-medium text-white">{exercise.title}</h3>
-                    
+
                     {/* Premium badge if applicable */}
                     {exercise.isPremium && (
                       <span className="bg-yellow-600 text-xs text-white px-2 py-1 rounded-full">
@@ -158,9 +158,9 @@ const CreatorExercisesPage = () => {
                       </span>
                     )}
                   </div>
-                  
+
                   <p className="text-gray-400 text-sm mb-3 line-clamp-2">{exercise.description}</p>
-                  
+
                   {/* Categories */}
                   <div className="flex flex-wrap gap-2 mb-3">
                     <span className="bg-purple-900/60 text-purple-300 text-xs px-2 py-1 rounded-full">
@@ -170,7 +170,7 @@ const CreatorExercisesPage = () => {
                       {exercise.position}
                     </span>
                   </div>
-                  
+
                   {/* Stats */}
                   <div className="flex items-center text-gray-400 text-xs">
                     <div className="flex items-center mr-4">

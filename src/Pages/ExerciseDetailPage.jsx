@@ -60,7 +60,11 @@ const ExerciseDetailPage = ({ userData }) => {
   useEffect(() => {
     const fetchExercise = async () => {
       try {
-        const response = await axios.get(`${API_URL}/exercises/${id}`);
+        const response = await axios.get(`${API_URL}/exercises/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         const data = response.data;
         setIsPro(response.data.membership !== "free");
         setExercise(data.exercise);
@@ -454,7 +458,7 @@ const ExerciseDetailPage = ({ userData }) => {
                   }
                 </div>
                 {userData.membership?.type !== "free" &&
-                  <button className='border-2 w-full border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
+                  <button onClick={()=>navigate(`/creator/exercise/${exercise.custom.creatorId}`)} className='border-2 w-full border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
                 }
               </div>
             )}
