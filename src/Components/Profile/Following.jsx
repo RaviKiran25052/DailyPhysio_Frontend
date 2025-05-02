@@ -63,13 +63,11 @@ export default function Following() {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log('Fetched therapists:', response.data);
+
       setTherapists(response.data);
     } catch (err) {
       console.error('Error fetching following:', err);
-      // If API isn't ready, use dummy data for demonstration
-      if (process.env.NODE_ENV === 'development') {
-        setTherapists(dummyTherapists);
-      }
     } finally {
       setLoading(false);
     }
@@ -79,7 +77,7 @@ export default function Following() {
   const handleUnfollow = async (id, e) => {
     e.stopPropagation(); // Prevent triggering showExercises
     setUnfollowLoading(id);
-    
+
     try {
       const token = localStorage.getItem('token');
       await axios.delete(`${API_URL}/users/following/${id}`, {
@@ -87,18 +85,13 @@ export default function Following() {
           Authorization: `Bearer ${token}`
         }
       });
-      
+
       // Update state locally
       setTherapists(therapists.filter(therapist => therapist._id !== id));
       toast.success('Unfollowed successfully');
     } catch (err) {
       console.error('Error unfollowing therapist:', err);
       toast.error('Failed to unfollow. Please try again.');
-      
-      // If API isn't ready, just update UI for demonstration
-      if (process.env.NODE_ENV === 'development') {
-        setTherapists(therapists.filter(therapist => therapist._id !== id));
-      }
     } finally {
       setUnfollowLoading(null);
     }
@@ -106,37 +99,25 @@ export default function Following() {
 
   // Show exercises for a specific therapist
   const showExercises = async (therapistId) => {
-    // Only fetch if we don't already have the exercises
-    if (!exercises[therapistId]) {
-      setExercisesLoading(true);
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${API_URL}/users/therapists/${therapistId}/exercises`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        
-        setExercises(prev => ({
-          ...prev,
-          [therapistId]: response.data
-        }));
-      } catch (err) {
-        console.error('Error fetching therapist exercises:', err);
-        toast.error('Failed to load exercises');
-        
-        // If API isn't ready, use dummy data
-        if (process.env.NODE_ENV === 'development') {
-          setExercises(prev => ({
-            ...prev,
-            [therapistId]: dummyExercises[therapistId] || []
-          }));
+    console.log('Showing exercises for therapist:', therapistId);
+
+    setExercisesLoading(true);
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_URL}/exercises/creator/${therapistId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      } finally {
-        setExercisesLoading(false);
-      }
+      });
+      console.log('Fetched exercises:', response.data.exercises);
+      setExercises(response.data.exercises);
+    } catch (err) {
+      console.error('Error fetching therapist exercises:', err);
+      toast.error('Failed to load exercises');
+    } finally {
+      setExercisesLoading(false);
     }
-    
+
     setViewingExercisesFor(therapistId);
   };
 
@@ -163,157 +144,11 @@ export default function Following() {
     );
   }
 
-  // Dummy data for therapists
-  const dummyTherapists = [
-    {
-      _id: '1',
-      name: 'Dr. Sarah Johnson',
-      fullName: 'Dr. Sarah Johnson',
-      email: 'sarah.johnson@example.com',
-      gender: 'female',
-      specializations: ['Depression', 'Anxiety', 'Trauma'],
-      workingAt: 'Serenity Wellness Center',
-      address: '123 Healing Ave, Mindful City, MC 12345',
-      phoneNumber: '5551234567',
-      experience: '10 years'
-    },
-    {
-      _id: '2',
-      name: 'Dr. Michael Chen',
-      fullName: 'Dr. Michael Chen',
-      email: 'michael.chen@example.com',
-      gender: 'male',
-      specializations: ['ADHD', 'Stress Management', 'Behavioral Therapy'],
-      workingAt: 'Balance Mental Health Clinic',
-      address: '456 Therapy Blvd, Wellness Town, WT 67890',
-      phoneNumber: '5559876543',
-      experience: '8 years'
-    },
-    {
-      _id: '3',
-      name: 'Dr. Amara Wilson',
-      fullName: 'Dr. Amara Wilson',
-      email: 'amara.wilson@example.com',
-      gender: 'female',
-      specializations: ['Family Therapy', 'Marriage Counseling', 'Child Psychology'],
-      workingAt: 'Harmony Family Services',
-      address: '789 Support St, Tranquil Hills, TH 45678',
-      phoneNumber: '5552223333',
-      experience: '15 years'
-    }
-  ];
-
-  // Dummy data for exercises based on the updated schema
-  const dummyExercises = {
-    '1': [
-      {
-        _id: 'e1',
-        title: 'Mindful Breathing',
-        description: 'A simple breathing technique to reduce anxiety and increase focus',
-        instruction: '1. Sit comfortably with your back straight.\n2. Breathe in deeply for 4 counts.\n3. Hold for 2 counts.\n4. Exhale slowly for 6 counts.\n5. Repeat for 5 minutes.',
-        video: ['https://example.com/mindful-breathing.mp4'],
-        image: ['https://example.com/mindful-breathing.jpg'],
-        category: 'Anxiety Management',
-        subCategory: 'Breathing Techniques',
-        position: 'Seated',
-        isPremium: false
-      },
-      {
-        _id: 'e2',
-        title: 'Thought Journal',
-        description: 'Record and challenge negative thought patterns',
-        instruction: '1. Write down your negative thoughts.\n2. Identify the cognitive distortion.\n3. Challenge the thought with evidence.\n4. Create an alternative balanced thought.',
-        video: [],
-        image: ['https://example.com/thought-journal.jpg'],
-        category: 'Cognitive Restructuring',
-        subCategory: 'Journaling',
-        position: 'Any',
-        isPremium: false
-      },
-      {
-        _id: 'e3',
-        title: 'Progressive Muscle Relaxation',
-        description: 'Systematically relax your muscle groups to reduce physical tension',
-        instruction: '1. Lie down in a comfortable position.\n2. Start with your feet, tense the muscles for 5 seconds.\n3. Release and notice the feeling of relaxation.\n4. Move up through each muscle group in your body.\n5. End with facial muscles.',
-        video: ['https://example.com/pmr.mp4'],
-        image: ['https://example.com/pmr1.jpg', 'https://example.com/pmr2.jpg'],
-        category: 'Stress Management',
-        subCategory: 'Physical Techniques',
-        position: 'Lying down',
-        isPremium: true
-      }
-    ],
-    '2': [
-      {
-        _id: 'e4',
-        title: 'Focus Exercise',
-        description: 'Improve attention span and concentration',
-        instruction: '1. Choose one simple object.\n2. Focus all your attention on it for 5 minutes.\n3. When your mind wanders, gently bring it back.\n4. Gradually increase duration over time.',
-        video: ['https://example.com/focus.mp4'],
-        image: [],
-        category: 'ADHD Management',
-        subCategory: 'Concentration',
-        position: 'Seated',
-        isPremium: false
-      },
-      {
-        _id: 'e5',
-        title: 'Time Management Planning',
-        description: 'Create structured schedules to improve productivity',
-        instruction: '1. Identify your most important tasks for the day.\n2. Break larger tasks into smaller, manageable steps.\n3. Assign specific time blocks for each task.\n4. Include short breaks between focused work periods.\n5. Review and adjust your schedule as needed.',
-        video: [],
-        image: ['https://example.com/time-management.jpg'],
-        category: 'Executive Function',
-        subCategory: 'Planning',
-        position: 'Any',
-        isPremium: true
-      }
-    ],
-    '3': [
-      {
-        _id: 'e6',
-        title: 'Family Communication Circle',
-        description: 'Improve family communication patterns',
-        instruction: '1. Have family members sit in a circle.\n2. Use a "talking object" - only the person holding it may speak.\n3. Each person shares their feelings on a specific topic.\n4. Others practice active listening without interrupting.\n5. After everyone shares, open for respectful discussion.',
-        video: ['https://example.com/family-circle.mp4'],
-        image: ['https://example.com/family-circle.jpg'],
-        category: 'Family Therapy',
-        subCategory: 'Communication',
-        position: 'Seated in circle',
-        isPremium: false
-      },
-      {
-        _id: 'e7',
-        title: 'Empathy Building',
-        description: 'Practice understanding and reflecting others\' emotions',
-        instruction: '1. Take turns describing a recent emotional experience.\n2. The listener reflects back what they heard without judgment.\n3. The speaker confirms or clarifies the reflection.\n4. Switch roles and repeat.',
-        video: [],
-        image: ['https://example.com/empathy.jpg'],
-        category: 'Relationship',
-        subCategory: 'Emotional Intelligence',
-        position: 'Face to face',
-        isPremium: false
-      },
-      {
-        _id: 'e8',
-        title: 'Child-Parent Bonding',
-        description: 'Structured activities to strengthen the parent-child relationship',
-        instruction: '1. Set aside 30 minutes of uninterrupted time.\n2. Let the child choose the activity.\n3. Follow the child\'s lead without directing.\n4. Provide positive attention and validation.\n5. Reflect the child\'s emotions and actions.',
-        video: ['https://example.com/parent-child1.mp4', 'https://example.com/parent-child2.mp4'],
-        image: ['https://example.com/parent-child.jpg'],
-        category: 'Child Psychology',
-        subCategory: 'Attachment',
-        position: 'Various',
-        isPremium: true
-      }
-    ]
-  };
-
   return (
     <div className="bg-gray-900 relative p-6">
       {/* Header */}
       <div className="flex items-center mb-8">
-        <button 
+        <button
           onClick={goBackToTherapists}
           className="focus:outline-none"
           style={styles.backButton}
@@ -322,8 +157,8 @@ export default function Following() {
           <ChevronLeft size={20} color="white" />
         </button>
         <h1 className="text-3xl font-bold text-white">
-          {viewingExercisesFor 
-            ? `${getCurrentTherapistName()}'s Exercises` 
+          {viewingExercisesFor
+            ? `${getCurrentTherapistName()}'s Exercises`
             : 'Therapists you Follow'
           }
         </h1>
@@ -334,10 +169,9 @@ export default function Following() {
         {therapists.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {therapists.map(therapist => (
-              <div 
-                key={therapist._id} 
-                className="bg-gray-800 rounded-lg overflow-hidden shadow-lg cursor-pointer hover:shadow-xl hover:border-purple-500 hover:border border border-transparent transition-all duration-200"
-                onClick={() => showExercises(therapist._id)}
+              <div
+                key={therapist._id}
+                className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl hover:border-purple-500 hover:border border border-transparent transition-all duration-200"
               >
                 {/* Therapist Header */}
                 <div className="p-5 bg-gray-700 flex items-center justify-between">
@@ -350,7 +184,7 @@ export default function Following() {
                       <div className="text-gray-300 text-xs">{therapist.email}</div>
                     </div>
                   </div>
-                  <button 
+                  <button
                     onClick={(e) => handleUnfollow(therapist._id, e)}
                     className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition"
                     disabled={unfollowLoading === therapist._id}
@@ -381,41 +215,41 @@ export default function Following() {
                       ))}
                     </div>
                   </div>
-                  
+
                   {/* Details */}
                   <div className="space-y-3 text-sm">
                     {therapist.workingAt && (
                       <div className="flex items-center text-gray-300">
-                        <Briefcase size={14} className="mr-2 text-gray-400" /> 
+                        <Briefcase size={14} className="mr-2 text-gray-400" />
                         <span>{therapist.workingAt}</span>
                       </div>
                     )}
-                    
+
                     {therapist.phoneNumber && (
                       <div className="flex items-center text-gray-300">
-                        <Phone size={14} className="mr-2 text-gray-400" /> 
+                        <Phone size={14} className="mr-2 text-gray-400" />
                         <span>{therapist.phoneNumber}</span>
                       </div>
                     )}
-                    
+
                     {therapist.address && (
                       <div className="flex items-center text-gray-300">
-                        <MapPin size={14} className="mr-2 text-gray-400" /> 
+                        <MapPin size={14} className="mr-2 text-gray-400" />
                         <span>{therapist.address}</span>
                       </div>
                     )}
-                    
+
                     {therapist.experience && (
                       <div className="flex items-center text-gray-300">
-                        <BookOpen size={14} className="mr-2 text-gray-400" /> 
+                        <BookOpen size={14} className="mr-2 text-gray-400" />
                         <span>Experience: {therapist.experience}</span>
                       </div>
                     )}
                   </div>
-                  
+
                   {/* View Exercises Button */}
                   <div className="mt-4 text-center">
-                    <button 
+                    <button
                       className="bg-purple-600 hover:bg-purple-700 text-white rounded-md py-2 px-4 w-full flex items-center justify-center"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -433,9 +267,6 @@ export default function Following() {
         ) : (
           <div className="text-center py-16 bg-gray-800 rounded-lg border border-gray-700">
             <p className="text-purple-400 italic mb-6">You're not following any therapists yet</p>
-            <button onClick={() => navigate('/therapists')} className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition">
-              Browse Therapists
-            </button>
           </div>
         )}
       </div>
@@ -452,12 +283,12 @@ export default function Following() {
           </div>
         ) : (
           <>
-            {viewingExercisesFor && exercises[viewingExercisesFor] && (
+            {viewingExercisesFor && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {exercises[viewingExercisesFor].length > 0 ? (
-                  exercises[viewingExercisesFor].map(exercise => (
-                    <div 
-                      key={exercise._id} 
+                {exercises.length > 0 ? (
+                  exercises.map(exercise => (
+                    <div
+                      key={exercise._id}
                       className="bg-gray-800 rounded-lg overflow-hidden shadow-lg flex flex-col"
                     >
                       {/* Media */}
@@ -466,7 +297,7 @@ export default function Following() {
                           <MediaCarousel videos={exercise.video || []} images={exercise.image || []} />
                         </div>
                       )}
-                      
+
                       {/* Content */}
                       <div className="p-5 flex-grow flex flex-col">
                         {/* Title with premium badge if applicable */}
@@ -478,10 +309,10 @@ export default function Following() {
                             </span>
                           )}
                         </div>
-                        
+
                         {/* Description */}
                         <p className="text-gray-300 text-sm mb-4 line-clamp-3">{exercise.description}</p>
-                        
+
                         {/* Categories and Position */}
                         <div className="mt-auto">
                           <div className="flex flex-wrap gap-2 mb-3">
@@ -495,9 +326,9 @@ export default function Following() {
                               {exercise.position}
                             </span>
                           </div>
-                          
+
                           {/* View Full Exercise Button */}
-                          <button 
+                          <button
                             className="mt-2 text-center w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-md transition"
                             onClick={() => navigate(`/exercise/${exercise._id}`)}
                           >

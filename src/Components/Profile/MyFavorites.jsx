@@ -28,7 +28,7 @@ const MyFavorites = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      
+
       setFavorites(response.data);
       setError(null);
     } catch (err) {
@@ -53,14 +53,14 @@ const MyFavorites = () => {
           Authorization: `Bearer ${token}`
         }
       });
-      
+
       // Update state locally
       setFavorites(favorites.filter(favorite => favorite._id !== id));
       toast.success('Exercise removed from favorites');
     } catch (err) {
       console.error('Error removing favorite:', err);
       toast.error('Failed to remove from favorites');
-      
+
       // If API isn't ready, just update UI for demonstration
       if (process.env.NODE_ENV === 'development') {
         setFavorites(favorites.filter(favorite => favorite._id !== id));
@@ -99,7 +99,7 @@ const MyFavorites = () => {
       instruction: 'Sit on a chair with your feet flat on the floor. Lift your toes while keeping your heels on the ground, then lower. Repeat 10 times.',
       video: [],
       image: [
-        'https://example.com/images/ankle-strength1.jpg', 
+        'https://example.com/images/ankle-strength1.jpg',
         'https://example.com/images/ankle-strength2.jpg',
         'https://example.com/images/ankle-strength3.jpg'
       ],
@@ -159,28 +159,28 @@ const MyFavorites = () => {
         {favorites.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {favorites.map(favorite => (
-              <div 
-                key={favorite._id} 
+              <div
+                key={favorite._id}
                 className="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-gray-700 hover:border-purple-500 transition duration-300"
               >
                 {/* Media Carousel */}
                 {(favorite.video?.length > 0 || favorite.image?.length > 0) && (
                   <div className='min-h-[200px]'>
-                  <MediaCarousel videos={favorite.video || []} images={favorite.image || []} />
+                    <MediaCarousel videos={favorite.video || []} images={favorite.image || []} />
                   </div>
                 )}
-                
+
                 {/* Content Area */}
                 <div className="p-5">
                   {/* Header with Title and Favorite Button */}
                   <div className="flex justify-between items-start mb-3">
-                    <h3 
+                    <h3
                       className="font-medium flex gap-2 text-white text-lg hover:text-purple-300 cursor-pointer transition"
                       onClick={() => handleExerciseClick(favorite._id)}
                     >
-                      {favorite.title}<SquareArrowOutUpRight size={14}/>
+                      {favorite.title}<SquareArrowOutUpRight size={14} />
                     </h3>
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         removeFavorite(favorite._id);
@@ -199,12 +199,12 @@ const MyFavorites = () => {
                       )}
                     </button>
                   </div>
-                  
+
                   {/* Description */}
                   <div className="text-sm text-gray-300 mb-4 line-clamp-2">
                     {favorite.description}
                   </div>
-                  
+
                   {/* Category and Subcategory */}
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <div className="bg-gray-700 p-2 rounded-md">
@@ -216,7 +216,7 @@ const MyFavorites = () => {
                       <p className="text-white text-sm">{favorite.subCategory}</p>
                     </div>
                   </div>
-                  
+
                   {/* Position Badge */}
                   <div className="inline-block bg-purple-600 px-3 py-1 rounded-full text-sm text-white">
                     {favorite.position}
