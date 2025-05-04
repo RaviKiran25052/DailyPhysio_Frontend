@@ -71,7 +71,7 @@ const AdminHome = () => {
           // Fall back to individual endpoints if stats endpoint fails
           try {
             // Fetch exercise count
-            const exercisesResponse = await axios.get(`${API_URL}/exercises/all`, config);
+            const exercisesResponse = await axios.get(`${API_URL}/exercises/`, config);
             const exercisesCount = exercisesResponse.data.total || exercisesResponse.data.exercises.length;
 
             // Fetch user counts
@@ -208,4 +208,4 @@ const AdminHome = () => {
   );
 };
 
-export default AdminHome; 
+export default AdminHome;

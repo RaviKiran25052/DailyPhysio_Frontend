@@ -189,14 +189,6 @@ const ExerciseDetailPage = ({ userData }) => {
     }
   };
 
-  const viewCreatorExercises = () => {
-    if (creatorData && creatorData.id) {
-      navigate(`/creator-exercises/${creatorData.id}`, {
-        state: { creatorName: creatorData.name }
-      });
-    }
-  };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -423,7 +415,7 @@ const ExerciseDetailPage = ({ userData }) => {
                       <p className='text-xs text-gray-400'>{creatorData.specializations?.length ? creatorData.specializations.join(" | ") : (exercise.custom?.createdBy === "admin" ? "Admin" : "Pro User")}</p>
                     </div>
                   </div>
-                  {exercise.custom?.createdBy === "therapist" && userData.membership?.type !== "free" &&
+                  {exercise.custom?.createdBy === "therapist" && (userData.membership?.type === "monthly") || (userData.membership?.type === "yearly") &&
                     <button
                       onClick={toggleFollow}
                       disabled={isLoadingFollow}
@@ -457,7 +449,7 @@ const ExerciseDetailPage = ({ userData }) => {
                     </button>
                   }
                 </div>
-                {userData.membership?.type !== "free" &&
+                {(userData.membership?.type === "monthly") || (userData.membership?.type === "yearly") &&
                   <button onClick={()=>navigate(`/creator/exercise/${exercise.custom.creatorId}`)} className='border-2 w-full border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
                 }
               </div>
