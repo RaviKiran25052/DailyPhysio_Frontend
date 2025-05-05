@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 
 // Import sub-components
-import Header from './components/Header';
 import SearchBar from './components/SearchBar';
 import ExerciseTabs from './components/ExerciseTabs';
 import ExerciseGrid from './components/ExerciseGrid';
@@ -273,11 +272,6 @@ const AdminExerciseList = () => {
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <Header
-          title="Exercise Management"
-          onHomeClick={() => navigate('/admin/home')}
-        />
-
         {selectedExercise && !showEditForm && (
           <ExerciseDetail
             exercise={selectedExercise}

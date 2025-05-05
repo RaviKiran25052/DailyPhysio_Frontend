@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaBell, FaSearch, FaTools } from 'react-icons/fa';
+import { FaBell, FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import TherapistCard from './TherapistCard';
@@ -51,7 +51,7 @@ const TherapistManagement = () => {
       }
     }
   };
-  
+
   // Check for admin authentication and fetch therapists
   useEffect(() => {
     const loggedInAdmin = localStorage.getItem('adminInfo')
@@ -82,11 +82,6 @@ const TherapistManagement = () => {
       );
       setFilteredTherapists(filtered);
     }
-  };
-
-  // Navigate back to admin home
-  const navigateToAdminHome = () => {
-    navigate('/admin/home');
   };
 
   // Handle logout
@@ -210,17 +205,11 @@ const TherapistManagement = () => {
     <div className="min-h-screen bg-gray-900 flex flex-col">
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Back button at top of the page */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
-          <button
-            onClick={navigateToAdminHome}
-            className="flex items-center px-4 py-2 mb-4 sm:mb-0 border border-transparent rounded-md shadow-sm text-sm font-medium text-purple-400 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-          >
-            <FaArrowLeft className="mr-2" />
-            Back to Home
-          </button>
+        <div className="flex justify-between items-center mb-10">
+          <h2 className="text-3xl font-extrabold text-white">Therapist Management</h2>
 
           {/* Search and Add buttons */}
-          <div className="flex flex-col sm:flex-row items-center gap-8">
+          <div className="flex items-center gap-8">
             <div className="relative w-full sm:w-64 md:w-80">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FaSearch className="text-gray-400" />
@@ -233,31 +222,18 @@ const TherapistManagement = () => {
                 className="pl-10 pr-4 py-2 w-full rounded-md bg-gray-800 border border-gray-700 text-purple-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               />
             </div>
-            <button
-              onClick={() => navigate('/admin/therapists/manage')}
-              className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-gray-100 bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-            >
-              <FaTools className="mr-2" />
-              <span className="hidden sm:inline">Manage</span>
-            </button>
-            <div className="cursor-pointer">
-              <div onClick={() => navigate('/admin/therapists/manage')} className="relative flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/10 border-2 border-purple-500 group-hover:scale-105 transition-transform duration-300">
-                <FaBell className="text-white relative z-10" />
-                {requestCount > 0 &&
-                  <>
-                    <div className="absolute animate-ping h-full w-full bg-purple-500 opacity-75 rounded-full"></div>
-                    <span className="absolute -top-2 -right-2 bg-white text-purple-900 text-[10px] font-bold rounded-full px-1.5 py-0.5 shadow">
-                      {requestCount}
-                    </span>
-                  </>
-                }
-              </div>
+            <div onClick={() => navigate('/admin/therapists/manage')} className="cursor-pointer relative flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/10 border-2 border-purple-500 group-hover:scale-105 transition-transform duration-300">
+              <FaBell className="text-white relative z-10" />
+              {requestCount > 0 &&
+                <>
+                  <div className="absolute animate-ping h-full w-full bg-purple-500 opacity-75 rounded-full"></div>
+                  <span className="absolute -top-2 -right-2 bg-white text-purple-900 text-[10px] font-bold rounded-full px-1.5 py-0.5 shadow">
+                    {requestCount}
+                  </span>
+                </>
+              }
             </div>
           </div>
-        </div>
-
-        <div className="mb-8">
-          <h2 className="text-3xl font-extrabold text-white">Therapist Management</h2>
         </div>
 
         {/* Therapist Cards */}
@@ -266,7 +242,7 @@ const TherapistManagement = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {filteredTherapists.length > 0 ? (
               filteredTherapists.map(therapist => (
                 <TherapistCard
