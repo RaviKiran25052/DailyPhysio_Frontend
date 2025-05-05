@@ -6,9 +6,30 @@ import MyFavorites from '../Components/Profile/MyFavorites';
 import MyRoutines from '../Components/Profile/MyRoutines';
 import Following from '../Components/Profile/Following';
 import CreateExercise from '../Components/Profile/CreateExercise';
+import axios from 'axios';
 
-const UserProfilePage = ({ userData }) => {
+const API_URL = process.env.REACT_APP_API_URL;
+
+const UserProfilePage = () => {
   const [activeTab, setActiveTab] = useState('profile');
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    const fetchUserData = async () => {
+      try {
+        
+        const response = await axios.get(`${API_URL}/users/profile`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setUserData(response.data);
+      } catch (apiError) {
+        console.error('Error fetching profile data:', apiError);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   // Render content based on the active tab
   const renderContent = () => {
@@ -26,7 +47,7 @@ const UserProfilePage = ({ userData }) => {
       case 'create':
         return <CreateExercise />;
       default:
-        return <ProfileInfo/>;
+        return <ProfileInfo />;
     }
   };
 

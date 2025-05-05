@@ -80,8 +80,8 @@ const AdminExerciseList = () => {
         all: exercises.length,
         premium: exercises.filter(ex => ex.isPremium).length,
         custom: exercises.filter(ex => 
-          ex.custom?.createdBy === "proUser" || 
-          ex.custom?.createdBy === "therapist" && 
+          (ex.custom?.createdBy === "proUser" || 
+          ex.custom?.createdBy === "therapist") && 
           ex.custom?.type === "public"
         ).length
       };
@@ -210,8 +210,8 @@ const AdminExerciseList = () => {
           all: updatedExercises.length,
           premium: updatedExercises.filter(ex => ex.isPremium).length,
           custom: updatedExercises.filter(ex => 
-            ex.custom?.createdBy === "proUser" || 
-            ex.custom?.createdBy === "therapist" && 
+            (ex.custom?.createdBy === "proUser" || 
+            ex.custom?.createdBy === "therapist") && 
             ex.custom?.type === "public"
           ).length
         };

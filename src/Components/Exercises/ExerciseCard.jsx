@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Info, Plus, Check, Crown, Heart } from 'lucide-react';
 import MediaCarousel from '../Profile/MediaCarousel';
 import axios from 'axios';

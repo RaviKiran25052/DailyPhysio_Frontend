@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Eye, Heart } from 'lucide-react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 import MediaCarousel from '../Components/Profile/MediaCarousel';
 
 const API_URL = process.env.REACT_APP_API_URL || '';
@@ -31,7 +30,7 @@ const CreatorExercisesPage = () => {
         console.log(data);
 
         setExercises(data.exercises);
-        setCreatorName(data.creatorName)
+        setCreatorName(data.creatorName.fullName)
 
         // Extract unique categories
         const uniqueCategories = [...new Set(data.exercises.map(ex => ex.category))];

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MediaCarousel from './MediaCarousel';
 import axios from 'axios';
-import { Link, SquareArrowOutUpRight, Trash2 } from 'lucide-react';
+import { SquareArrowOutUpRight, Trash2 } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const API_URL = process.env.REACT_APP_API_URL;

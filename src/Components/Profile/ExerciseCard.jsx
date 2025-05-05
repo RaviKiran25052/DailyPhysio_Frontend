@@ -19,19 +19,6 @@ const ExerciseCard = ({ exercise, onTypeChange, onDelete }) => {
 		return date.toLocaleDateString();
 	};
 
-	const categoryColors = {
-		'Ankle and Foot': 'text-blue-300',
-		'Cervical': 'text-green-300',
-		'Education': 'text-yellow-300',
-		'Elbow and Hand': 'text-orange-300',
-		'Hip and Knee': 'text-purple-300',
-		'Lumbar Thoracic': 'text-red-300',
-		'Oral Motor': 'text-pink-300',
-		'Shoulder': 'text-indigo-300',
-		'Special': 'text-teal-300'
-	};
-
-	const color = categoryColors[exercise.category] || 'text-gray-300';
 	return (
 		<div className="flex flex-col justify-between bg-gray-800 hover:bg-gray-750 rounded-lg overflow-hidden shadow-lg transition transform hover:-translate-y-1">
 			<MediaCarousel images={exercise.image} videos={exercise.video} />

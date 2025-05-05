@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { X, Trash2, AlertCircle } from 'lucide-react';
-import { toast } from 'react-toastify';
 
 const ExerciseFooter = ({ selectedExercises, removeExercise, clearExercises }) => {
   const [isFooterVisible, setIsFooterVisible] = useState(false);

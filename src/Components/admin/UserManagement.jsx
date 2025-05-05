@@ -8,7 +8,6 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const UserManagement = () => {
   const navigate = useNavigate();
-  const [adminToken, setAdminToken] = useState('');
   const [users, setUsers] = useState([]);
   const [regularUsers, setRegularUsers] = useState([]);
   const [premiumUsers, setPremiumUsers] = useState([]);
@@ -16,7 +15,6 @@ const UserManagement = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalPremiumUsers, setTotalPremiumUsers] = useState(0);
   const itemsPerPage = 10;
@@ -33,8 +31,6 @@ const UserManagement = () => {
       navigate('/admin/login');
       return;
     }
-
-    setAdminToken(loggedInAdmin.token);
     fetchUsers(loggedInAdmin.token);
   }, [navigate]);
 

@@ -61,7 +61,7 @@ const AppContent = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/exercises" element={<ExercisesPage />} />
           <Route path="/exercise/:id" element={<ExerciseDetailPage userData={userData} />} />
-          <Route path="/profile" element={<UserProfilePage userData={userData} />} />
+          <Route path="/profile" element={<UserProfilePage />} />
           <Route path="/creator/exercise/:creatorId" element={<CreatorExercisesPage />} />
 
           {/* <Route element={<TherapistRouteProtect />}> */}

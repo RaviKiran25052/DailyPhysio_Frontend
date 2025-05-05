@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft, ChevronRight, Heart, PlayCircle, Activity, Save, UserPlus, X, CheckCircle, UserMinus } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Heart, PlayCircle, Activity, Save, UserPlus, X, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import MediaCarousel from '../Components/Profile/MediaCarousel';
@@ -60,16 +60,21 @@ const ExerciseDetailPage = ({ userData }) => {
   useEffect(() => {
     const fetchExercise = async () => {
       try {
+        console.log(1);
+        
         const response = await axios.get(`${API_URL}/exercises/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
+        console.log(2);
         const data = response.data;
         setIsPro(response.data.membership !== "free");
         setExercise(data.exercise);
         
         setCreatorData(data.creatorData);
+        console.log(data);
+        
         setRelatedExercises(data.relatedExercises);
 
         // Update form data with exercise title
@@ -78,6 +83,7 @@ const ExerciseDetailPage = ({ userData }) => {
           name: data.exercise.title || 'Exercise Routine'
         }));
 
+        console.log(3);
         // Check favorite status
         await checkFavoriteStatus();
       } catch (error) {
@@ -415,7 +421,7 @@ const ExerciseDetailPage = ({ userData }) => {
                       <p className='text-xs text-gray-400'>{creatorData.specializations?.length ? creatorData.specializations.join(" | ") : (exercise.custom?.createdBy === "admin" ? "Admin" : "Pro User")}</p>
                     </div>
                   </div>
-                  {exercise.custom?.createdBy === "therapist" && (userData.membership?.type === "monthly") || (userData.membership?.type === "yearly") &&
+                  {exercise.custom?.createdBy === "therapist" && (userData.membership?.type === "monthly" || userData.membership?.type === "yearly") &&
                     <button
                       onClick={toggleFollow}
                       disabled={isLoadingFollow}
@@ -449,7 +455,7 @@ const ExerciseDetailPage = ({ userData }) => {
                     </button>
                   }
                 </div>
-                {(userData.membership?.type === "monthly") || (userData.membership?.type === "yearly") &&
+                {(userData.membership?.type === "monthly" || userData.membership?.type === "yearly") &&
                   <button onClick={()=>navigate(`/creator/exercise/${exercise.custom.creatorId}`)} className='border-2 w-full border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
                 }
               </div>

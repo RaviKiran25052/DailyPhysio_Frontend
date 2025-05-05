@@ -3,9 +3,6 @@ import MediaCarousel from '../../Profile/MediaCarousel';
 import { Crown } from 'lucide-react';
 
 const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm }) => {
-	// Placeholder image for exercises without images
-	const placeholderImage = "/placeholder/400/250";
-
 	if (totalExercises === 0) {
 		return (
 			<div className="text-center py-12">

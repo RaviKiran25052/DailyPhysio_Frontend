@@ -39,8 +39,6 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
   
   // Check if we have category in location state (from Featured Courses)
   const initialCategory = location.state?.selectedCategory || 'Ankle and Foot';
-
-  const [exercises, setExercises] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
   const [selectedPosition, setSelectedPosition] = useState('All');
@@ -52,8 +50,6 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [layoutSize, setLayoutSize] = useState('medium'); // small, medium, large
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [hepExercises, setHepExercises] = useState([]);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   // If we came from featured exercises, show a notification
@@ -97,12 +93,10 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       
-      setExercises(response.data);
       setFilteredExercises(response.data);
       setCurrentPage(1);
     } catch (error) {
       console.error('Error fetching exercises:', error);
-      setExercises([]);
       setFilteredExercises([]);
     } finally {
       setIsLoading(false);
@@ -119,24 +113,6 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
     setSearchQuery(query);
     fetchExercises();
   };
-
-  // Load HEP exercises from localStorage
-  useEffect(() => {
-    const loadHepExercises = () => {
-      const savedExercises = JSON.parse(localStorage.getItem('hepExercises') || '[]');
-      setHepExercises(savedExercises);
-    };
-    
-    // Load on mount
-    loadHepExercises();
-    
-    // Add event listener to update when localStorage changes
-    window.addEventListener('storage', loadHepExercises);
-    
-    return () => {
-      window.removeEventListener('storage', loadHepExercises);
-    };
-  }, []);
 
   // Add event listener for window resize
   useEffect(() => {
@@ -170,11 +146,6 @@ const ExerciseGallery = ({ addExerciseToHEP, isProUser, selectedExercises }) => 
     setSelectedCategory(category);
     setSelectedSubCategory('');
     setShowCategoryDropdown(false);
-  };
-
-  // Handle subcategory selection in mobile dropdown
-  const handleSubCategorySelect = (subCategory) => {
-    setSelectedSubCategory(subCategory);
   };
 
   // Handle position selection in mobile dropdown

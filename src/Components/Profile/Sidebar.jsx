@@ -1,12 +1,10 @@
 import React from 'react';
 import { User, Dumbbell, Heart, FileText, Users, Plus } from 'lucide-react';
-const Sidebar = ({ userData, currentPath, setActiveTab }) => {
 
+const Sidebar = ({ userData, currentPath, setActiveTab }) => {
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
-console.log(userData.membership);
-
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden">
       {/* User info header */}

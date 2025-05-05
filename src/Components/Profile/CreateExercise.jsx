@@ -674,7 +674,7 @@ export default function CreateExercise() {
 											{imageData.preview ? (
 												<img
 													src={imageData.preview}
-													alt={`Exercise image ${index + 1}`}
+													alt={`Exercise img ${index + 1}`}
 													className="w-full h-full object-cover"
 												/>
 											) : (

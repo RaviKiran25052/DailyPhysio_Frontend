@@ -4,11 +4,7 @@ import {
   FaTachometerAlt, 
   FaDumbbell, 
   FaUsers, 
-  FaUserMd, 
-  FaChartLine, 
-  FaCog, 
-  FaCalendarAlt,
-  FaClipboardList,
+  FaUserMd,
   FaTimes
 } from 'react-icons/fa';
 

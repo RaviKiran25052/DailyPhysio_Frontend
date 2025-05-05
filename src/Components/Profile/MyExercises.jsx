@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import {
   Dumbbell, Globe, Lock
 } from 'lucide-react';
@@ -7,8 +6,6 @@ import ExerciseCard from './ExerciseCard';
 import EmptyState from './EmptyState';
 import TypeChangeModal from './TypeChangeModal';
 import DeleteModal from './DeleteModal';
-
-const API_URL = process.env.REACT_APP_API_URL;
 
 // Loading State Component
 const LoadingState = () => {
