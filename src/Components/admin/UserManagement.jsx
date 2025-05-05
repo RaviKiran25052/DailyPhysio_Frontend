@@ -330,7 +330,7 @@ const UserManagement = () => {
                           {user.fullName}
                         </td>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
-                          <span className="px-2 py-1 text-xs bg-purple-900 rounded-full">
+                          <span className="px-2 py-1 text-sm text-black bg-yellow-600 rounded-full">
                             {user.membership.type === 'monthly' ? 'Monthly' : 'Yearly'}
                           </span>
                         </td>

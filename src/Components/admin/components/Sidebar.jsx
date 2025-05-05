@@ -28,7 +28,7 @@ const Sidebar = ({ tab, setTab }) => {
 					<div
 						key={index}
 						onClick={() => setTab(item.tab)}
-						className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${tab === item.tab
+						className={`flex items-center space-x-3 px-4 py-3 cursor-pointer rounded-lg transition-colors ${tab === item.tab
 							? 'bg-purple-700 text-white'
 							: 'text-gray-300 hover:bg-gray-800 hover:text-white'
 							}`}
@@ -42,8 +42,7 @@ const Sidebar = ({ tab, setTab }) => {
 			<div className="px-4 mt-auto">
 				<div className="pt-2 border-t border-gray-700">
 					<div className="text-xs text-gray-500">
-						<p>© {new Date().getFullYear()} ExerciseMD</p>
-						<p className="mt-1">Admin Dashboard v1.2.0</p>
+						<p>© {new Date().getFullYear()} ExerciseMD Admin Dashboard</p>
 					</div>
 				</div>
 			</div>
