@@ -4,7 +4,6 @@ import { FiSave, FiPlusCircle, FiX, FiVideo, FiImage, FiTag, FiList } from 'reac
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-// API base URL
 const BASE_URL = process.env.REACT_APP_API_URL || '';
 
 export default function CreateExercise() {
@@ -31,8 +30,11 @@ export default function CreateExercise() {
 		type: 'public'
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
-
-	const [customPositionEnabled, setCustomPositionEnabled] = useState(false);
+	const [customFields, setCustomFields] = useState({
+		positionEnabled: false,
+		categoryEnabled: false,
+		subCategoryEnabled: false
+	});
 	const [availableSubCategories, setAvailableSubCategories] = useState([]);
 	const [videoFiles, setVideoFiles] = useState([]);
 	const [imageFiles, setImageFiles] = useState([]);
@@ -74,16 +76,36 @@ export default function CreateExercise() {
 
 	useEffect(() => {
 		if (exercise.category) {
-			setAvailableSubCategories(validSubCategories[exercise.category] || []);
-			setExercise(prev => ({ ...prev, subCategory: '' }));
+			if (exercise.category === 'Other') {
+				setCustomFields(prev => ({ ...prev, categoryEnabled: true }));
+				// When category is "Other", clear subcategory dropdown options
+				setAvailableSubCategories([]);
+				// Reset subCategory value
+				setExercise(prev => ({ ...prev, subCategory: '' }));
+			} else {
+				setCustomFields(prev => ({ ...prev, categoryEnabled: false }));
+				// Load subcategories for the selected category
+				setAvailableSubCategories(validSubCategories[exercise.category] || []);
+				// Reset customCategory
+				setExercise(prev => ({ ...prev, customCategory: '' }));
+			}
 		}
 	}, [exercise.category]);
 
 	useEffect(() => {
-		if (exercise.position === 'Other') {
-			setCustomPositionEnabled(true);
+		if (exercise.subCategory === 'Other' && exercise.category !== 'Other') {
+			setCustomFields(prev => ({ ...prev, subCategoryEnabled: true }));
 		} else {
-			setCustomPositionEnabled(false);
+			setCustomFields(prev => ({ ...prev, subCategoryEnabled: false }));
+			setExercise(prev => ({ ...prev, customSubCategory: '' }));
+		}
+	}, [exercise.subCategory, exercise.category]);
+
+	useEffect(() => {
+		if (exercise.position === 'Other') {
+			setCustomFields(prev => ({ ...prev, positionEnabled: true }));
+		} else {
+			setCustomFields(prev => ({ ...prev, positionEnabled: false }));
 			setExercise(prev => ({ ...prev, customPosition: '' }));
 		}
 	}, [exercise.position]);
@@ -210,8 +232,18 @@ export default function CreateExercise() {
 			return;
 		}
 
-		if (!exercise.subCategory) {
+		if (exercise.category === 'Other' && !exercise.customCategory.trim()) {
+			toast.error('Custom category is required');
+			return;
+		}
+
+		if (exercise.category !== 'Other' && !exercise.subCategory) {
 			toast.error('Sub-category is required');
+			return;
+		}
+
+		if (exercise.category !== 'Other' && exercise.subCategory === 'Other' && !exercise.customSubCategory.trim()) {
+			toast.error('Custom sub-category is required');
 			return;
 		}
 
@@ -230,6 +262,10 @@ export default function CreateExercise() {
 		try {
 			// Prepare final data with actual position value
 			const finalPosition = exercise.position === 'Other' ? exercise.customPosition : exercise.position;
+			const finalCategory = exercise.category === 'Other' ? exercise.customCategory : exercise.category;
+			const finalSubCategory = exercise.category === 'Other'
+				? exercise.customSubCategory
+				: (exercise.subCategory === 'Other' ? exercise.customSubCategory : exercise.subCategory);
 
 			// Create FormData object for file uploads
 			const formData = new FormData();
@@ -243,8 +279,8 @@ export default function CreateExercise() {
 			formData.append('set', exercise.set);
 			formData.append('perform[count]', exercise.perform.count);
 			formData.append('perform[type]', exercise.perform.type);
-			formData.append('category', exercise.category);
-			formData.append('subCategory', exercise.subCategory);
+			formData.append('category', finalCategory);
+			formData.append('subCategory', finalSubCategory);
 			formData.append('position', finalPosition);
 			formData.append('isPremium', exercise.isPremium);
 			formData.append('custom[type]', exercise.type);
@@ -260,7 +296,6 @@ export default function CreateExercise() {
 
 			// Get token from local storage
 			const token = localStorage.getItem('token');
-
 			// Send request to backend
 			const response = await axios.post(`${BASE_URL}/exercises/`, formData, {
 				headers: {
@@ -312,8 +347,6 @@ export default function CreateExercise() {
 		setImageFiles([]);
 		setSelectedVideoPreview(null);
 
-		// Reset any other states
-		setCustomPositionEnabled(false);
 		setAvailableSubCategories([]);
 	};
 
@@ -365,7 +398,7 @@ export default function CreateExercise() {
 						</div>
 					</div>
 
-					{customPositionEnabled && (
+					{customFields.positionEnabled && (
 						<div className="mt-4">
 							<label className="block text-gray-300 font-medium mb-2" htmlFor="customPosition">
 								Custom Position
@@ -436,30 +469,82 @@ export default function CreateExercise() {
 								{categories.map((cat) => (
 									<option key={cat} value={cat}>{cat}</option>
 								))}
+								<option value="Other">Other</option>
 							</select>
 						</div>
 
-						<div>
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="subCategory">
-								Sub Category
+						{!customFields.categoryEnabled ? (
+							<div>
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="subCategory">
+									Sub Category
+								</label>
+								<select
+									id="subCategory"
+									name="subCategory"
+									value={exercise.subCategory}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									disabled={!exercise.category || exercise.category === 'Other'}
+									required
+								>
+									<option value="">Select Sub Category</option>
+									{availableSubCategories.map((subCat) => (
+										<option key={subCat} value={subCat}>{subCat}</option>
+									))}
+									<option value="Other">Other</option>
+								</select>
+							</div>
+						) : (
+							<div>
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="customSubCategory">
+									Custom Sub Category
+								</label>
+								<input
+									type="text"
+									id="customSubCategory"
+									name="customSubCategory"
+									value={exercise.customSubCategory}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									required
+								/>
+							</div>
+						)}
+					</div>
+					{customFields.categoryEnabled && (
+						<div className="mt-4">
+							<label className="block text-gray-300 font-medium mb-2" htmlFor="customCategory">
+								Custom Category
 							</label>
-							<select
-								id="subCategory"
-								name="subCategory"
-								value={exercise.subCategory}
+							<input
+								type="text"
+								id="customCategory"
+								name="customCategory"
+								value={exercise.customCategory}
 								onChange={handleChange}
 								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-								disabled={!exercise.category}
 								required
-							>
-								<option value="">Select Sub Category</option>
-								{availableSubCategories.map((subCat) => (
-									<option key={subCat} value={subCat}>{subCat}</option>
-								))}
-							</select>
+							/>
 						</div>
-					</div>
+					)}
 
+					{/* Custom Subcategory input when "Other" is selected */}
+					{customFields.subCategoryEnabled && (
+						<div className="mt-4">
+							<label className="block text-gray-300 font-medium mb-2" htmlFor="customSubCategory">
+								Custom Sub Category
+							</label>
+							<input
+								type="text"
+								id="customSubCategory"
+								name="customSubCategory"
+								value={exercise.customSubCategory}
+								onChange={handleChange}
+								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+								required
+							/>
+						</div>
+					)}
 					{/* <div className="mt-6 flex items-center">
 						<label className="flex items-center cursor-pointer">
 							<span className="mr-3 text-gray-300 font-medium">Premium Exercise</span>
@@ -476,7 +561,6 @@ export default function CreateExercise() {
 								<div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform ${exercise.isPremium ? 'translate-x-6' : ''}`}></div>
 							</div>
 						</label>
-
 					</div> */}
 					<div className="mt-6">
 						<div className="flex items-center">
