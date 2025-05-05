@@ -9,12 +9,11 @@ const AdminExerciseForm = ({ exercise, isEdit, onSave, adminToken }) => {
     category: '',
     subCategory: '',
     position: '',
-    image: null,
-    video: null,
+    image: [],
+    video: [],
     imagePreview: '',
     videoPreview: '',
     isPremium: false,
-    isCustom: true
   });
 
   // Available categories

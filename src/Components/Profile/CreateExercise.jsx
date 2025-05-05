@@ -1,6 +1,6 @@
-import { Cross, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-import { FiSave, FiPlusCircle, FiX, FiCheck, FiVideo, FiImage, FiTag, FiList } from 'react-icons/fi';
+import { FiSave, FiPlusCircle, FiX, FiVideo, FiImage, FiTag, FiList } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -24,6 +24,8 @@ export default function CreateExercise() {
 		category: '',
 		subCategory: '',
 		position: '',
+		customCategory: '',
+		customSubCategory: '',
 		customPosition: '',
 		isPremium: false,
 		type: 'public'
@@ -186,52 +188,52 @@ export default function CreateExercise() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		
+
 		// Validate form
 		if (!exercise.title.trim()) {
 			toast.error('Title is required');
 			return;
 		}
-		
+
 		if (!exercise.description.trim()) {
 			toast.error('Description is required');
 			return;
 		}
-		
+
 		if (!exercise.instruction.trim()) {
 			toast.error('Instructions are required');
 			return;
 		}
-		
+
 		if (!exercise.category) {
 			toast.error('Category is required');
 			return;
 		}
-		
+
 		if (!exercise.subCategory) {
 			toast.error('Sub-category is required');
 			return;
 		}
-		
+
 		if (!exercise.position) {
 			toast.error('Position is required');
 			return;
 		}
-		
+
 		if (exercise.position === 'Other' && !exercise.customPosition.trim()) {
 			toast.error('Custom position is required');
 			return;
 		}
-		
+
 		setIsSubmitting(true);
 
 		try {
 			// Prepare final data with actual position value
 			const finalPosition = exercise.position === 'Other' ? exercise.customPosition : exercise.position;
-			
+
 			// Create FormData object for file uploads
 			const formData = new FormData();
-			
+
 			// Add all text fields
 			formData.append('title', exercise.title);
 			formData.append('description', exercise.description);
@@ -246,34 +248,34 @@ export default function CreateExercise() {
 			formData.append('position', finalPosition);
 			formData.append('isPremium', exercise.isPremium);
 			formData.append('custom[type]', exercise.type);
-			
+
 			// Add files
 			videoFiles.forEach(videoData => {
 				formData.append('videos', videoData.file);
 			});
-			
+
 			imageFiles.forEach(imageData => {
 				formData.append('images', imageData.file);
 			});
-			
+
 			// Get token from local storage
 			const token = localStorage.getItem('token');
-			
+
 			// Send request to backend
-			const response = await axios.post(`${BASE_URL}/exercises/add`, formData, {
+			const response = await axios.post(`${BASE_URL}/exercises/`, formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
 					Authorization: `Bearer ${token}`
 				}
 			});
-			
+
 			// Reset form after successful submission
 			resetForm();
 			toast.success('Exercise created successfully!');
 			console.log('Exercise created:', response.data);
-			
+
 			// Navigate to exercises list or stay on the same page based on your app flow
-			
+
 		} catch (error) {
 			console.error('Error creating exercise:', error);
 			toast.error(error.response?.data?.message || 'Failed to create exercise. Please try again.');
@@ -304,12 +306,12 @@ export default function CreateExercise() {
 			isPremium: false,
 			type: 'public'
 		});
-		
+
 		// Clear file states
 		setVideoFiles([]);
 		setImageFiles([]);
 		setSelectedVideoPreview(null);
-		
+
 		// Reset any other states
 		setCustomPositionEnabled(false);
 		setAvailableSubCategories([]);

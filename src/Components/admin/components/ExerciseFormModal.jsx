@@ -1,34 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import AdminExerciseForm from '../AdminExerciseForm';
 
 const ExerciseFormModal = ({ isOpen, onClose, exercise, isEdit, onSave, adminToken }) => {
 	const modalRef = useRef();
-
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if (modalRef.current && !modalRef.current.contains(event.target)) {
-				onClose();
-			}
-		};
-
-		const handleEscape = (event) => {
-			if (event.key === 'Escape') {
-				onClose();
-			}
-		};
-
-		if (isOpen) {
-			document.addEventListener('mousedown', handleClickOutside);
-			document.addEventListener('keydown', handleEscape);
-			document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
-		}
-
-		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
-			document.removeEventListener('keydown', handleEscape);
-			document.body.style.overflow = 'auto'; // Re-enable scrolling when modal is closed
-		};
-	}, [isOpen, onClose]);
 
 	if (!isOpen) return null;
 

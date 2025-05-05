@@ -163,9 +163,9 @@ const MyFavorites = () => {
                 key={favorite._id}
                 className="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-gray-700 hover:border-purple-500 transition duration-300"
               >
-                {/* Media Carousel */}
+                {/* Media Carousel - Fixed height to match your second image */}
                 {(favorite.video?.length > 0 || favorite.image?.length > 0) && (
-                  <div className='min-h-[200px]'>
+                  <div className="h-48 relative">
                     <MediaCarousel videos={favorite.video || []} images={favorite.image || []} />
                   </div>
                 )}
@@ -237,5 +237,4 @@ const MyFavorites = () => {
     </div>
   );
 };
-
 export default MyFavorites;

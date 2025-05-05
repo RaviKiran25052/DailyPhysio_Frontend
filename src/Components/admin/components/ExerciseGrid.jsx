@@ -1,4 +1,6 @@
 import React from 'react';
+import MediaCarousel from '../../Profile/MediaCarousel';
+import { Crown } from 'lucide-react';
 
 const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm }) => {
 	// Placeholder image for exercises without images
@@ -20,25 +22,19 @@ const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm })
 			{exercises.map((exercise) => (
 				<div
 					key={exercise._id}
-					className="bg-gray-800 rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-all duration-300 border border-gray-700 hover:border-purple-500 flex flex-col"
-					onClick={() => onViewExercise(exercise)}
+					className="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-700 hover:border-purple-500 flex flex-col"
 				>
 					<div className="relative h-48 overflow-hidden">
-						<img
-							src={exercise.image || placeholderImage}
-							alt={exercise.title}
-							className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-						/>
+						<MediaCarousel images={exercise.image} videos={exercise.video} />
 						{exercise.isPremium && (
-							<div className="absolute top-3 right-3">
-								<span className="bg-yellow-600 text-yellow-200 px-3 py-1 rounded-full text-xs font-bold shadow-md">
-									PREMIUM
-								</span>
+							<div className="absolute top-3 left-3 z-20 bg-yellow-600 rounded-lg p-2">
+								<Crown size={16}/>
 							</div>
 						)}
 					</div>
 					<div className="p-6 flex-grow">
-						<h3 className="text-lg font-semibold text-purple-400">{exercise.title}</h3>
+						<h3 className="text-lg font-semibold text-purple-400 cursor-pointer"
+							onClick={() => onViewExercise(exercise)}>{exercise.title}</h3>
 						<p className="mt-2 text-white line-clamp-2 text-sm">{exercise.description}</p>
 						<div className="flex flex-wrap gap-2 mt-4">
 							{exercise.category && (
@@ -51,7 +47,7 @@ const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm })
 									{exercise.position}
 								</span>
 							)}
-							{exercise.isCustom && (
+							{exercise.custom.createdBy !== "admin" && (
 								<span className="bg-blue-900 text-blue-300 px-2 py-1 rounded-full text-xs">
 									Custom
 								</span>

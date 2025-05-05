@@ -17,14 +17,14 @@ const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const AdminExerciseList = () => {
   const navigate = useNavigate();
-  const [exercises, setExercises] = useState([]);
+  const [allExercises, setAllExercises] = useState([]);
+  const [displayedExercises, setDisplayedExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = window.innerWidth < 768 ? 8 : 15;
   const [adminToken, setAdminToken] = useState('');
   const [totalPages, setTotalPages] = useState(1);
   const [totalExercises, setTotalExercises] = useState(0);
@@ -34,8 +34,7 @@ const AdminExerciseList = () => {
     premium: 0,
     custom: 0
   });
-  const [isDataFetching, setIsDataFetching] = useState(false);
-
+  
   useEffect(() => {
     // Check if admin is logged in
     const loggedInAdmin = localStorage.getItem('adminInfo')
@@ -50,94 +49,15 @@ const AdminExerciseList = () => {
     }
 
     setAdminToken(loggedInAdmin.token);
-
     // Initial data fetch
-    const initializeData = async () => {
-      await fetchTabCounts(loggedInAdmin.token);
-      await fetchExercisesByTab(loggedInAdmin.token, 'all', 1);
-    };
+    fetchAllExercises(loggedInAdmin.token);
 
-    initializeData();
-
-    // Add window resize listener for responsive pagination
-    const handleResize = () => {
-      setCurrentPage(1); // Reset to first page on resize
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    // Reset to first page on component unmount if needed
+    return () => {};
   }, [navigate]);
 
-  // Handle tab changes without double loading
-  useEffect(() => {
-    if (adminToken && !isDataFetching) {
-      setIsDataFetching(true);
-      fetchExercisesByTab(adminToken, activeTab, 1).finally(() => {
-        setIsDataFetching(false);
-      });
-    }
-  }, [activeTab, adminToken]);
-
-  // Apply search filter with debounce
-  useEffect(() => {
-    if (!adminToken || isDataFetching) return;
-
-    const delayDebounceFn = setTimeout(() => {
-      setIsDataFetching(true);
-      if (searchTerm.trim() !== '') {
-        fetchExercisesWithSearch(adminToken, searchTerm, activeTab).finally(() => {
-          setIsDataFetching(false);
-        });
-      } else {
-        fetchExercisesByTab(adminToken, activeTab, 1).finally(() => {
-          setIsDataFetching(false);
-        });
-      }
-    }, 500);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm, adminToken]);
-
-  const fetchTabCounts = async (token) => {
-    try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const [allResponse, premiumResponse, customResponse] = await Promise.all([
-        axios.get(`${API_URL}/exercises?count=true`, config),
-        axios.get(`${API_URL}/exercises?isPremium=true&count=true`, config),
-        axios.get(`${API_URL}/exercises?isCustom=true&count=true`, config)
-      ]);
-
-      setTabCounts({
-        all: allResponse.data.total || 0,
-        premium: premiumResponse.data.total || 0,
-        custom: customResponse.data.total || 0
-      });
-
-      return true;
-    } catch (error) {
-      console.error('Error fetching tab counts:', error);
-      toast.error('Failed to load exercise counts');
-      return false;
-    }
-  };
-
-  const fetchExercisesByTab = async (token, tab, page = 1) => {
-    switch (tab) {
-      case 'premium':
-        return fetchExercises(token, page, true, false);
-      case 'custom':
-        return fetchExercises(token, page, false, true);
-      default: // 'all'
-        return fetchExercises(token, page);
-    }
-  };
-
-  const fetchExercises = async (token, page = 1, isPremium = null, isCustom = null) => {
+  // Fetch all exercises from the backend
+  const fetchAllExercises = async (token) => {
     try {
       setLoading(true);
 
@@ -147,65 +67,96 @@ const AdminExerciseList = () => {
         },
       };
 
-      // Build URL based on filters
-      let url = `${API_URL}/exercises?pageNumber=${page}&pageSize=${itemsPerPage}`;
-      if (isPremium !== null) url += `&isPremium=${isPremium}`;
-      if (isCustom !== null) url += `&isCustom=${isCustom}`;
-
-      const response = await axios.get(url, config);
-
-      const { exercises: fetchedExercises, pages, total } = response.data;
-
-      setExercises(fetchedExercises);
-      setCurrentPage(page);
-      setTotalPages(pages);
-      setTotalExercises(total);
+      const response = await axios.get(`${API_URL}/exercises`, config);
+      
+      const { exercises, pagination: paginationData } = response.data;
+      
+      setAllExercises(exercises);
+      setTotalPages(paginationData.totalPages);
+      setTotalExercises(paginationData.total);
+      
+      // Calculate tab counts
+      const counts = {
+        all: exercises.length,
+        premium: exercises.filter(ex => ex.isPremium).length,
+        custom: exercises.filter(ex => 
+          ex.custom?.createdBy === "proUser" || 
+          ex.custom?.createdBy === "therapist" && 
+          ex.custom?.type === "public"
+        ).length
+      };
+      
+      setTabCounts(counts);
+      
+      // Apply initial filtering based on active tab
+      filterExercises(exercises, activeTab, searchTerm, 1);
+      
       setLoading(false);
-
-      return true;
     } catch (error) {
       console.error('Error fetching exercises:', error);
       toast.error('Failed to load exercises');
       setLoading(false);
-      return false;
     }
   };
 
-  const fetchExercisesWithSearch = async (token, query, tab, page = 1) => {
-    try {
-      setLoading(true);
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      // Build URL based on filters and tab
-      let url = `${API_URL}/exercises?keyword=${encodeURIComponent(query)}&pageNumber=${page}&pageSize=${itemsPerPage}`;
-
-      // Add tab-specific parameters
-      if (tab === 'premium') url += '&isPremium=true';
-      if (tab === 'custom') url += '&isCustom=true';
-
-      const response = await axios.get(url, config);
-
-      const { exercises: fetchedExercises, pages, total } = response.data;
-
-      setExercises(fetchedExercises);
-      setCurrentPage(page);
-      setTotalPages(pages);
-      setTotalExercises(total);
-      setLoading(false);
-
-      return true;
-    } catch (error) {
-      console.error('Error searching exercises:', error);
-      toast.error('Failed to search exercises');
-      setLoading(false);
-      return false;
+  // Filter exercises based on active tab, search term, and current page
+  const filterExercises = (exercises, tab, search, page) => {
+    let filtered = [...exercises];
+    
+    // Apply tab filter
+    if (tab === 'premium') {
+      filtered = filtered.filter(ex => ex.isPremium);
+    } else if (tab === 'custom') {
+      filtered = filtered.filter(ex => 
+        (ex.custom?.createdBy === "proUser" || ex.custom?.createdBy === "therapist") && 
+        ex.custom?.type === "public"
+      );
     }
+    
+    // Apply search filter if search term exists
+    if (search && search.trim() !== '') {
+      const searchLower = search?.toLowerCase();
+      filtered = filtered.filter(ex => 
+        ex.name?.toLowerCase().includes(searchLower) || 
+        ex.category?.toLowerCase().includes(searchLower) ||
+        ex.subCategory?.toLowerCase().includes(searchLower) ||
+        ex.position?.toLowerCase().includes(searchLower)
+      );
+    }
+    
+    // Calculate total pages for filtered results
+    const totalFilteredPages = Math.ceil(filtered.length / 9);
+    
+    // Apply pagination
+    const startIndex = (page - 1) * 9;
+    const endIndex = Math.min(startIndex + 9, filtered.length);
+    const paginatedExercises = filtered.slice(startIndex, endIndex);
+    
+    setDisplayedExercises(paginatedExercises);
+    setTotalPages(totalFilteredPages);
+    setCurrentPage(page);
+    setTotalExercises(filtered.length);
   };
+
+  // Effect for handling tab changes
+  useEffect(() => {
+    if (allExercises.length > 0) {
+      filterExercises(allExercises, activeTab, searchTerm, 1);
+    }
+  }, [activeTab]);
+
+  // Effect for handling search with debounce
+  useEffect(() => {
+    if (allExercises.length === 0) return;
+    
+    const delayDebounceFn = setTimeout(() => {
+      filterExercises(allExercises, activeTab, searchTerm, 1);
+    }, 500);
+    
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
+  // No need for this effect since itemsPerPage is now fixed at 9
 
   const handleAddExercise = () => {
     setShowAddForm(true);
@@ -234,8 +185,6 @@ const AdminExerciseList = () => {
   const handleTabChange = (tab) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
-      setCurrentPage(1);
-      setSearchTerm('');
     }
   };
 
@@ -252,12 +201,24 @@ const AdminExerciseList = () => {
 
         toast.success('Exercise deleted successfully');
 
-        // Set loading to true to indicate refresh is happening
-        setLoading(true);
-
-        // Refresh the data
-        await fetchTabCounts(adminToken);
-        await fetchExercisesByTab(adminToken, activeTab, currentPage);
+        // Remove the deleted exercise from state
+        const updatedExercises = allExercises.filter(ex => ex._id !== id);
+        setAllExercises(updatedExercises);
+        
+        // Update counts and filters
+        const counts = {
+          all: updatedExercises.length,
+          premium: updatedExercises.filter(ex => ex.isPremium).length,
+          custom: updatedExercises.filter(ex => 
+            ex.custom?.createdBy === "proUser" || 
+            ex.custom?.createdBy === "therapist" && 
+            ex.custom?.type === "public"
+          ).length
+        };
+        setTabCounts(counts);
+        
+        // Apply filters again with updated data
+        filterExercises(updatedExercises, activeTab, searchTerm, currentPage);
 
         if (selectedExercise && selectedExercise._id === id) {
           setSelectedExercise(null);
@@ -266,7 +227,6 @@ const AdminExerciseList = () => {
       } catch (error) {
         console.error('Error deleting exercise:', error);
         toast.error(error.response?.data?.message || 'Failed to delete exercise');
-        setLoading(false);
       }
     }
   };
@@ -297,9 +257,7 @@ const AdminExerciseList = () => {
       handleCloseModal();
 
       // Refresh the data
-      setLoading(true);
-      await fetchTabCounts(adminToken);
-      await fetchExercisesByTab(adminToken, activeTab, 1);
+      fetchAllExercises(adminToken);
     } catch (error) {
       console.error('Error saving exercise:', error);
       toast.error(error.response?.data?.message || 'Failed to save exercise');
@@ -307,17 +265,8 @@ const AdminExerciseList = () => {
   };
 
   const paginate = (pageNumber) => {
-    if (pageNumber > 0 && pageNumber <= totalPages && !isDataFetching) {
-      setIsDataFetching(true);
-      if (searchTerm.trim() !== '') {
-        fetchExercisesWithSearch(adminToken, searchTerm, activeTab, pageNumber).finally(() => {
-          setIsDataFetching(false);
-        });
-      } else {
-        fetchExercisesByTab(adminToken, activeTab, pageNumber).finally(() => {
-          setIsDataFetching(false);
-        });
-      }
+    if (pageNumber > 0 && pageNumber <= totalPages) {
+      filterExercises(allExercises, activeTab, searchTerm, pageNumber);
     }
   };
 
@@ -364,7 +313,7 @@ const AdminExerciseList = () => {
             ) : (
               <>
                 <ExerciseGrid
-                  exercises={exercises}
+                  exercises={displayedExercises}
                   totalExercises={totalExercises}
                   onViewExercise={handleViewExercise}
                   searchTerm={searchTerm}
