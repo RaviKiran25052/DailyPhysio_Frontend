@@ -1,29 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBell, FaSearch } from 'react-icons/fa';
+import { FaBell, FaSearch, FaSpinner } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import TherapistCard from './TherapistCard';
-import TherapistForm from './TherapistForm';
-import DeleteConfirmation from './DeleteConfirmation';
+import TherapistManagementTable from './TherapistManagementTable';
 
 // API URL from environment or default
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const TherapistManagement = () => {
   const navigate = useNavigate();
-  const [adminToken, setAdminToken] = useState('');
   const [therapists, setTherapists] = useState([]);
-  const [requestCount, setRequestCount] = useState(0);
+  const [pendingTherapists, setPendingTherapists] = useState([]);
   const [filteredTherapists, setFilteredTherapists] = useState([]);
+  const [filteredPendingTherapists, setFilteredPendingTherapists] = useState([]);
+  const [requestCount, setRequestCount] = useState(0);
+  const [selectedTherapist, setSelectedTherapist] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingTherapist, setEditingTherapist] = useState(null);
-  const [deletingTherapist, setDeletingTherapist] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
+  const [isCards, setIsCards] = useState(true);
 
-  // Fetch therapists from the backend
-  const fetchTherapists = async (token) => {
+  const fetchTherapists = async () => {
+    const loggedInAdmin = localStorage.getItem('adminInfo')
+      ? JSON.parse(localStorage.getItem('adminInfo'))
+      : sessionStorage.getItem('adminInfo')
+        ? JSON.parse(sessionStorage.getItem('adminInfo'))
+        : null;
+
+    const token = loggedInAdmin?.token;
+
     try {
       setLoading(true);
 
@@ -35,9 +43,12 @@ const TherapistManagement = () => {
 
       const response = await axios.get(`${API_URL}/admin/therapists`, config);
       const fetchedTherapists = response.data.therapists || [];
+      const fetchedPendingTherapists = response.data.pendingTherapists || [];
 
       setRequestCount(response.data.requestCount || 0);
+      setPendingTherapists(fetchedPendingTherapists);
       setTherapists(fetchedTherapists);
+      setFilteredPendingTherapists(fetchedPendingTherapists);
       setFilteredTherapists(fetchedTherapists);
       setLoading(false);
     } catch (error) {
@@ -52,22 +63,14 @@ const TherapistManagement = () => {
     }
   };
 
-  // Check for admin authentication and fetch therapists
+  const handleEdit = (therapist) => {
+    setSelectedTherapist(therapist);
+    setIsModalOpen(true)
+  }
+
   useEffect(() => {
-    const loggedInAdmin = localStorage.getItem('adminInfo')
-      ? JSON.parse(localStorage.getItem('adminInfo'))
-      : sessionStorage.getItem('adminInfo')
-        ? JSON.parse(sessionStorage.getItem('adminInfo'))
-        : null;
-
-    if (!loggedInAdmin) {
-      navigate('/admin/login');
-      return;
-    }
-
-    setAdminToken(loggedInAdmin.token);
-    fetchTherapists(loggedInAdmin.token);
-  }, []);
+    fetchTherapists();
+  }, [isCards]);
 
   // Handle search functionality
   const handleSearch = (e) => {
@@ -76,10 +79,15 @@ const TherapistManagement = () => {
 
     if (value === '') {
       setFilteredTherapists(therapists);
+      setFilteredPendingTherapists(pendingTherapists);
     } else {
       const filtered = therapists.filter(
         therapist => therapist.name.toLowerCase().includes(value)
       );
+      const filteredPT = pendingTherapists.filter(
+        therapist => therapist.name.toLowerCase().includes(value)
+      );
+      setFilteredPendingTherapists(filteredPT);
       setFilteredTherapists(filtered);
     }
   };
@@ -91,113 +99,29 @@ const TherapistManagement = () => {
     navigate('/admin/login');
   };
 
-  // Open the form modal for editing a therapist
-  const handleEditTherapist = (therapist) => {
-    setEditingTherapist(therapist);
-    setIsFormOpen(true);
-  };
-
-  // Open delete confirmation modal
-  const handleDeleteClick = (therapist) => {
-    setDeletingTherapist(therapist);
-  };
-
-  // Handle form submission for adding/editing therapist
-  const handleFormSubmit = async (therapistData) => {
+  const updateTherapistStatus = async (id, status) => {
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${adminToken}`,
-        },
-      };
-
-      if (editingTherapist) {
-        // Edit existing therapist
-        const response = await axios.put(
-          `${API_URL}/admin/therapists/${editingTherapist._id}`,
-          therapistData,
-          config
-        );
-
-        if (response.data.success) {
-          // Update local state
-          const updatedTherapists = therapists.map(t =>
-            t._id === editingTherapist._id ? response.data.therapist : t
-          );
-          setTherapists(updatedTherapists);
-          setFilteredTherapists(updatedTherapists);
-          toast.success('Therapist updated successfully');
-        }
-      } else {
-        // Add new therapist
-        const response = await axios.post(
-          `${API_URL}/admin/therapists`,
-          therapistData,
-          config
-        );
-
-        if (response.data.success) {
-          // Add to local state
-          const newTherapist = response.data.therapist;
-          const updatedTherapists = [...therapists, newTherapist];
-          setTherapists(updatedTherapists);
-          setFilteredTherapists(updatedTherapists);
-          toast.success('Therapist added successfully');
-        }
+      setProcessing(true);
+      const adminInfo = JSON.parse(localStorage.getItem('adminInfo'));
+      if (!adminInfo || !adminInfo.token) {
+        throw new Error('Admin authentication required');
       }
-      setIsFormOpen(false);
-    } catch (error) {
-      console.error('Error saving therapist:', error);
-      const errorMsg = error.response && error.response.data.message
-        ? error.response.data.message
-        : 'Failed to save therapist';
-      toast.error(errorMsg);
 
-      // If the token is invalid, redirect to login
-      if (error.response && error.response.status === 401) {
-        handleLogout();
-      }
-    }
-  };
-
-  // Handle therapist deletion
-  const handleDeleteTherapist = async () => {
-    if (deletingTherapist) {
-      try {
-        const config = {
+      await axios.put(`${API_URL}/admin/therapists/${id}/approve`,
+        { state: status },
+        {
           headers: {
-            Authorization: `Bearer ${adminToken}`,
-          },
-        };
-
-        const response = await axios.delete(
-          `${API_URL}/admin/therapists/${deletingTherapist._id}`,
-          config
-        );
-
-        if (response.data.success) {
-          // Update local state
-          const updatedTherapists = therapists.filter(
-            therapist => therapist._id !== deletingTherapist._id
-          );
-          setTherapists(updatedTherapists);
-          setFilteredTherapists(updatedTherapists);
-          toast.success('Therapist deleted successfully');
+            'Authorization': `Bearer ${adminInfo.token}`,
+            'Content-Type': 'application/json'
+          }
         }
-        setDeletingTherapist(null);
-      } catch (error) {
-        console.error('Error deleting therapist:', error);
-        const errorMsg = error.response && error.response.data.message
-          ? error.response.data.message
-          : 'Failed to delete therapist';
-        toast.error(errorMsg);
-
-        // If the token is invalid, redirect to login
-        if (error.response && error.response.status === 401) {
-          handleLogout();
-        }
-      }
+      );
+      fetchTherapists();
+    } catch (err) {
+      console.error(err.response?.data?.message || err.message);
+    } finally {
+      setIsModalOpen(false);
+      setProcessing(false)
     }
   };
 
@@ -222,7 +146,7 @@ const TherapistManagement = () => {
                 className="pl-10 pr-4 py-2 w-full rounded-md bg-gray-800 border border-gray-700 text-purple-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               />
             </div>
-            <div onClick={() => navigate('/admin/therapists/manage')} className="cursor-pointer relative flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/10 border-2 border-purple-500 group-hover:scale-105 transition-transform duration-300">
+            <div onClick={() => setIsCards(false)} className="cursor-pointer relative flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/10 border-2 border-purple-500 group-hover:scale-105 transition-transform duration-300">
               <FaBell className="text-white relative z-10" />
               {requestCount > 0 &&
                 <>
@@ -242,41 +166,72 @@ const TherapistManagement = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredTherapists.length > 0 ? (
-              filteredTherapists.map(therapist => (
-                <TherapistCard
-                  key={therapist._id}
-                  therapist={therapist}
-                  onEdit={() => handleEditTherapist(therapist)}
-                  onDelete={() => handleDeleteClick(therapist)}
-                />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-10">
-                <p className="text-gray-400 text-lg">No therapists found</p>
-              </div>
-            )}
-          </div>
+          isCards ?
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {filteredTherapists.length > 0 ? (
+                filteredTherapists.map(therapist => (
+                  <TherapistCard
+                    key={therapist._id}
+                    therapist={therapist}
+                    onEdit={handleEdit}
+                  />
+                ))
+              ) : (
+                <div className="col-span-full text-center py-10">
+                  <p className="text-gray-400 text-lg">No therapists found</p>
+                </div>
+              )}
+            </div>
+            : <TherapistManagementTable therapists={filteredPendingTherapists} onEdit={handleEdit} onUpdate={updateTherapistStatus} onBack={() => { setIsCards(true); setSearchTerm('') }} />
         )}
       </main>
 
-      {/* Add/Edit Therapist Form Modal */}
-      {isFormOpen && (
-        <TherapistForm
-          therapist={editingTherapist}
-          onClose={() => setIsFormOpen(false)}
-          onSubmit={handleFormSubmit}
-        />
-      )}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-lg shadow-xl p-6 w-96 max-w-md border border-gray-700">
+            <h3 className="text-lg font-semibold text-white mb-4">
+              Update Status for {selectedTherapist.name}
+            </h3>
 
-      {/* Delete Confirmation Modal */}
-      {deletingTherapist && (
-        <DeleteConfirmation
-          therapist={deletingTherapist}
-          onCancel={() => setDeletingTherapist(null)}
-          onConfirm={handleDeleteTherapist}
-        />
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Select Status
+              </label>
+              <div className="relative">
+                <select
+                  className="block w-full pl-3 pr-10 py-2 text-base bg-gray-700 border border-gray-600 text-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 rounded-md"
+                  defaultValue={selectedTherapist.status}
+                  onChange={(e) => setSelectedTherapist({ ...selectedTherapist, status: e.target.value })}
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="rejected">Reject</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="px-4 py-2 bg-gray-700 text-gray-300 rounded-md hover:bg-gray-600 transition duration-150"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => updateTherapistStatus(selectedTherapist._id, selectedTherapist.status)}
+                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-500 transition duration-150"
+                disabled={processing}
+              >
+                {processing ?
+                  <div className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-md opacity-75">
+                    <FaSpinner className="animate-spin mr-2" /> Updating...
+                  </div>
+                  : "Update"
+                }
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

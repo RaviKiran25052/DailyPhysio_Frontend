@@ -17,7 +17,6 @@ import TherapistManagementTable from './Components/admin/Therapist/TherapistMana
 import TherapistConsultation from './Components/Therapist/TherapistConsultation';
 import axios from 'axios';
 import CreatorExercisesPage from './Pages/CreatorExercisesPage';
-import AdminDashboard from './Components/admin/AdminDashboard';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -70,7 +69,6 @@ const AppContent = () => {
           <Route path="/therapist/new-consultation" element={<TherapistConsultation />} />
           {/* </Route> */}
 
-          <Route path="/admin/" element={<AdminDashboard />} />
           <Route path="/admin/login" element={<Adminlogin />} />
           <Route path="/admin/home" element={<AdminHome />} />
           <Route path="/admin/exercises" element={<AdminExerciseList />} />

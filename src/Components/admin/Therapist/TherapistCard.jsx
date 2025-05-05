@@ -1,7 +1,7 @@
 import React from 'react';
-import { FaUserMd, FaEdit, FaTrash, FaEnvelope, FaHospital, FaUserFriends } from 'react-icons/fa';
+import { FaUserMd, FaEdit, FaEnvelope, FaHospital, FaUserFriends } from 'react-icons/fa';
 
-const TherapistCard = ({ therapist, onEdit, onDelete }) => {
+const TherapistCard = ({ therapist, onEdit }) => {
   return (
     <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-700 hover:border-purple-500 rounded-2xl shadow-xl hover:shadow-purple-800/50 transition-all duration-300 overflow-hidden relative group p-6">
       {/* Header: Icon + Info */}
@@ -73,18 +73,15 @@ const TherapistCard = ({ therapist, onEdit, onDelete }) => {
       <div className="w-full h-0.5 bg-gradient-to-r from-transparent via-white/50 to-transparent my-6 rounded-full"></div>
 
       {/* Buttons */}
-      <div className="flex justify-end gap-4">
+      <div className="flex justify-between items-center gap-4">
+        {therapist.status === 'active' && <span className="px-3 py-2 inline-flex text-xs leading-5 font-medium rounded-full bg-green-900/30 text-green-400 border border-green-500/30">Verified</span>}
+        {therapist.status === 'rejected' && <span className="px-3 py-2 inline-flex text-xs leading-5 font-medium rounded-full bg-red-900/30 text-red-400 border border-red-500/30">Rejected</span>}
+        {therapist.status === 'inactive' && <span className="px-3 py-2 inline-flex text-xs leading-5 font-medium rounded-full bg-yellow-900/30 text-yellow-400 border border-yellow-500/30">Inactive</span>}
         <button
-          onClick={onEdit}
+          onClick={() => onEdit(therapist)}
           className="flex items-center px-4 py-2 rounded-lg border border-purple-500 text-purple-400 hover:bg-purple-800 hover:text-white transition-all duration-200 shadow-sm"
         >
           <FaEdit className="mr-2" /> Edit
-        </button>
-        <button
-          onClick={onDelete}
-          className="flex items-center px-4 py-2 rounded-lg border border-red-500 text-red-400 hover:bg-red-800 hover:text-white transition-all duration-200 shadow-sm"
-        >
-          <FaTrash className="mr-2" /> Delete
         </button>
       </div>
     </div>
