@@ -33,7 +33,7 @@ const AdminExerciseList = () => {
     premium: 0,
     custom: 0
   });
-  
+
   useEffect(() => {
     // Check if admin is logged in
     const loggedInAdmin = localStorage.getItem('adminInfo')
@@ -52,7 +52,7 @@ const AdminExerciseList = () => {
     fetchAllExercises(loggedInAdmin.token);
 
     // Reset to first page on component unmount if needed
-    return () => {};
+    return () => { };
   }, [navigate]);
 
   // Fetch all exercises from the backend
@@ -67,29 +67,29 @@ const AdminExerciseList = () => {
       };
 
       const response = await axios.get(`${API_URL}/exercises`, config);
-      
+
       const { exercises, pagination: paginationData } = response.data;
-      
+
       setAllExercises(exercises);
       setTotalPages(paginationData.totalPages);
       setTotalExercises(paginationData.total);
-      
+
       // Calculate tab counts
       const counts = {
         all: exercises.length,
         premium: exercises.filter(ex => ex.isPremium).length,
-        custom: exercises.filter(ex => 
-          (ex.custom?.createdBy === "proUser" || 
-          ex.custom?.createdBy === "therapist") && 
+        custom: exercises.filter(ex =>
+          (ex.custom?.createdBy === "proUser" ||
+            ex.custom?.createdBy === "therapist") &&
           ex.custom?.type === "public"
         ).length
       };
-      
+
       setTabCounts(counts);
-      
+
       // Apply initial filtering based on active tab
       filterExercises(exercises, activeTab, searchTerm, 1);
-      
+
       setLoading(false);
     } catch (error) {
       console.error('Error fetching exercises:', error);
@@ -101,36 +101,36 @@ const AdminExerciseList = () => {
   // Filter exercises based on active tab, search term, and current page
   const filterExercises = (exercises, tab, search, page) => {
     let filtered = [...exercises];
-    
+
     // Apply tab filter
     if (tab === 'premium') {
       filtered = filtered.filter(ex => ex.isPremium);
     } else if (tab === 'custom') {
-      filtered = filtered.filter(ex => 
-        (ex.custom?.createdBy === "proUser" || ex.custom?.createdBy === "therapist") && 
+      filtered = filtered.filter(ex =>
+        (ex.custom?.createdBy === "proUser" || ex.custom?.createdBy === "therapist") &&
         ex.custom?.type === "public"
       );
     }
-    
+
     // Apply search filter if search term exists
     if (search && search.trim() !== '') {
       const searchLower = search?.toLowerCase();
-      filtered = filtered.filter(ex => 
-        ex.name?.toLowerCase().includes(searchLower) || 
+      filtered = filtered.filter(ex =>
+        ex.name?.toLowerCase().includes(searchLower) ||
         ex.category?.toLowerCase().includes(searchLower) ||
         ex.subCategory?.toLowerCase().includes(searchLower) ||
         ex.position?.toLowerCase().includes(searchLower)
       );
     }
-    
+
     // Calculate total pages for filtered results
     const totalFilteredPages = Math.ceil(filtered.length / 9);
-    
+
     // Apply pagination
     const startIndex = (page - 1) * 9;
     const endIndex = Math.min(startIndex + 9, filtered.length);
     const paginatedExercises = filtered.slice(startIndex, endIndex);
-    
+
     setDisplayedExercises(paginatedExercises);
     setTotalPages(totalFilteredPages);
     setCurrentPage(page);
@@ -147,11 +147,11 @@ const AdminExerciseList = () => {
   // Effect for handling search with debounce
   useEffect(() => {
     if (allExercises.length === 0) return;
-    
+
     const delayDebounceFn = setTimeout(() => {
       filterExercises(allExercises, activeTab, searchTerm, 1);
     }, 500);
-    
+
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
@@ -203,19 +203,19 @@ const AdminExerciseList = () => {
         // Remove the deleted exercise from state
         const updatedExercises = allExercises.filter(ex => ex._id !== id);
         setAllExercises(updatedExercises);
-        
+
         // Update counts and filters
         const counts = {
           all: updatedExercises.length,
           premium: updatedExercises.filter(ex => ex.isPremium).length,
-          custom: updatedExercises.filter(ex => 
-            (ex.custom?.createdBy === "proUser" || 
-            ex.custom?.createdBy === "therapist") && 
+          custom: updatedExercises.filter(ex =>
+            (ex.custom?.createdBy === "proUser" ||
+              ex.custom?.createdBy === "therapist") &&
             ex.custom?.type === "public"
           ).length
         };
         setTabCounts(counts);
-        
+
         // Apply filters again with updated data
         filterExercises(updatedExercises, activeTab, searchTerm, currentPage);
 
@@ -270,20 +270,21 @@ const AdminExerciseList = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col">
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {selectedExercise && !showEditForm && (
-          <ExerciseDetail
-            exercise={selectedExercise}
-            onEdit={handleEditExercise}
-            onDelete={handleDeleteExercise}
-            onBack={() => setSelectedExercise(null)}
-          />
-        )}
+    <main className="p-6">
+      {selectedExercise && !showEditForm && (
+        <ExerciseDetail
+          exercise={selectedExercise}
+          onEdit={handleEditExercise}
+          onDelete={handleDeleteExercise}
+          onBack={() => setSelectedExercise(null)}
+        />
+      )}
 
-        {!selectedExercise && (
-          <>
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
+      {!selectedExercise && (
+        <>
+          <div className='flex justify-between items-center mb-6'>
+            <h2 className="text-3xl font-extrabold text-white">Exercise Management</h2>
+            <div className="flex gap-4 items-center">
               <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
               <button
                 onClick={handleAddExercise}
@@ -293,49 +294,49 @@ const AdminExerciseList = () => {
                 Add Exercise
               </button>
             </div>
+          </div>
 
-            <ExerciseTabs
-              activeTab={activeTab}
-              onTabChange={handleTabChange}
-              counts={tabCounts}
-            />
+          <ExerciseTabs
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            counts={tabCounts}
+          />
 
-            {loading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-              </div>
-            ) : (
-              <>
-                <ExerciseGrid
-                  exercises={displayedExercises}
-                  totalExercises={totalExercises}
-                  onViewExercise={handleViewExercise}
-                  searchTerm={searchTerm}
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+            </div>
+          ) : (
+            <>
+              <ExerciseGrid
+                exercises={displayedExercises}
+                totalExercises={totalExercises}
+                onViewExercise={handleViewExercise}
+                searchTerm={searchTerm}
+              />
+
+              {totalPages > 1 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={paginate}
                 />
+              )}
+            </>
+          )}
+        </>
+      )}
 
-                {totalPages > 1 && (
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={paginate}
-                  />
-                )}
-              </>
-            )}
-          </>
-        )}
-
-        {/* Modal for Add/Edit Exercise */}
-        <ExerciseFormModal
-          isOpen={showAddForm || showEditForm}
-          onClose={handleCloseModal}
-          exercise={selectedExercise}
-          isEdit={showEditForm}
-          onSave={handleSaveExercise}
-          adminToken={adminToken}
-        />
-      </main>
-    </div>
+      {/* Modal for Add/Edit Exercise */}
+      <ExerciseFormModal
+        isOpen={showAddForm || showEditForm}
+        onClose={handleCloseModal}
+        exercise={selectedExercise}
+        isEdit={showEditForm}
+        onSave={handleSaveExercise}
+        adminToken={adminToken}
+      />
+    </main>
   );
 };
 

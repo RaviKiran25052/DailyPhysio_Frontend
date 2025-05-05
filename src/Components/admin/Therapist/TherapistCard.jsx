@@ -3,11 +3,11 @@ import { FaUserMd, FaEdit, FaEnvelope, FaHospital, FaUserFriends } from 'react-i
 
 const TherapistCard = ({ therapist, onEdit }) => {
   return (
-    <div className="bg-gray-900/80 backdrop-blur-sm border border-gray-700 hover:border-purple-500 rounded-2xl shadow-xl hover:shadow-purple-800/50 transition-all duration-300 overflow-hidden relative group p-6">
+    <div className="bg-gray-900/80 backdrop-blur-sm border border-purple-500 rounded-2xl shadow-lg hover:shadow-purple-800/50 transition-all duration-300 overflow-hidden relative group p-6">
       {/* Header: Icon + Info */}
       <div className="flex items-start mb-4 space-x-4">
         {/* Icon */}
-        <div className="bg-gradient-to-br from-purple-700 to-purple-900 p-4 rounded-full shadow-lg group-hover:rotate-6 transition duration-500">
+        <div className="bg-gradient-to-br from-purple-700 to-purple-900 p-4 rounded-full shadow-lg">
           <FaUserMd className="text-white text-2xl" />
         </div>
 
@@ -74,9 +74,9 @@ const TherapistCard = ({ therapist, onEdit }) => {
 
       {/* Buttons */}
       <div className="flex justify-between items-center gap-4">
-        {therapist.status === 'active' && <span className="px-3 py-2 inline-flex text-xs leading-5 font-medium rounded-full bg-green-900/30 text-green-400 border border-green-500/30">Verified</span>}
-        {therapist.status === 'rejected' && <span className="px-3 py-2 inline-flex text-xs leading-5 font-medium rounded-full bg-red-900/30 text-red-400 border border-red-500/30">Rejected</span>}
-        {therapist.status === 'inactive' && <span className="px-3 py-2 inline-flex text-xs leading-5 font-medium rounded-full bg-yellow-900/30 text-yellow-400 border border-yellow-500/30">Inactive</span>}
+        {therapist.status === 'active' && <span className="px-3 py-2 inline-flex leading-5 font-medium rounded-full bg-green-900/30 text-green-400 border border-green-500/30">Verified</span>}
+        {therapist.status === 'rejected' && <span className="px-3 py-2 inline-flex leading-5 font-medium rounded-full bg-red-900/30 text-red-400 border border-red-500/30">Rejected</span>}
+        {therapist.status === 'inactive' && <span className="px-3 py-2 inline-flex leading-5 font-medium rounded-full bg-yellow-900/30 text-yellow-400 border border-yellow-500/30">Inactive</span>}
         <button
           onClick={() => onEdit(therapist)}
           className="flex items-center px-4 py-2 rounded-lg border border-purple-500 text-purple-400 hover:bg-purple-800 hover:text-white transition-all duration-200 shadow-sm"

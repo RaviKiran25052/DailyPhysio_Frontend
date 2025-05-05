@@ -238,9 +238,7 @@ const DashBoard = () => {
 					<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
 				</div>
 				:
-				<div className="bg-gray-900 text-white p-6 min-h-screen">
-					<h1 className="text-3xl font-bold mb-8 text-center text-purple-300">Dashboard Overview</h1>
-
+				<div className="bg-gray-900 text-white px-6">
 					{/* SECTION 1: INFO CARDS */}
 					<h2 className="text-2xl font-bold mb-6 text-purple-100 border-b border-purple-500 pb-2">
 						Overview Stats

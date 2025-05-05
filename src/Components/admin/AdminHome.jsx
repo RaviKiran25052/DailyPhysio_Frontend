@@ -50,7 +50,7 @@ const AdminHome = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-800">
+    <div className="flex h-screen bg-gray-900">
       {/* Sidebar */}
       <Sidebar tab={activeTab} setTab={(tab) => setActiveTab(tab)} />
 

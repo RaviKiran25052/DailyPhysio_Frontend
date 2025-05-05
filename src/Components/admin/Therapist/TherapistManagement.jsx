@@ -126,66 +126,63 @@ const TherapistManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col">
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Back button at top of the page */}
-        <div className="flex justify-between items-center mb-10">
-          <h2 className="text-3xl font-extrabold text-white">Therapist Management</h2>
+    <main className="p-6">
+      {/* Back button at top of the page */}
+      <div className="flex justify-between items-center mb-10">
+        <h2 className="text-3xl font-extrabold text-white">Therapist Management</h2>
 
-          {/* Search and Add buttons */}
-          <div className="flex items-center gap-8">
-            <div className="relative w-full sm:w-64 md:w-80">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaSearch className="text-gray-400" />
-              </div>
-              <input
-                type="text"
-                placeholder="Search by therapist name..."
-                value={searchTerm}
-                onChange={handleSearch}
-                className="pl-10 pr-4 py-2 w-full rounded-md bg-gray-800 border border-gray-700 text-purple-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              />
+        {/* Search and Add buttons */}
+        <div className="flex items-center gap-8">
+          <div className="relative w-full sm:w-64 md:w-80">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <FaSearch className="text-gray-400" />
             </div>
-            <div onClick={() => setIsCards(false)} className="cursor-pointer relative flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/10 border-2 border-purple-500 group-hover:scale-105 transition-transform duration-300">
-              <FaBell className="text-white relative z-10" />
-              {requestCount > 0 &&
-                <>
-                  <div className="absolute animate-ping h-full w-full bg-purple-500 opacity-75 rounded-full"></div>
-                  <span className="absolute -top-2 -right-2 bg-white text-purple-900 text-[10px] font-bold rounded-full px-1.5 py-0.5 shadow">
-                    {requestCount}
-                  </span>
-                </>
-              }
-            </div>
+            <input
+              type="text"
+              placeholder="Search by therapist name..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="pl-10 pr-4 py-2 w-full rounded-md bg-gray-800 border border-gray-700 text-purple-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            />
+          </div>
+          <div onClick={() => setIsCards(false)} className="cursor-pointer relative flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/10 border-2 border-purple-500 group-hover:scale-105 transition-transform duration-300">
+            <FaBell className="text-white relative z-10" />
+            {requestCount > 0 &&
+              <>
+                <div className="absolute animate-ping h-full w-full bg-purple-500 opacity-75 rounded-full"></div>
+                <span className="absolute -top-2 -right-2 bg-white text-purple-900 text-[10px] font-bold rounded-full px-1.5 py-0.5 shadow">
+                  {requestCount}
+                </span>
+              </>
+            }
           </div>
         </div>
+      </div>
 
-        {/* Therapist Cards */}
-        {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      {/* Therapist Cards */}
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        </div>
+      ) : (
+        isCards ?
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {filteredTherapists.length > 0 ? (
+              filteredTherapists.map(therapist => (
+                <TherapistCard
+                  key={therapist._id}
+                  therapist={therapist}
+                  onEdit={handleEdit}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-10">
+                <p className="text-gray-400 text-lg">No therapists found</p>
+              </div>
+            )}
           </div>
-        ) : (
-          isCards ?
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredTherapists.length > 0 ? (
-                filteredTherapists.map(therapist => (
-                  <TherapistCard
-                    key={therapist._id}
-                    therapist={therapist}
-                    onEdit={handleEdit}
-                  />
-                ))
-              ) : (
-                <div className="col-span-full text-center py-10">
-                  <p className="text-gray-400 text-lg">No therapists found</p>
-                </div>
-              )}
-            </div>
-            : <TherapistManagementTable therapists={filteredPendingTherapists} onEdit={handleEdit} onUpdate={updateTherapistStatus} onBack={() => { setIsCards(true); setSearchTerm('') }} />
-        )}
-      </main>
-
+          : <TherapistManagementTable therapists={filteredPendingTherapists} onEdit={handleEdit} onUpdate={updateTherapistStatus} onBack={() => { setIsCards(true); setSearchTerm('') }} />
+      )}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-gray-800 rounded-lg shadow-xl p-6 w-96 max-w-md border border-gray-700">
@@ -233,7 +230,7 @@ const TherapistManagement = () => {
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 };
 
