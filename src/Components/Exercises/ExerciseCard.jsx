@@ -46,10 +46,10 @@ const ExerciseCard = ({
     }
 
     setIsLoadingFavorite(true);
-    
+
     try {
       await axios.post(
-        `${API_URL}/exercises/favorite/${exercise._id}`, 
+        `${API_URL}/exercises/favorite/${exercise._id}`,
         {},
         {
           headers: {
@@ -57,7 +57,7 @@ const ExerciseCard = ({
           }
         }
       );
-      
+
       setIsFavorite(true);
       toast.success('Added to favorites');
     } catch (error) {
@@ -96,7 +96,7 @@ const ExerciseCard = ({
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-700">
       <div className={`relative ${getLayout()} overflow-hidden bg-gray-700`}>
-        <MediaCarousel images={exercise.image} videos={exercise.video} />
+        <MediaCarousel images={exercise.image} video={exercise.video} />
         {exercise.isPremium &&
           <div className='absolute top-2 left-2 bg-yellow-500 rounded-md z-10 p-1'>
             <Crown size={16} className='text-gray-800' />
@@ -106,11 +106,10 @@ const ExerciseCard = ({
 
         {/* Favorite Button */}
         <button
-          className={`absolute top-2 right-2 z-11 p-2 rounded-full transition-all duration-200 ${
-            isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite 
-              ? 'bg-gray-800/80 cursor-default' 
+          className={`absolute top-2 right-2 z-11 p-2 rounded-full transition-all duration-200 ${isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite
+              ? 'bg-gray-800/80 cursor-default'
               : 'bg-gray-800/80 hover:bg-purple-900/80'
-          }`}
+            }`}
           onClick={handleToggleFavorite}
           disabled={isLoadingFavorite || isFavorite}
           title={isFavorite ? "Added to favorites" : "Add to favorites"}
@@ -118,9 +117,9 @@ const ExerciseCard = ({
           {isLoadingFavorite ? (
             <div className="w-5 h-5 border-2 border-t-transparent border-purple-500 rounded-full animate-spin"></div>
           ) : (
-            <Heart 
-              size={18} 
-              className={isFavorite ? "text-purple-500 fill-purple-500" : "text-white"} 
+            <Heart
+              size={18}
+              className={isFavorite ? "text-purple-500 fill-purple-500" : "text-white"}
             />
           )}
         </button>

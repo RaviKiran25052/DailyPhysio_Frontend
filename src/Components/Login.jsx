@@ -163,145 +163,143 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center">
-        {/* Overlay */}
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
-          onClick={handleClose}
-        ></div>
-        <div className="bg-gray-800 relative w-full max-w-md rounded-2xl shadow-2xl transform transition-all duration-300 scale-100 overflow-hidden">
-          <div className="bg-gradient-to-r from-purple-600 to-purple-800 py-3 px-5 flex-shrink-0">
-            <h2 className="text-lg font-bold text-white mt-2">
-              {forgotPassword
-                ? 'Reset Password'
-                : isSignIn
-                  ? 'Welcome Back'
-                  : 'Create Account'
-              }
-            </h2>
-            <p className="text-purple-200 mt-1 text-sm">
-              {forgotPassword
-                ? 'Enter your email to receive reset instructions'
-                : isSignIn
-                  ? 'Sign in to access your personalized exercise programs'
-                  : 'Join thousands improving their health with expert guidance'
-              }
-            </p>
-          </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Overlay */}
+      <div
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+        onClick={handleClose}
+      ></div>
+      <div className="bg-gray-800 relative w-full max-w-md rounded-2xl shadow-2xl transform transition-all duration-300 scale-100 overflow-hidden">
+        <div className="bg-gradient-to-r from-purple-600 to-purple-800 py-3 px-5 flex-shrink-0">
+          <h2 className="text-lg font-bold text-white mt-2">
+            {forgotPassword
+              ? 'Reset Password'
+              : isSignIn
+                ? 'Welcome Back'
+                : 'Create Account'
+            }
+          </h2>
+          <p className="text-purple-200 mt-1 text-sm">
+            {forgotPassword
+              ? 'Enter your email to receive reset instructions'
+              : isSignIn
+                ? 'Sign in to access your personalized exercise programs'
+                : 'Join thousands improving their health with expert guidance'
+            }
+          </p>
+        </div>
 
-          <div className="p-5 overflow-y-auto flex-grow">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {!isSignIn && !forgotPassword && (
-                <div>
-                  <label htmlFor="name" className="block text-gray-300 mb-1 text-sm font-medium">Full Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder="Enter your name"
-                    required
-                    autoComplete="username"
-                  />
-                </div>
-              )}
-
+        <div className="p-5 overflow-y-auto flex-grow">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {!isSignIn && !forgotPassword && (
               <div>
-                <label htmlFor="email" className="block text-gray-300 mb-1 text-sm font-medium">Email</label>
+                <label htmlFor="name" className="block text-gray-300 mb-1 text-sm font-medium">Full Name</label>
                 <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
                   className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  placeholder="Enter your email"
+                  placeholder="Enter your name"
                   required
                   autoComplete="username"
                 />
               </div>
+            )}
 
-              {!forgotPassword && (
+            <div>
+              <label htmlFor="email" className="block text-gray-300 mb-1 text-sm font-medium">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Enter your email"
+                required
+                autoComplete="username"
+              />
+            </div>
+
+            {!forgotPassword && (
+              <div>
+                <label htmlFor="password" className="block text-gray-300 mb-1 text-sm font-medium">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  autoComplete="current-password"
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder={isSignIn ? "Enter your password" : "Create a password"}
+                  required
+                />
+              </div>
+            )}
+
+            {!isSignIn && !forgotPassword && (
+              <>
                 <div>
-                  <label htmlFor="password" className="block text-gray-300 mb-1 text-sm font-medium">Password</label>
+                  <label htmlFor="confirmPassword" className="block text-gray-300 mb-1 text-sm font-medium">Confirm Password</label>
                   <input
                     type="password"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    autoComplete="current-password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
                     onChange={handleChange}
                     className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder={isSignIn ? "Enter your password" : "Create a password"}
+                    placeholder="Confirm your password"
+                    autoComplete="new-password"
                     required
                   />
+                  {passwordError && (
+                    <p className="text-red-400 text-sm mt-1">{passwordError}</p>
+                  )}
                 </div>
-              )}
+              </>
+            )}
 
-              {!isSignIn && !forgotPassword && (
-                <>
-                  <div>
-                    <label htmlFor="confirmPassword" className="block text-gray-300 mb-1 text-sm font-medium">Confirm Password</label>
-                    <input
-                      type="password"
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                      placeholder="Confirm your password"
-                      autoComplete="new-password"
-                      required
-                    />
-                    {passwordError && (
-                      <p className="text-red-400 text-sm mt-1">{passwordError}</p>
-                    )}
-                  </div>
-                </>
-              )}
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-2 px-4 rounded-md font-medium hover:from-purple-700 hover:to-purple-900 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+            >
+              {forgotPassword
+                ? 'Send Reset Link'
+                : 'Sign In'
+              }
+            </button>
+          </form>
 
+          <div className="mt-3 text-center">
+            {isSignIn && !forgotPassword && (
               <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-2 px-4 rounded-md font-medium hover:from-purple-700 hover:to-purple-900 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                onClick={handleForgotPassword}
+                className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+              >
+                Forgot your password?
+              </button>
+            )}
+
+            <div className="mt-2">
+              <button
+                onClick={toggleMode}
+                className="text-purple-400 hover:text-purple-300 text-sm font-medium"
               >
                 {forgotPassword
-                  ? 'Send Reset Link'
-                  : 'Sign In'
+                  ? 'Back to Sign In'
+                  : isSignIn
+                    ? "Don't have an account? Sign up"
+                    : "Already have an account? Sign in"
                 }
               </button>
-            </form>
-
-            <div className="mt-3 text-center">
-              {isSignIn && !forgotPassword && (
-                <button
-                  onClick={handleForgotPassword}
-                  className="text-purple-400 hover:text-purple-300 text-sm font-medium"
-                >
-                  Forgot your password?
-                </button>
-              )}
-
-              <div className="mt-2">
-                <button
-                  onClick={toggleMode}
-                  className="text-purple-400 hover:text-purple-300 text-sm font-medium"
-                >
-                  {forgotPassword
-                    ? 'Back to Sign In'
-                    : isSignIn
-                      ? "Don't have an account? Sign up"
-                      : "Already have an account? Sign in"
-                  }
-                </button>
-              </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

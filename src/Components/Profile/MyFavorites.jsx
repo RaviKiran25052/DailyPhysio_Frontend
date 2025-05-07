@@ -163,7 +163,7 @@ const MyFavorites = () => {
                 {/* Media Carousel - Fixed height to match your second image */}
                 {(favorite.video?.length > 0 || favorite.image?.length > 0) && (
                   <div className="h-48 relative">
-                    <MediaCarousel videos={favorite.video || []} images={favorite.image || []} />
+                    <MediaCarousel video={favorite.video || []} images={favorite.image || []} />
                   </div>
                 )}
 

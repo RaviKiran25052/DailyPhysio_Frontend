@@ -8,7 +8,7 @@ import SearchBar from './components/SearchBar';
 import ExerciseTabs from './components/ExerciseTabs';
 import ExerciseGrid from './components/ExerciseGrid';
 import ExerciseDetail from './components/ExerciseDetail';
-import ExerciseFormModal from './components/ExerciseFormModal';
+import CreateExercise from '../Profile/CreateExercise'
 import Pagination from './components/Pagination';
 import { FaPlus } from 'react-icons/fa';
 
@@ -38,9 +38,7 @@ const AdminExerciseList = () => {
     // Check if admin is logged in
     const loggedInAdmin = localStorage.getItem('adminInfo')
       ? JSON.parse(localStorage.getItem('adminInfo'))
-      : sessionStorage.getItem('adminInfo')
-        ? JSON.parse(sessionStorage.getItem('adminInfo'))
-        : null;
+      : null;
 
     if (!loggedInAdmin) {
       navigate('/admin/login');
@@ -69,7 +67,6 @@ const AdminExerciseList = () => {
       const response = await axios.get(`${API_URL}/exercises`, config);
 
       const { exercises, pagination: paginationData } = response.data;
-
       setAllExercises(exercises);
       setTotalPages(paginationData.totalPages);
       setTotalExercises(paginationData.total);
@@ -230,39 +227,6 @@ const AdminExerciseList = () => {
     }
   };
 
-  const handleSaveExercise = async (exerciseData, isEdit = false) => {
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${adminToken}`,
-        },
-      };
-
-      if (isEdit && selectedExercise) {
-        await axios.put(
-          `${API_URL}/exercises/${selectedExercise._id}`,
-          exerciseData,
-          config
-        );
-
-        toast.success('Exercise updated successfully');
-      } else {
-        await axios.post(`${API_URL}/exercises`, exerciseData, config);
-        toast.success('Exercise created successfully');
-      }
-
-      // Close the modal
-      handleCloseModal();
-
-      // Refresh the data
-      fetchAllExercises(adminToken);
-    } catch (error) {
-      console.error('Error saving exercise:', error);
-      toast.error(error.response?.data?.message || 'Failed to save exercise');
-    }
-  };
-
   const paginate = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
       filterExercises(allExercises, activeTab, searchTerm, pageNumber);
@@ -270,7 +234,7 @@ const AdminExerciseList = () => {
   };
 
   return (
-    <main className="p-6">
+    <main className="p-6 ">
       {selectedExercise && !showEditForm && (
         <ExerciseDetail
           exercise={selectedExercise}
@@ -328,13 +292,13 @@ const AdminExerciseList = () => {
       )}
 
       {/* Modal for Add/Edit Exercise */}
-      <ExerciseFormModal
+      <CreateExercise
+        isEdit={showEditForm}
         isOpen={showAddForm || showEditForm}
         onClose={handleCloseModal}
         exercise={selectedExercise}
-        isEdit={showEditForm}
-        onSave={handleSaveExercise}
         adminToken={adminToken}
+        onSuccess={fetchAllExercises}
       />
     </main>
   );

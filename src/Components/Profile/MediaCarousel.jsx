@@ -2,12 +2,12 @@ import { Image } from 'lucide-react';
 import React, { useState } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-const MediaCarousel = ({ images = [], videos = [] }) => {
+const MediaCarousel = ({ images = [], video = null }) => {
 	const [currentIndex, setCurrentIndex] = useState(0);
-	const mediaItems = [...videos.map(url => ({ type: 'video', url })), ...images.map(url => ({ type: 'image', url }))];
+	const mediaItems = [{ type: 'video', video }, ...images.map(url => ({ type: 'image', url }))];
 
 	if (mediaItems.length === 0) return <div className="w-full h-48 flex flex-col items-center justify-center bg-gray-700 rounded-lg">
-		<Image size={30} className='text-gray-500'/>
+		<Image size={30} className='text-gray-500' />
 		<p className="text-gray-500 text-center">No media available</p>
 	</div>
 

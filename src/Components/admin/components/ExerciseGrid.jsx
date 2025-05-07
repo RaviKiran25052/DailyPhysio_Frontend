@@ -22,10 +22,10 @@ const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm })
 					className="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-700 hover:border-purple-500 flex flex-col"
 				>
 					<div className="relative h-48 overflow-hidden">
-						<MediaCarousel images={exercise.image} videos={exercise.video} />
+						<MediaCarousel images={exercise.image} video={exercise.video} />
 						{exercise.isPremium && (
 							<div className="absolute top-3 left-3 z-20 bg-yellow-600 rounded-lg p-2">
-								<Crown size={16}/>
+								<Crown size={16} />
 							</div>
 						)}
 					</div>

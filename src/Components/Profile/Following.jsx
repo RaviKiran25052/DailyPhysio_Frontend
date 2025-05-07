@@ -294,7 +294,7 @@ export default function Following() {
                       {/* Media */}
                       {(exercise.video?.length > 0 || exercise.image?.length > 0) && (
                         <div className="min-h-[200px]">
-                          <MediaCarousel videos={exercise.video || []} images={exercise.image || []} />
+                          <MediaCarousel video={exercise.video || []} images={exercise.image || []} />
                         </div>
                       )}
 

@@ -1,17 +1,17 @@
 import { X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-import { FiSave, FiPlusCircle, FiX, FiVideo, FiImage, FiTag, FiList } from 'react-icons/fi';
+import { FiSave, FiPlusCircle, FiX, FiVideo, FiImage, FiTag, FiList, FiEdit } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const BASE_URL = process.env.REACT_APP_API_URL || '';
 
-export default function CreateExercise() {
-	const [exercise, setExercise] = useState({
+export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null, adminToken, onSuccess }) {
+	const [formData, setFormData] = useState({
 		title: '',
 		description: '',
 		instruction: '',
-		videos: [],
+		video: null,
 		images: [],
 		reps: 0,
 		hold: 0,
@@ -36,9 +36,11 @@ export default function CreateExercise() {
 		subCategoryEnabled: false
 	});
 	const [availableSubCategories, setAvailableSubCategories] = useState([]);
-	const [videoFiles, setVideoFiles] = useState([]);
+	const [videoFile, setVideoFile] = useState(null);
+	const [videoPreview, setVideoPreview] = useState(null);
 	const [imageFiles, setImageFiles] = useState([]);
-	const [selectedVideoPreview, setSelectedVideoPreview] = useState(null);
+	const [existingImages, setExistingImages] = useState([]);
+	const [existingVideo, setExistingVideo] = useState(null);
 
 	const positions = ["Kneeling", "Prone", "Quadruped", "Side Lying", "Sitting", "Standing", "Supine"];
 
@@ -74,57 +76,110 @@ export default function CreateExercise() {
 			'Pediatric', 'Vestibular', 'Yoga']
 	};
 
+	// Initialize form data if in edit mode
 	useEffect(() => {
-		if (exercise.category) {
-			if (exercise.category === 'Other') {
+
+		if (isEdit && exercise) {
+			// Determine if we need to enable custom fields
+			const categoryIsOther = !categories.includes(exercise.category);
+			const positionIsOther = !positions.includes(exercise.position);
+			let subCategoryIsOther = false;
+
+			if (!categoryIsOther && exercise.category) {
+				const validSubCats = validSubCategories[exercise.category] || [];
+				subCategoryIsOther = !validSubCats.includes(exercise.subCategory);
+				// Set available subcategories based on category
+				setAvailableSubCategories(validSubCats);
+			}
+
+			setCustomFields({
+				categoryEnabled: categoryIsOther,
+				subCategoryEnabled: subCategoryIsOther,
+				positionEnabled: positionIsOther
+			});
+
+			// Initialize form with exercise data
+			setFormData({
+				title: exercise.title || '',
+				description: exercise.description || '',
+				instruction: exercise.instruction || '',
+				reps: exercise.reps || 0,
+				hold: exercise.hold || 0,
+				set: exercise.set || 0,
+				perform: {
+					count: exercise.perform?.count || 0,
+					type: exercise.perform?.type || 'hour'
+				},
+				category: categoryIsOther ? 'Other' : exercise.category || '',
+				subCategory: subCategoryIsOther ? 'Other' : exercise.subCategory || '',
+				position: positionIsOther ? 'Other' : exercise.position || '',
+				customCategory: categoryIsOther ? exercise.category || '' : '',
+				customSubCategory: subCategoryIsOther ? exercise.subCategory || '' : '',
+				customPosition: positionIsOther ? exercise.position || '' : '',
+				isPremium: exercise.isPremium || false,
+				type: exercise.type || 'public'
+			});
+
+			setExistingVideo(exercise.video);
+
+			if (exercise.images && exercise.images.length > 0) {
+				setExistingImages(exercise.images);
+			}
+		} else {
+			resetForm();
+		}
+	}, [exercise, isEdit]);
+
+	// Handle category change
+	useEffect(() => {
+		if (formData.category) {
+			if (formData.category === 'Other') {
 				setCustomFields(prev => ({ ...prev, categoryEnabled: true }));
-				// When category is "Other", clear subcategory dropdown options
 				setAvailableSubCategories([]);
-				// Reset subCategory value
-				setExercise(prev => ({ ...prev, subCategory: '' }));
+				setFormData(prev => ({ ...prev, subCategory: '' }));
 			} else {
 				setCustomFields(prev => ({ ...prev, categoryEnabled: false }));
-				// Load subcategories for the selected category
-				setAvailableSubCategories(validSubCategories[exercise.category] || []);
-				// Reset customCategory
-				setExercise(prev => ({ ...prev, customCategory: '' }));
+				setAvailableSubCategories(validSubCategories[formData.category] || []);
+				setFormData(prev => ({ ...prev, customCategory: '' }));
 			}
 		}
-	}, [exercise.category]);
+	}, [formData.category]);
 
+	// Handle subcategory change
 	useEffect(() => {
-		if (exercise.subCategory === 'Other' && exercise.category !== 'Other') {
+		if (formData.subCategory === 'Other' && formData.category !== 'Other') {
 			setCustomFields(prev => ({ ...prev, subCategoryEnabled: true }));
 		} else {
 			setCustomFields(prev => ({ ...prev, subCategoryEnabled: false }));
-			setExercise(prev => ({ ...prev, customSubCategory: '' }));
+			setFormData(prev => ({ ...prev, customSubCategory: '' }));
 		}
-	}, [exercise.subCategory, exercise.category]);
+	}, [formData.subCategory, formData.category]);
 
+	// Handle position change
 	useEffect(() => {
-		if (exercise.position === 'Other') {
+		if (formData.position === 'Other') {
 			setCustomFields(prev => ({ ...prev, positionEnabled: true }));
 		} else {
 			setCustomFields(prev => ({ ...prev, positionEnabled: false }));
-			setExercise(prev => ({ ...prev, customPosition: '' }));
+			setFormData(prev => ({ ...prev, customPosition: '' }));
 		}
-	}, [exercise.position]);
+	}, [formData.position]);
 
 	const handleChange = (e) => {
 		const { name, value, type, checked } = e.target;
 
 		if (name === 'perform.count') {
-			setExercise(prev => ({
+			setFormData(prev => ({
 				...prev,
 				perform: { ...prev.perform, count: value }
 			}));
 		} else if (name === 'perform.type') {
-			setExercise(prev => ({
+			setFormData(prev => ({
 				...prev,
 				perform: { ...prev.perform, type: value }
 			}));
 		} else {
-			setExercise(prev => ({
+			setFormData(prev => ({
 				...prev,
 				[name]: type === 'checkbox' ? checked : value
 			}));
@@ -133,26 +188,23 @@ export default function CreateExercise() {
 
 	const handleVideoUpload = (e) => {
 		if (e.target.files.length > 0) {
-			const newFiles = Array.from(e.target.files);
-			const newVideoFiles = [...videoFiles];
-
-			newFiles.forEach(file => {
-				const reader = new FileReader();
-				reader.onload = () => {
-					newVideoFiles.push({
-						file,
-						url: URL.createObjectURL(file)
-					});
-					setVideoFiles([...newVideoFiles]);
-				};
-				reader.readAsArrayBuffer(file);
-			});
-
-			setExercise(prev => ({
-				...prev,
-				videos: [...prev.videos, ...newFiles.map(file => file.name)]
-			}));
+			const file = e.target.files[0];
+			setVideoFile(file);
+			setVideoPreview(URL.createObjectURL(file));
+			setExistingVideo(null);
 		}
+	};
+
+	const removeVideo = () => {
+		if (videoPreview) {
+			URL.revokeObjectURL(videoPreview);
+		}
+		setVideoFile(null);
+		setVideoPreview(null);
+	};
+
+	const removeExistingVideo = () => {
+		setExistingVideo(null);
 	};
 
 	const handleImageUpload = (e) => {
@@ -171,29 +223,6 @@ export default function CreateExercise() {
 				};
 				reader.readAsDataURL(file);
 			});
-
-			setExercise(prev => ({
-				...prev,
-				images: [...prev.images, ...newFiles.map(file => file.name)]
-			}));
-		}
-	};
-
-	const removeVideo = (index) => {
-		const newVideos = [...videoFiles];
-		if (newVideos[index].url) {
-			URL.revokeObjectURL(newVideos[index].url);
-		}
-		newVideos.splice(index, 1);
-		setVideoFiles(newVideos);
-
-		setExercise(prev => ({
-			...prev,
-			videos: prev.videos.filter((_, i) => i !== index)
-		}));
-
-		if (selectedVideoPreview === index) {
-			setSelectedVideoPreview(null);
 		}
 	};
 
@@ -201,119 +230,162 @@ export default function CreateExercise() {
 		const newImages = [...imageFiles];
 		newImages.splice(index, 1);
 		setImageFiles(newImages);
+	};
 
-		setExercise(prev => ({
-			...prev,
-			images: prev.images.filter((_, i) => i !== index)
-		}));
+	const removeExistingImage = (index) => {
+		const newImages = [...existingImages];
+		newImages.splice(index, 1);
+		setExistingImages(newImages);
+	};
+
+	const validateForm = () => {
+		if (!formData.title.trim()) {
+			toast.error('Title is required');
+			return false;
+		}
+
+		if (!formData.description.trim()) {
+			toast.error('Description is required');
+			return false;
+		}
+
+		if (!formData.instruction.trim()) {
+			toast.error('Instructions are required');
+			return false;
+		}
+
+		if (!formData.category) {
+			toast.error('Category is required');
+			return false;
+		}
+
+		if (formData.category === 'Other' && !formData.customCategory.trim()) {
+			toast.error('Custom category is required');
+			return false;
+		}
+
+		if (formData.category !== 'Other' && !formData.subCategory) {
+			toast.error('Sub-category is required');
+			return false;
+		}
+
+		if (formData.category !== 'Other' && formData.subCategory === 'Other' && !formData.customSubCategory.trim()) {
+			toast.error('Custom sub-category is required');
+			return false;
+		}
+
+		if (!formData.position) {
+			toast.error('Position is required');
+			return false;
+		}
+
+		if (formData.position === 'Other' && !formData.customPosition.trim()) {
+			toast.error('Custom position is required');
+			return false;
+		}
+
+		// In create mode, require at least one media file
+		if (!isEdit && !videoFile && imageFiles.length === 0) {
+			toast.error('Please upload at least one video or image');
+			return false;
+		}
+
+		return true;
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		// Validate form
-		if (!exercise.title.trim()) {
-			toast.error('Title is required');
-			return;
-		}
-
-		if (!exercise.description.trim()) {
-			toast.error('Description is required');
-			return;
-		}
-
-		if (!exercise.instruction.trim()) {
-			toast.error('Instructions are required');
-			return;
-		}
-
-		if (!exercise.category) {
-			toast.error('Category is required');
-			return;
-		}
-
-		if (exercise.category === 'Other' && !exercise.customCategory.trim()) {
-			toast.error('Custom category is required');
-			return;
-		}
-
-		if (exercise.category !== 'Other' && !exercise.subCategory) {
-			toast.error('Sub-category is required');
-			return;
-		}
-
-		if (exercise.category !== 'Other' && exercise.subCategory === 'Other' && !exercise.customSubCategory.trim()) {
-			toast.error('Custom sub-category is required');
-			return;
-		}
-
-		if (!exercise.position) {
-			toast.error('Position is required');
-			return;
-		}
-
-		if (exercise.position === 'Other' && !exercise.customPosition.trim()) {
-			toast.error('Custom position is required');
+		if (!validateForm()) {
 			return;
 		}
 
 		setIsSubmitting(true);
 
 		try {
-			// Prepare final data with actual position value
-			const finalPosition = exercise.position === 'Other' ? exercise.customPosition : exercise.position;
-			const finalCategory = exercise.category === 'Other' ? exercise.customCategory : exercise.category;
-			const finalSubCategory = exercise.category === 'Other'
-				? exercise.customSubCategory
-				: (exercise.subCategory === 'Other' ? exercise.customSubCategory : exercise.subCategory);
+			// Prepare final data
+			const finalPosition = formData.position === 'Other' ? formData.customPosition : formData.position;
+			const finalCategory = formData.category === 'Other' ? formData.customCategory : formData.category;
+			const finalSubCategory = formData.category === 'Other'
+				? formData.customSubCategory
+				: (formData.subCategory === 'Other' ? formData.customSubCategory : formData.subCategory);
 
 			// Create FormData object for file uploads
-			const formData = new FormData();
+			const submitData = new FormData();
 
 			// Add all text fields
-			formData.append('title', exercise.title);
-			formData.append('description', exercise.description);
-			formData.append('instruction', exercise.instruction);
-			formData.append('reps', exercise.reps);
-			formData.append('hold', exercise.hold);
-			formData.append('set', exercise.set);
-			formData.append('perform[count]', exercise.perform.count);
-			formData.append('perform[type]', exercise.perform.type);
-			formData.append('category', finalCategory);
-			formData.append('subCategory', finalSubCategory);
-			formData.append('position', finalPosition);
-			formData.append('isPremium', exercise.isPremium);
-			formData.append('custom[type]', exercise.type);
+			submitData.append('title', formData.title);
+			submitData.append('description', formData.description);
+			submitData.append('instruction', formData.instruction);
+			submitData.append('reps', formData.reps);
+			submitData.append('hold', formData.hold);
+			submitData.append('set', formData.set);
+			submitData.append('perform[count]', formData.perform.count);
+			submitData.append('perform[type]', formData.perform.type);
+			submitData.append('category', finalCategory);
+			submitData.append('subCategory', finalSubCategory);
+			submitData.append('position', finalPosition);
+			submitData.append('isPremium', formData.isPremium);
+			submitData.append('custom[type]', formData.type);
 
 			// Add files
-			videoFiles.forEach(videoData => {
-				formData.append('videos', videoData.file);
-			});
+			if (videoFile) {
+				submitData.append('video', videoFile);
+			}
 
-			imageFiles.forEach(imageData => {
-				formData.append('images', imageData.file);
-			});
-
-			// Get token from local storage
-			const token = localStorage.getItem('token');
-			// Send request to backend
-			const response = await axios.post(`${BASE_URL}/exercises/`, formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data',
-					Authorization: `Bearer ${token}`
+			// If we're in edit mode and there are existing images/videos we want to keep
+			if (isEdit) {
+				// Add info about existing videos to keep
+				if (existingVideo) {
+					submitData.append('existingVideo', JSON.stringify(existingVideo));
+				} else {
+					submitData.append('existingVideo', JSON.stringify());
 				}
+
+				// Add info about existing images to keep
+				if (existingImages.length) {
+					submitData.append('existingImages', JSON.stringify(existingImages));
+				}
+				
+				submitData.append('video', existingVideo);
+				submitData.append('images', existingImages);
+			}
+
+			// Add new images
+			imageFiles.forEach(imageData => {
+				submitData.append('images', imageData.file);
 			});
 
-			// Reset form after successful submission
-			resetForm();
-			toast.success('Exercise created successfully!');
-			console.log('Exercise created:', response.data);
+			// Create or update based on mode
+			let response;
+			if (isEdit) {
+				response = await axios.put(`${BASE_URL}/exercises/${exercise._id}`, submitData, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+						Authorization: `Bearer ${adminToken}`
+					}
+				});
+				toast.success('Exercise updated successfully!');
+				onClose();
+				onSuccess();
+			} else {
+				response = await axios.post(`${BASE_URL}/exercises/`, submitData, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+						Authorization: `Bearer ${adminToken}`
+					}
+				});
+				resetForm();
+				toast.success('Exercise created successfully!');
+				onClose();
+				onSuccess();
+			}
 
-			// Navigate to exercises list or stay on the same page based on your app flow
+			console.log('Exercise saved:', response.data);
 
 		} catch (error) {
-			console.error('Error creating exercise:', error);
-			toast.error(error.response?.data?.message || 'Failed to create exercise. Please try again.');
+			console.error('Error saving exercise:', error);
+			toast.error(error.response?.data?.message || 'Failed to save exercise. Please try again.');
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -321,12 +393,10 @@ export default function CreateExercise() {
 
 	const resetForm = () => {
 		// Reset all form state
-		setExercise({
+		setFormData({
 			title: '',
 			description: '',
 			instruction: '',
-			videos: [],
-			images: [],
 			reps: 0,
 			hold: 0,
 			set: 0,
@@ -337,165 +407,215 @@ export default function CreateExercise() {
 			category: '',
 			subCategory: '',
 			position: '',
+			customCategory: '',
+			customSubCategory: '',
 			customPosition: '',
 			isPremium: false,
 			type: 'public'
 		});
 
 		// Clear file states
-		setVideoFiles([]);
+		if (videoPreview) {
+			URL.revokeObjectURL(videoPreview);
+		}
+		setVideoFile(null);
+		setVideoPreview(null);
 		setImageFiles([]);
-		setSelectedVideoPreview(null);
-
+		setExistingVideo(null);
+		setExistingImages([]);
 		setAvailableSubCategories([]);
 	};
 
+	if (!isOpen) return null;
+
 	return (
-		<div className="max-w-4xl mx-auto p-6 bg-gray-800 rounded-xl shadow-lg text-gray-200">
-			<h1 className="text-3xl font-bold text-center text-purple-400 mb-8">Create New Exercise</h1>
+		<div className="fixed inset-0 z-50 flex items-center justify-center">
+			{/* Overlay */}
+			<div
+				className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+				onClick={onClose}
+			></div>
+			<div className="relative max-w-4xl mx-auto h-[90vh] overflow-y-auto custom-scrollbar p-6 bg-gray-800 rounded-xl shadow-lg text-gray-200">
+				<h1 className="text-3xl font-bold text-center text-purple-400 mb-8">
+					{isEdit ? 'Edit Exercise' : 'Create New Exercise'}
+				</h1>
+				<form onSubmit={handleSubmit} className="space-y-6">
+					{/* Basic Info Section */}
+					<div className="bg-gray-700 p-6 rounded-lg shadow-md">
+						<h2 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
+							<FiList className="mr-2" /> Basic Information
+						</h2>
 
-			<form onSubmit={handleSubmit} className="space-y-6">
-				{/* Basic Info Section */}
-				<div className="bg-gray-700 p-6 rounded-lg shadow-md">
-					<h2 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
-						<FiList className="mr-2" /> Basic Information
-					</h2>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<div>
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="title">
-								Title
-							</label>
-							<input
-								type="text"
-								id="title"
-								name="title"
-								value={exercise.title}
-								onChange={handleChange}
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-								required
-							/>
-						</div>
-
-						<div>
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="position">
-								Position
-							</label>
-							<select
-								id="position"
-								name="position"
-								value={exercise.position}
-								onChange={handleChange}
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-								required
-							>
-								<option value="">Select Position</option>
-								{positions.map(pos => (
-									<option key={pos} value={pos}>{pos}</option>
-								))}
-								<option value="Other">Other</option>
-							</select>
-						</div>
-					</div>
-
-					{customFields.positionEnabled && (
-						<div className="mt-4">
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="customPosition">
-								Custom Position
-							</label>
-							<input
-								type="text"
-								id="customPosition"
-								name="customPosition"
-								value={exercise.customPosition}
-								onChange={handleChange}
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-								required
-							/>
-						</div>
-					)}
-
-					<div className="mt-4">
-						<label className="block text-gray-300 font-medium mb-2" htmlFor="description">
-							Description
-						</label>
-						<textarea
-							id="description"
-							name="description"
-							value={exercise.description}
-							onChange={handleChange}
-							rows="3"
-							className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-							required
-						/>
-					</div>
-
-					<div className="mt-4">
-						<label className="block text-gray-300 font-medium mb-2" htmlFor="instruction">
-							Instructions
-						</label>
-						<textarea
-							id="instruction"
-							name="instruction"
-							value={exercise.instruction}
-							onChange={handleChange}
-							rows="5"
-							className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-							required
-						/>
-					</div>
-				</div>
-
-				{/* Category Section */}
-				<div className="bg-gray-700 p-6 rounded-lg shadow-md">
-					<h2 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
-						<FiTag className="mr-2" /> Categories
-					</h2>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<div>
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="category">
-								Category
-							</label>
-							<select
-								id="category"
-								name="category"
-								value={exercise.category}
-								onChange={handleChange}
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-								required
-							>
-								<option value="">Select Category</option>
-								{categories.map((cat) => (
-									<option key={cat} value={cat}>{cat}</option>
-								))}
-								<option value="Other">Other</option>
-							</select>
-						</div>
-
-						{!customFields.categoryEnabled ? (
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							<div>
-								<label className="block text-gray-300 font-medium mb-2" htmlFor="subCategory">
-									Sub Category
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="title">
+									Title
 								</label>
-								<select
-									id="subCategory"
-									name="subCategory"
-									value={exercise.subCategory}
+								<input
+									type="text"
+									id="title"
+									name="title"
+									value={formData.title}
 									onChange={handleChange}
 									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-									disabled={!exercise.category || exercise.category === 'Other'}
+									required
+								/>
+							</div>
+
+							<div>
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="position">
+									Position
+								</label>
+								<select
+									id="position"
+									name="position"
+									value={formData.position}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
 									required
 								>
-									<option value="">Select Sub Category</option>
-									{availableSubCategories.map((subCat) => (
-										<option key={subCat} value={subCat}>{subCat}</option>
+									<option value="">Select Position</option>
+									{positions.map(pos => (
+										<option key={pos} value={pos}>{pos}</option>
 									))}
 									<option value="Other">Other</option>
 								</select>
 							</div>
-						) : (
+						</div>
+
+						{customFields.positionEnabled && (
+							<div className="mt-4">
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="customPosition">
+									Custom Position
+								</label>
+								<input
+									type="text"
+									id="customPosition"
+									name="customPosition"
+									value={formData.customPosition}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									required
+								/>
+							</div>
+						)}
+
+						<div className="mt-4">
+							<label className="block text-gray-300 font-medium mb-2" htmlFor="description">
+								Description
+							</label>
+							<textarea
+								id="description"
+								name="description"
+								value={formData.description}
+								onChange={handleChange}
+								rows="3"
+								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+								required
+							/>
+						</div>
+
+						<div className="mt-4">
+							<label className="block text-gray-300 font-medium mb-2" htmlFor="instruction">
+								Instructions
+							</label>
+							<textarea
+								id="instruction"
+								name="instruction"
+								value={formData.instruction}
+								onChange={handleChange}
+								rows="5"
+								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+								required
+							/>
+						</div>
+					</div>
+
+					{/* Category Section */}
+					<div className="bg-gray-700 p-6 rounded-lg shadow-md">
+						<h2 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
+							<FiTag className="mr-2" /> Categories
+						</h2>
+
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 							<div>
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="category">
+									Category
+								</label>
+								<select
+									id="category"
+									name="category"
+									value={formData.category}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									required
+								>
+									<option value="">Select Category</option>
+									{categories.map((cat) => (
+										<option key={cat} value={cat}>{cat}</option>
+									))}
+									<option value="Other">Other</option>
+								</select>
+							</div>
+
+							{!customFields.categoryEnabled ? (
+								<div>
+									<label className="block text-gray-300 font-medium mb-2" htmlFor="subCategory">
+										Sub Category
+									</label>
+									<select
+										id="subCategory"
+										name="subCategory"
+										value={formData.subCategory}
+										onChange={handleChange}
+										className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+										disabled={!formData.category || formData.category === 'Other'}
+										required
+									>
+										<option value="">Select Sub Category</option>
+										{availableSubCategories.map((subCat) => (
+											<option key={subCat} value={subCat}>{subCat}</option>
+										))}
+										<option value="Other">Other</option>
+									</select>
+								</div>
+							) : (
+								<div>
+									<label className="block text-gray-300 font-medium mb-2" htmlFor="customSubCategory">
+										Custom Sub Category
+									</label>
+									<input
+										type="text"
+										id="customSubCategory"
+										name="customSubCategory"
+										value={formData.customSubCategory}
+										onChange={handleChange}
+										className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+										required
+									/>
+								</div>
+							)}
+						</div>
+
+						{customFields.categoryEnabled && (
+							<div className="mt-4">
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="customCategory">
+									Custom Category
+								</label>
+								<input
+									type="text"
+									id="customCategory"
+									name="customCategory"
+									value={formData.customCategory}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									required
+								/>
+							</div>
+						)}
+
+						{customFields.subCategoryEnabled && (
+							<div className="mt-4">
 								<label className="block text-gray-300 font-medium mb-2" htmlFor="customSubCategory">
 									Custom Sub Category
 								</label>
@@ -503,317 +623,304 @@ export default function CreateExercise() {
 									type="text"
 									id="customSubCategory"
 									name="customSubCategory"
-									value={exercise.customSubCategory}
+									value={formData.customSubCategory}
 									onChange={handleChange}
 									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
 									required
 								/>
 							</div>
 						)}
-					</div>
-					{customFields.categoryEnabled && (
-						<div className="mt-4">
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="customCategory">
-								Custom Category
-							</label>
-							<input
-								type="text"
-								id="customCategory"
-								name="customCategory"
-								value={exercise.customCategory}
-								onChange={handleChange}
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-								required
-							/>
-						</div>
-					)}
 
-					{/* Custom Subcategory input when "Other" is selected */}
-					{customFields.subCategoryEnabled && (
-						<div className="mt-4">
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="customSubCategory">
-								Custom Sub Category
-							</label>
-							<input
-								type="text"
-								id="customSubCategory"
-								name="customSubCategory"
-								value={exercise.customSubCategory}
-								onChange={handleChange}
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-								required
-							/>
-						</div>
-					)}
-					{/* <div className="mt-6 flex items-center">
-						<label className="flex items-center cursor-pointer">
-							<span className="mr-3 text-gray-300 font-medium">Premium Exercise</span>
-							<div className="relative">
-								<input
-									type="checkbox"
-									id="isPremium"
-									name="isPremium"
-									checked={exercise.isPremium}
-									onChange={handleChange}
-									className="sr-only"
-								/>
-								<div className={`block w-14 h-8 rounded-full transition ${exercise.isPremium ? 'bg-purple-600' : 'bg-gray-500'}`}></div>
-								<div className={`absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform ${exercise.isPremium ? 'translate-x-6' : ''}`}></div>
+						<div className="mt-6">
+							<div className="flex items-center">
+								<span className="text-gray-300 font-medium mr-4">Type:</span>
+								<label className="inline-flex items-center mr-6">
+									<input
+										type="radio"
+										name="type"
+										value="public"
+										checked={formData.type === "public"}
+										onChange={handleChange}
+										className="form-radio h-5 w-5 text-purple-600"
+									/>
+									<span className="ml-2 text-gray-300">Public</span>
+								</label>
+								<label className="inline-flex items-center">
+									<input
+										type="radio"
+										name="type"
+										value="private"
+										checked={formData.type === "private"}
+										onChange={handleChange}
+										className="form-radio h-5 w-5 text-purple-600"
+									/>
+									<span className="ml-2 text-gray-300">Private</span>
+								</label>
 							</div>
-						</label>
-					</div> */}
-					<div className="mt-6">
+						</div>
+					</div>
+
+					{/* Performance Section */}
+					<div className="bg-gray-700 p-6 rounded-lg shadow-md">
+						<h2 className="text-xl font-semibold text-purple-300 mb-4">Performance Details</h2>
+
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+							<div>
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="perform.count">
+									Perform Count
+								</label>
+								<input
+									type="number"
+									id="perform.count"
+									name="perform.count"
+									value={formData.perform.count}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+								/>
+							</div>
+
+							<div>
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="perform.type">
+									Perform Type
+								</label>
+								<select
+									id="perform.type"
+									name="perform.type"
+									value={formData.perform.type}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+								>
+									<option value="hour">Hour</option>
+									<option value="day">Day</option>
+									<option value="week">Week</option>
+								</select>
+							</div>
+
+							<div>
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="reps">
+									Reps
+								</label>
+								<input
+									type="number"
+									id="reps"
+									name="reps"
+									value={formData.reps}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+								/>
+							</div>
+
+							<div>
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="hold">
+									Hold (seconds)
+								</label>
+								<input
+									type="number"
+									id="hold"
+									name="hold"
+									value={formData.hold}
+									onChange={handleChange}
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+								/>
+							</div>
+						</div>
+
+						<div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+							<div>
+								<label className="block text-gray-300 font-medium mb-2" htmlFor="set">
+									Sets
+								</label>
+								<input
+									type="number"
+									id="set"
+									name="set"
+									value={formData.set}
+									onChange={handleChange}
+									min="0"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+								/>
+							</div>
+						</div>
+					</div>
+
+					{/* Media Section */}
+					<div className="bg-gray-700 p-6 rounded-lg shadow-md">
+						<h2 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
+							<FiVideo className="mr-2" /> Video
+						</h2>
+
 						<div className="flex items-center">
-							<span className="text-gray-300 font-medium mr-4">Type:</span>
-							<label className="inline-flex items-center mr-6">
+							<label className="w-full flex items-center justify-center px-4 py-3 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer hover:bg-gray-500 transition">
+								<FiPlusCircle className="mr-2" /> Upload Video
 								<input
-									type="radio"
-									name="type"
-									value="public"
-									checked={exercise.type === "public"}
-									onChange={handleChange}
-									className="form-radio h-5 w-5 text-purple-600"
+									type="file"
+									accept="video/*"
+									onChange={handleVideoUpload}
+									className="hidden"
 								/>
-								<span className="ml-2 text-gray-300">Public</span>
-							</label>
-							<label className="inline-flex items-center">
-								<input
-									type="radio"
-									name="type"
-									value="private"
-									checked={exercise.type === "private"}
-									onChange={handleChange}
-									className="form-radio h-5 w-5 text-purple-600"
-								/>
-								<span className="ml-2 text-gray-300">Private</span>
 							</label>
 						</div>
-					</div>
-				</div>
 
-				{/* Performance Section */}
-				<div className="bg-gray-700 p-6 rounded-lg shadow-md">
-					<h2 className="text-xl font-semibold text-purple-300 mb-4">Performance Details</h2>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-						<div>
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="perform.count">
-								Perform Count
-							</label>
-							<input
-								type="number"
-								id="perform.count"
-								name="perform.count"
-								value={exercise.perform.count}
-								onChange={handleChange}
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-							/>
-						</div>
-
-						<div>
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="perform.type">
-								Perform Type
-							</label>
-							<select
-								id="perform.type"
-								name="perform.type"
-								value={exercise.perform.type}
-								onChange={handleChange}
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-							>
-								<option value="hour">Hour</option>
-								<option value="day">Day</option>
-								<option value="week">Week</option>
-							</select>
-						</div>
-
-						<div>
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="reps">
-								Reps
-							</label>
-							<input
-								type="number"
-								id="reps"
-								name="reps"
-								value={exercise.reps}
-								onChange={handleChange}
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-							/>
-						</div>
-
-						<div>
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="hold">
-								Hold (seconds)
-							</label>
-							<input
-								type="number"
-								id="hold"
-								name="hold"
-								value={exercise.hold}
-								onChange={handleChange}
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-							/>
-						</div>
-					</div>
-
-					<div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-						<div>
-							<label className="block text-gray-300 font-medium mb-2" htmlFor="set">
-								Sets
-							</label>
-							<input
-								type="number"
-								id="set"
-								name="set"
-								value={exercise.set}
-								onChange={handleChange}
-								min="0"
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
-							/>
-						</div>
-					</div>
-				</div>
-
-				{/* Media Section */}
-				<div className="bg-gray-700 p-6 rounded-lg shadow-md">
-					<h2 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
-						<FiVideo className="mr-2" /> Videos
-					</h2>
-
-					<div className="flex items-center">
-						<label className="w-full flex items-center justify-center px-4 py-3 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer hover:bg-gray-500 transition">
-							<FiPlusCircle className="mr-2" /> Upload Video Files
-							<input
-								type="file"
-								accept="video/*"
-								onChange={handleVideoUpload}
-								multiple
-								className="hidden"
-							/>
-						</label>
-					</div>
-
-					{selectedVideoPreview !== null && videoFiles[selectedVideoPreview] && (
-						<div className="relative mt-4 bg-gray-800 p-3 rounded-lg">
-							<span className='absolute top-3 right-3 p-1 bg-red-600 hover:bg-red-800 text-white rounded-lg cursor-pointer' onClick={() => setSelectedVideoPreview(null)}><X size={18} /></span>
-							<h3 className="text-lg font-medium text-purple-300 mb-2">Video Preview</h3>
-							<video
-								controls
-								className="w-full rounded-lg max-h-64"
-								src={videoFiles[selectedVideoPreview].url}
-							>
-								Your browser does not support the video tag.
-							</video>
-						</div>
-					)}
-
-					<div className="mt-4 max-h-60 overflow-y-auto pr-2">
-						{videoFiles.length > 0 ? (
-							videoFiles.map((fileData, index) => (
-								<div key={index} className="flex items-center bg-gray-600 p-3 rounded-lg mb-2">
-									<FiVideo className="text-purple-400 mr-2" />
-									<span
-										className="flex-grow truncate text-gray-300 cursor-pointer hover:text-purple-300"
-										onClick={() => setSelectedVideoPreview(index)}
-									>
-										{fileData.file.name}
-									</span>
-									<button
-										type="button"
-										onClick={() => removeVideo(index)}
-										className="ml-2 text-red-400 hover:text-red-300 focus:outline-none"
-									>
-										<FiX className="inline-block" />
-									</button>
-								</div>
-							))
-						) : (
-							<p className="text-gray-400 text-center py-4">No video files uploaded yet.</p>
+						{/* Video Preview */}
+						{videoPreview && (
+							<div className="relative mt-4 bg-gray-800 p-3 rounded-lg">
+								<span className='absolute top-3 right-3 p-1 bg-red-600 hover:bg-red-800 text-white rounded-lg cursor-pointer' onClick={removeVideo}>
+									<X size={18} />
+								</span>
+								<h3 className="text-lg font-medium text-purple-300 mb-2">Video Preview</h3>
+								<video
+									controls
+									className="w-full rounded-lg max-h-64"
+									src={videoPreview}
+								>
+									Your browser does not support the video tag.
+								</video>
+							</div>
 						)}
-					</div>
 
-					<h2 className="text-xl font-semibold text-purple-300 mt-8 mb-4 flex items-center">
-						<FiImage className="mr-2" /> Images
-					</h2>
+						{/* Existing Video (when editing) */}
+						{!videoPreview && existingVideo && (
+							<div className="relative mt-4 bg-gray-800 p-3 rounded-lg">
+								<span className='absolute top-3 right-3 p-1 bg-red-600 hover:bg-red-800 text-white rounded-lg cursor-pointer' onClick={removeExistingVideo}>
+									<X size={18} />
+								</span>
+								<h3 className="text-lg font-medium text-purple-300 mb-2">Current Video</h3>
+								<video
+									controls
+									className="w-full rounded-lg max-h-64"
+									src={existingVideo.url || existingVideo}
+								>
+									Your browser does not support the video tag.
+								</video>
+							</div>
+						)}
 
-					<div className="flex items-center">
-						<label className="w-full flex items-center justify-center px-4 py-3 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer hover:bg-gray-500 transition">
-							<FiPlusCircle className="mr-2" /> Upload Image Files
-							<input
-								type="file"
-								accept="image/*"
-								onChange={handleImageUpload}
-								multiple
-								className="hidden"
-							/>
-						</label>
-					</div>
+						{/* Video status message */}
+						{!videoPreview && !existingVideo && (
+							<p className="text-gray-400 text-center py-4 mt-2">No video uploaded yet.</p>
+						)}
 
-					<div className="mt-4 overflow-x-auto pb-4 custom-scrollbar">
-						<div className="flex space-x-4" style={{ minWidth: 'min-content' }}>
-							{imageFiles.length > 0 ? (
-								imageFiles.map((imageData, index) => (
-									<div key={index} className="relative group flex-shrink-0" style={{ width: '200px' }}>
-										<div className="h-40 w-full bg-gray-600 rounded-lg overflow-hidden">
-											{imageData.preview ? (
-												<img
-													src={imageData.preview}
-													alt={`Exercise img ${index + 1}`}
-													className="w-full h-full object-cover"
-												/>
-											) : (
-												<img src="/placeholder/400/320" alt="placeholder" className="w-full h-full object-cover" />
-											)}
-										</div>
-										<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity">
-											<button
-												type="button"
-												onClick={() => removeImage(index)}
-												className="p-2 bg-red-500 text-white rounded-full hover:bg-red-700 focus:outline-none"
-											>
-												<FiX className="inline-block" />
-											</button>
-										</div>
-										<p className="mt-1 text-sm text-gray-400 truncate">{imageData.file.name}</p>
+						<h2 className="text-xl font-semibold text-purple-300 mt-8 mb-4 flex items-center">
+							<FiImage className="mr-2" /> Images
+						</h2>
+
+						<div className="flex items-center">
+							<label className="w-full flex items-center justify-center px-4 py-3 bg-gray-600 border border-gray-500 rounded-lg cursor-pointer hover:bg-gray-500 transition">
+								<FiPlusCircle className="mr-2" /> Upload Image Files
+								<input
+									type="file"
+									accept="image/*"
+									onChange={handleImageUpload}
+									multiple
+									className="hidden"
+								/>
+							</label>
+						</div>
+
+						{/* New Images */}
+						{imageFiles.length > 0 && (
+							<>
+								<h3 className="text-lg font-medium text-purple-300 mt-4 mb-2">New Images</h3>
+								<div className="mt-2 overflow-x-auto pb-4 custom-scrollbar">
+									<div className="flex space-x-4" style={{ minWidth: 'min-content' }}>
+										{imageFiles.map((imageData, index) => (
+											<div key={index} className="relative group flex-shrink-0" style={{ width: '200px' }}>
+												<div className="h-40 w-full bg-gray-600 rounded-lg overflow-hidden">
+													{imageData.preview ? (
+														<img
+															src={imageData.preview}
+															alt={`Exercise img ${index + 1}`}
+															className="w-full h-full object-cover"
+														/>
+													) : (
+														<div className="w-full h-full flex items-center justify-center bg-gray-700">
+															<span className="text-gray-400">Loading...</span>
+														</div>
+													)}
+												</div>
+												<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity">
+													<button
+														type="button"
+														onClick={() => removeImage(index)}
+														className="p-2 bg-red-500 text-white rounded-full hover:bg-red-700 focus:outline-none"
+													>
+														<FiX className="inline-block" />
+													</button>
+												</div>
+												<p className="mt-1 text-sm text-gray-400 truncate">{imageData.file.name}</p>
+											</div>
+										))}
 									</div>
-								))
-							) : (
-								<div className="w-full">
-									<p className="text-gray-400 text-center py-8">No image files uploaded yet.</p>
 								</div>
-							)}
-						</div>
-					</div>
-				</div>
-
-				{/* Submit Button */}
-				<div className="flex justify-end space-x-4">
-					<button
-						type="button"
-						onClick={resetForm}
-						className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-800 flex items-center"
-					>
-						<FiX className="mr-2" /> Reset Form
-					</button>
-					<button
-						type="submit"
-						disabled={isSubmitting}
-						className={`px-6 py-3 ${isSubmitting ? 'bg-purple-400' : 'bg-purple-600 hover:bg-purple-500'} text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-gray-800 flex items-center`}
-					>
-						{isSubmitting ? (
-							<>
-								<span className="mr-2 animate-spin">⟳</span> Creating...
-							</>
-						) : (
-							<>
-								<FiSave className="mr-2" /> Create Exercise
 							</>
 						)}
-					</button>
-				</div>
-			</form>
 
-			<style jsx>{`
+						{/* Existing Images (when editing) */}
+						{existingImages.length > 0 && (
+							<>
+								<h3 className="text-lg font-medium text-purple-300 mt-4 mb-2">Current Images</h3>
+								<div className="mt-2 overflow-x-auto pb-4 custom-scrollbar">
+									<div className="flex space-x-4" style={{ minWidth: 'min-content' }}>
+										{existingImages.map((image, index) => (
+											<div key={index} className="relative group flex-shrink-0" style={{ width: '200px' }}>
+												<div className="h-40 w-full bg-gray-600 rounded-lg overflow-hidden">
+													<img
+														src={image.url || image}
+														alt={`Exercise img ${index + 1}`}
+														className="w-full h-full object-cover"
+													/>
+												</div>
+												<div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity">
+													<button
+														type="button"
+														onClick={() => removeExistingImage(index)}
+														className="p-2 bg-red-500 text-white rounded-full hover:bg-red-700 focus:outline-none"
+													>
+														<FiX className="inline-block" />
+													</button>
+												</div>
+												<p className="mt-1 text-sm text-gray-400 truncate">Existing image {index + 1}</p>
+											</div>
+										))}
+									</div>
+								</div>
+							</>
+						)}
+
+						{/* Image status message */}
+						{imageFiles.length === 0 && existingImages.length === 0 && (
+							<p className="text-gray-400 text-center py-4 mt-2">No images uploaded yet.</p>
+						)}
+					</div>
+
+					{/* Submit Button */}
+					<div className="flex justify-end space-x-4">
+						<button
+							type="button"
+							onClick={resetForm}
+							className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-800 flex items-center"
+						>
+							<FiX className="mr-2" /> Reset Form
+						</button>
+						<button
+							type="submit"
+							disabled={isSubmitting}
+							className={`px-6 py-3 ${isSubmitting ? 'bg-purple-400' : 'bg-purple-600 hover:bg-purple-500'} text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-gray-800 flex items-center`}
+						>
+							{isSubmitting ? (
+								<>
+									<span className="mr-2 animate-spin">⟳</span> {isEdit ? 'Updating...' : 'Creating...'}
+								</>
+							) : (
+								<>
+									<FiSave className="mr-2" /> {isEdit ? 'Save Changes' : 'Create Exercise'}
+								</>
+							)}
+						</button>
+					</div>
+				</form>
+
+				<style jsx>{`
         .custom-scrollbar::-webkit-scrollbar {
 			 height: 4px;
 			 width: 4px;
@@ -827,6 +934,7 @@ export default function CreateExercise() {
           border-radius: 8px;
         }
       `}</style>
+			</div>
 		</div>
 	);
 }

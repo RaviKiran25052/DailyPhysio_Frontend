@@ -21,7 +21,7 @@ const ExerciseCard = ({ exercise, onTypeChange, onDelete }) => {
 
 	return (
 		<div className="flex flex-col justify-between bg-gray-800 hover:bg-gray-750 rounded-lg overflow-hidden shadow-lg transition transform hover:-translate-y-1">
-			<MediaCarousel images={exercise.image} videos={exercise.video} />
+			<MediaCarousel images={exercise.image} video={exercise.video} />
 
 			<div className="p-4">
 				<div className="flex justify-between items-start mb-3 ">

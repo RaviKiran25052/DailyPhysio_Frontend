@@ -87,14 +87,14 @@ const CreatorExercisesPage = () => {
     <div className="min-h-screen px-16 bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-6">
         {/* Header with back button */}
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center text-gray-300 hover:text-purple-400 transition-colors mr-4"
-          >
-            <ArrowLeft size={20} className="mr-2" />
-            <span>Back</span>
-          </button>
-          <h1 className="text-2xl my-6 font-bold">{creatorName}'s Exercises</h1>
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-gray-300 hover:text-purple-400 transition-colors mr-4"
+        >
+          <ArrowLeft size={20} className="mr-2" />
+          <span>Back</span>
+        </button>
+        <h1 className="text-2xl my-6 font-bold">{creatorName}'s Exercises</h1>
 
         {/* Categories filter */}
         {categories.length > 1 && (
@@ -137,7 +137,7 @@ const CreatorExercisesPage = () => {
                 {/* Media preview */}
                 <div className="h-48 bg-gray-700">
                   {exercise.video?.length > 0 || exercise.image?.length > 0 ? (
-                    <MediaCarousel videos={exercise.video || []} images={exercise.image || []} />
+                    <MediaCarousel video={exercise.video || []} images={exercise.image || []} />
                   ) : (
                     <div className="h-full flex items-center justify-center bg-gray-700 text-gray-500">
                       <p>No media</p>

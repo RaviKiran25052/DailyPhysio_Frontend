@@ -61,7 +61,7 @@ const ExerciseDetailPage = ({ userData }) => {
     const fetchExercise = async () => {
       try {
         console.log(1);
-        
+
         const response = await axios.get(`${API_URL}/exercises/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -71,10 +71,10 @@ const ExerciseDetailPage = ({ userData }) => {
         const data = response.data;
         setIsPro(response.data.membership !== "free");
         setExercise(data.exercise);
-        
+
         setCreatorData(data.creatorData);
         console.log(data);
-        
+
         setRelatedExercises(data.relatedExercises);
 
         // Update form data with exercise title
@@ -161,12 +161,12 @@ const ExerciseDetailPage = ({ userData }) => {
             }
           }
         );
-        
+
         setCreatorData({
           ...creatorData,
           isFollowing: false
         });
-        
+
         toast.success('Unfollowed successfully');
       } else {
         // Follow the creator
@@ -179,12 +179,12 @@ const ExerciseDetailPage = ({ userData }) => {
             }
           }
         );
-        
+
         setCreatorData({
           ...creatorData,
           isFollowing: true
         });
-        
+
         toast.success('Following successfully');
       }
     } catch (error) {
@@ -333,7 +333,7 @@ const ExerciseDetailPage = ({ userData }) => {
             <div className="relative rounded-xl overflow-hidden mb-6 border border-gray-800">
 
               <div className="aspect-[4/2] w-full">
-                <MediaCarousel images={exercise.image} videos={isPro ? exercise.video : []} />
+                <MediaCarousel images={exercise.image} video={isPro ? exercise.video : []} />
               </div>
 
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-20"></div>
@@ -425,13 +425,12 @@ const ExerciseDetailPage = ({ userData }) => {
                     <button
                       onClick={toggleFollow}
                       disabled={isLoadingFollow}
-                      className={`flex items-center text-sm px-3 py-1 rounded-full transition-colors ${
-                        isLoadingFollow 
-                          ? 'bg-gray-700 text-gray-300 cursor-wait' 
+                      className={`flex items-center text-sm px-3 py-1 rounded-full transition-colors ${isLoadingFollow
+                          ? 'bg-gray-700 text-gray-300 cursor-wait'
                           : creatorData.isFollowing
                             ? 'bg-green-600 hover:bg-green-700 text-white'
                             : 'bg-purple-600 hover:bg-purple-700 text-white'
-                      }`}
+                        }`}
                     >
                       {isLoadingFollow ? (
                         <span className="flex items-center">
@@ -456,7 +455,7 @@ const ExerciseDetailPage = ({ userData }) => {
                   }
                 </div>
                 {(userData.membership?.type === "monthly" || userData.membership?.type === "yearly") &&
-                  <button onClick={()=>navigate(`/creator/exercise/${exercise.custom.creatorId}`)} className='border-2 w-full border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
+                  <button onClick={() => navigate(`/creator/exercise/${exercise.custom.creatorId}`)} className='border-2 w-full border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
                 }
               </div>
             )}
