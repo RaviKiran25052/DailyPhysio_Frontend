@@ -254,7 +254,7 @@ const DashBoard = () => {
 								</div>
 								<h3 className="text-lg font-semibold text-purple-200">User Types</h3>
 							</div>
-							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
+							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-300 to-transparent"></div>
 							<div className="space-y-1">
 								<div className="flex justify-between items-center">
 									<p className="text-sm text-purple-300 font-medium">Regular Users</p>
@@ -268,7 +268,7 @@ const DashBoard = () => {
 						</div>
 
 						{/* Card 2: User Creation Sources */}
-						<div className="bg-gradient-to-br from-purple-800 to-purple-700 rounded-xl shadow-lg p-4 border border-purple-600/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-purple-400">
+						<div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl shadow-lg p-4 border border-purple-600/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-purple-400">
 							<div className="flex items-center mb-3">
 								<div className="p-2 bg-purple-600/30 rounded-lg mr-3">
 									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -277,7 +277,7 @@ const DashBoard = () => {
 								</div>
 								<h3 className="text-lg font-semibold text-purple-200">User Sources</h3>
 							</div>
-							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
+							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-300 to-transparent"></div>
 							<div className="space-y-1">
 								<div className="flex justify-between items-center">
 									<p className="text-sm text-purple-200 font-medium">Admin Created</p>
@@ -291,7 +291,7 @@ const DashBoard = () => {
 						</div>
 
 						{/* Card 3: Exercise Types */}
-						<div className="bg-gradient-to-br from-purple-700 to-purple-600 rounded-xl shadow-lg p-4 border border-purple-500/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-purple-300">
+						<div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl shadow-lg p-4 border border-purple-500/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-purple-300">
 							<div className="flex items-center mb-3">
 								<div className="p-2 bg-purple-500/30 rounded-lg mr-3">
 									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -300,7 +300,7 @@ const DashBoard = () => {
 								</div>
 								<h3 className="text-lg font-semibold text-purple-100">Exercise Types</h3>
 							</div>
-							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-300 to-transparent"></div>
 							<div className="space-y-1">
 								<div className="flex justify-between items-center">
 									<p className="text-sm text-purple-100 font-medium">Free Exercises</p>
@@ -314,7 +314,7 @@ const DashBoard = () => {
 						</div>
 
 						{/* Card 4: Active Therapists */}
-						<div className="bg-gradient-to-br from-purple-600 to-purple-500 rounded-xl shadow-lg p-4 border border-purple-400/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-purple-200">
+						<div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl shadow-lg p-4 border border-purple-400/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-purple-200">
 							<div className="flex items-center mb-3">
 								<div className="p-2 bg-purple-400/30 rounded-lg mr-3">
 									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -415,8 +415,8 @@ const DashBoard = () => {
 												{categoryCountsData.map((entry, index) => (
 													<Cell
 														key={`cell-${index}`}
-														fill={`url(#colorGradient${index % purpleColors.length})`}
-														className="hover:opacity-90 transition-opacity cursor-pointer"
+														fill='#a246ff'
+														className="cursor-pointer"
 													/>
 												))}
 											</Bar>
@@ -484,8 +484,8 @@ const DashBoard = () => {
 												{positionCountsData.map((entry, index) => (
 													<Cell
 														key={`cell-${index}`}
-														fill={`url(#posGradient${index % purpleColors.length})`}
-														className="hover:opacity-90 transition-opacity cursor-pointer"
+														fill="#a246ff"
+														className="cursor-pointer"
 													/>
 												))}
 											</Bar>
@@ -553,8 +553,8 @@ const DashBoard = () => {
 												{specializationCountsData.map((entry, index) => (
 													<Cell
 														key={`cell-${index}`}
-														fill={`url(#specGradient${index % purpleColors.length})`}
-														className="hover:opacity-90 transition-opacity cursor-pointer"
+														fill="#a246ff"
+														className="cursor-pointer"
 													/>
 												))}
 											</Bar>

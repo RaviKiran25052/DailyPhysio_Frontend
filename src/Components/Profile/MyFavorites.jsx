@@ -34,11 +34,8 @@ const MyFavorites = () => {
     } catch (err) {
       console.error('Error fetching favorites:', err);
       setError('Failed to load favorites. Please try again later.');
-      // If API isn't ready, use dummy data for demonstration
-      if (process.env.NODE_ENV === 'development') {
-        setFavorites(dummyFavorites);
-        setError(null);
-      }
+      setFavorites(dummyFavorites);
+      setError(null);
     } finally {
       setLoading(false);
     }

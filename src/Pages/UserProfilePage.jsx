@@ -55,7 +55,7 @@ const UserProfilePage = () => {
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-1/4 md:sticky top-24 h-fit">
+          <div className="lg:w-1/4 md:sticky top-20 h-fit">
             <Sidebar
               userData={userData}
               currentPath={activeTab}

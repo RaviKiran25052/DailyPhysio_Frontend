@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Info, Plus, Check, Crown, Heart } from 'lucide-react';
+import { Info, Plus, Check, Crown, Heart, SquareArrowOutUpRight } from 'lucide-react';
 import MediaCarousel from '../Profile/MediaCarousel';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -126,9 +126,9 @@ const ExerciseCard = ({
         </button>
       </div>
 
-      <div className="p-3 flex-grow flex flex-col">
-        <h3 className="text-lg font-semibold mb-2 text-white line-clamp-1">
-          {exercise.title || exercise.name || "Unnamed Exercise"}
+      <div className="p-3 flex flex-col">
+        <h3 onClick={handleViewDetails} className="flex gap-2 text-lg font-semibold mb-2 text-white hover:text-purple-300 line-clamp-1 cursor-pointer">
+          {exercise.title || exercise.name || "Unnamed Exercise"}<SquareArrowOutUpRight size={14} />
         </h3>
 
         {/* Make categories and positions visible on all screens */}
@@ -148,29 +148,6 @@ const ExerciseCard = ({
         <p className="text-sm text-gray-400 line-clamp-2 mb-3 flex-grow">
           {exercise.description || "No description available."}
         </p>
-
-        <div className="flex justify-between items-center mt-auto">
-          <button
-            className="text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors duration-200 p-1 rounded-md hover:bg-gray-700/50"
-            onClick={handleViewDetails}
-          >
-            <Info size={16} />
-            <span>Details</span>
-          </button>
-
-          {/* Mobile-only button for adding to HEP */}
-          <button
-            className={`md:hidden flex items-center gap-1 p-1 rounded-md ${isInHEP
-              ? 'text-purple-300 bg-purple-900/20'
-              : 'text-gray-400 hover:text-purple-300 hover:bg-gray-700/50'
-              } transition-colors duration-200`}
-            onClick={handleAddToHEP}
-            disabled={isInHEP}
-          >
-            {isInHEP ? <Check size={16} /> : <Plus size={16} />}
-            <span>{isInHEP ? "Added" : "Add"}</span>
-          </button>
-        </div>
       </div>
     </div>
   );

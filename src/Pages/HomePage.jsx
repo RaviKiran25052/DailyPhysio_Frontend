@@ -14,7 +14,7 @@ const HomePage = () => {
 	const plansRef = useRef(null);
 
 	return (
-		<div className="bg-gray-900 min-h-screen px-4 md:px-20">
+		<div className="bg-gray-900 min-h-screen">
 			<div ref={aboutRef} id="about">
 				<Hero/>
 
