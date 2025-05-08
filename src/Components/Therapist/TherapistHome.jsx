@@ -16,7 +16,7 @@ const TherapistHome = () => {
       : null;
 
     if (!loggedInTherapist) {
-      navigate('/therapist/login');
+      navigate('/therapist/');
       return;
     }
 

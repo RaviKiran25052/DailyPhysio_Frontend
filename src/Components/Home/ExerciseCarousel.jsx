@@ -1,25 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Eye, Heart, Film } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight, Eye, Heart, Calendar, Clock, Layers, Repeat } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ExerciseCarousel = ({ exercises = [], loading = false }) => {
+	const navigate = useNavigate();
 	// State for carousel positioning
 	const [startIdx, setStartIdx] = useState(0);
+	const [isAnimating, setIsAnimating] = useState(false);
+	const [hoveredCard, setHoveredCard] = useState(null);
 
 	// State for image carousels within cards
 	const [cardImageIndices, setCardImageIndices] = useState({});
+	const carouselRef = useRef(null);
+	const cardRefs = useRef([]);
 
 	// Determine visible cards count based on screen width
 	const [visibleCards, setVisibleCards] = useState(3);
+	const [cardWidth, setCardWidth] = useState(0);
 
 	useEffect(() => {
 		// Handle responsive card display
 		const handleResize = () => {
-			if (window.innerWidth >= 1024) { // desktop
+			if (window.innerWidth >= 1280) { // xl
 				setVisibleCards(3);
-			} else if (window.innerWidth >= 768) { // tablet
+			} else if (window.innerWidth >= 768) { // md
 				setVisibleCards(2);
 			} else { // mobile
 				setVisibleCards(1);
+			}
+
+			// Update card width calculation
+			if (carouselRef.current) {
+				const containerWidth = carouselRef.current.offsetWidth;
+				const gap = 16; // gap between cards in pixels
+				const calculatedWidth = (containerWidth - (gap * (visibleCards - 1))) / visibleCards;
+				setCardWidth(calculatedWidth);
 			}
 		};
 
@@ -29,7 +44,7 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 		// Add resize listener
 		window.addEventListener('resize', handleResize);
 		return () => window.removeEventListener('resize', handleResize);
-	}, []);
+	}, [visibleCards]);
 
 	useEffect(() => {
 		// Initialize image carousel indices for each card
@@ -40,15 +55,31 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 			});
 			setCardImageIndices(imageIndices);
 		}
+
+		// Set up card refs
+		cardRefs.current = cardRefs.current.slice(0, exercises.length);
 	}, [exercises]);
 
-	// Navigation functions for main carousel
+	// Navigation functions for main carousel with smooth animation
 	const nextExercises = () => {
+		if (isAnimating || startIdx >= exercises.length - visibleCards) return;
+		setIsAnimating(true);
 		setStartIdx(prev => Math.min(prev + 1, Math.max(0, exercises.length - visibleCards)));
+		setTimeout(() => setIsAnimating(false), 500); // match transition duration
 	};
 
 	const prevExercises = () => {
+		if (isAnimating || startIdx === 0) return;
+		setIsAnimating(true);
 		setStartIdx(prev => Math.max(0, prev - 1));
+		setTimeout(() => setIsAnimating(false), 500); // match transition duration
+	};
+
+	const goToSlide = (index) => {
+		if (isAnimating) return;
+		setIsAnimating(true);
+		setStartIdx(index);
+		setTimeout(() => setIsAnimating(false), 500); // match transition duration
 	};
 
 	// Navigation functions for image carousels
@@ -68,14 +99,14 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 
 	// Helper component for loading skeleton
 	const SkeletonCard = () => (
-		<div className="bg-gray-700 rounded-lg overflow-hidden shadow-xl animate-pulse w-full">
-			<div className="w-full h-64 bg-gray-600"></div>
+		<div className="bg-gray-800/60 rounded-xl overflow-hidden shadow-xl animate-pulse w-full backdrop-blur-sm border border-gray-700/50">
+			<div className="w-full h-64 bg-gray-700/70"></div>
 			<div className="p-6">
-				<div className="h-6 bg-gray-600 rounded mb-2"></div>
-				<div className="h-4 bg-gray-600 rounded mb-4"></div>
+				<div className="h-6 bg-gray-700/70 rounded mb-2"></div>
+				<div className="h-4 bg-gray-700/70 rounded mb-4"></div>
 				<div className="flex justify-between">
-					<div className="h-3 w-20 bg-gray-600 rounded"></div>
-					<div className="h-3 w-20 bg-gray-600 rounded"></div>
+					<div className="h-3 w-20 bg-gray-700/70 rounded"></div>
+					<div className="h-3 w-20 bg-gray-700/70 rounded"></div>
 				</div>
 			</div>
 		</div>
@@ -84,33 +115,74 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 	// Generate loading skeletons
 	const renderSkeletons = (count) => {
 		return Array(count).fill(0).map((_, index) => (
-			<div key={`skeleton-${index}`} className="px-3 w-full md:w-1/2 lg:w-1/3 flex-shrink-0">
+			<div key={`skeleton-${index}`} className="px-2 flex-shrink-0" style={{ width: cardWidth ? cardWidth + 'px' : '100%' }}>
 				<SkeletonCard />
 			</div>
 		));
 	};
 
 	return (
-		<section>
-			<h2 className="text-3xl font-bold text-white mb-8 text-center">
-				Trending Exercises
-			</h2>
+		<div className="relative z-10 mx-6 md:mx-20 overflow-hidden mb-10">
+			<div className="flex items-center justify-between mb-10">
+				<h2 className="text-3xl sm:text-4xl font-bold text-white text-center relative">
+					<span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-gray-500">
+						Trending Exercises
+					</span>
+					<div className="h-1 w-24 bg-gradient-to-r from-purple-600 to-gray-500 mt-2"></div>
+				</h2>
+
+				{!loading && exercises.length > visibleCards && (
+					<div className="hidden sm:flex items-center space-x-3">
+						<button
+							onClick={prevExercises}
+							disabled={startIdx === 0 || isAnimating}
+							className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx === 0 ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
+								'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+								} transition-all duration-300`}
+							aria-label="Previous exercises"
+						>
+							<ChevronLeft size={20} />
+						</button>
+						<button
+							onClick={nextExercises}
+							disabled={startIdx >= exercises.length - visibleCards || isAnimating}
+							className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx >= exercises.length - visibleCards ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
+								'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+								} transition-all duration-300`}
+							aria-label="Next exercises"
+						>
+							<ChevronRight size={20} />
+						</button>
+					</div>
+				)}
+			</div>
 
 			{loading ? (
-				<div className="flex space-x-4 overflow-hidden">
-					{renderSkeletons(3)}
+				<div className="flex space-x-4 overflow-hidden" ref={carouselRef}>
+					{renderSkeletons(visibleCards)}
 				</div>
 			) : (
 				<div className="relative">
-					<div className="flex overflow-hidden">
-						{exercises.slice(startIdx, startIdx + visibleCards).map((exercise, index) => (
-							<div key={exercise._id} className="px-3 w-full md:w-1/2 lg:w-1/3 flex-shrink-0">
-								<div className="bg-gray-700 rounded-lg overflow-hidden shadow-xl hover:shadow-purple-500/30 transition-all duration-300 transform hover:-translate-y-1 h-full relative group">
-									{/* Card number overlay */}
-									<div className="absolute top-4 left-4 w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold z-10 shadow-md">
-										{startIdx + index + 1}
-									</div>
-
+					<div
+						ref={carouselRef}
+						className="flex space-x-4 pb-3 w-full"
+						style={{
+							transform: `translateX(-${startIdx * (cardWidth + 16)}px)`,
+							transition: 'transform 500ms cubic-bezier(0.25, 1, 0.5, 1)'
+						}}
+					>
+						{exercises.map((exercise, index) => (
+							<div
+								key={exercise._id}
+								ref={el => cardRefs.current[index] = el}
+								className="flex-shrink-0"
+								style={{ width: cardWidth ? cardWidth + 'px' : '100%' }}
+								onMouseEnter={() => setHoveredCard(index)}
+								onMouseLeave={() => setHoveredCard(null)}
+							>
+								<div className={`bg-gray-800/80 rounded-xl overflow-hidden shadow-xl border border-gray-700/60 h-full relative group backdrop-blur-sm transition-all duration-500 
+									${hoveredCard === index ? 'shadow-purple-500/30 border-purple-500/40' : 'hover:shadow-purple-500/20'}`}
+								>
 									<div className="relative">
 										{/* Image carousel */}
 										{exercise.image && exercise.image.length > 0 && (
@@ -158,8 +230,8 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 																	[exercise._id]: imgIndex
 																}))}
 																className={`w-2 h-2 rounded-full transition-all ${imgIndex === cardImageIndices[exercise._id]
-																		? 'bg-purple-500 w-4'
-																		: 'bg-gray-400 hover:bg-purple-400'
+																	? 'bg-purple-500 w-4'
+																	: 'bg-gray-400 hover:bg-purple-400'
 																	}`}
 																aria-label={`Go to image ${imgIndex + 1}`}
 															/>
@@ -172,27 +244,31 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 										<div className="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1 rounded-lg flex items-center shadow-md">
 											{exercise.category}
 										</div>
-
-										{exercise.video && (
-											<div className="absolute bottom-4 right-4 z-10">
-												<div className="bg-purple-800/80 p-2 rounded-full shadow-md">
-													<Film size={20} className="text-white" />
-												</div>
-											</div>
-										)}
 									</div>
 
 									<div className="p-6">
-										<div className="flex flex-wrap gap-2 mb-3">
-											<span className="bg-purple-900/40 text-purple-200 text-xs px-3 py-1 rounded-full border border-purple-800/50">
-												{exercise.subCategory}
-											</span>
-											<span className="bg-purple-900/40 text-purple-200 text-xs px-3 py-1 rounded-full border border-purple-800/50">
-												{exercise.position}
-											</span>
+										<div className="flex justify-between mb-3">
+											<div className='flex gap-2 items-center'>
+												<span className="bg-purple-900/40 text-purple-200 text-xs px-3 py-1 rounded-full border border-purple-800/50">
+													{exercise.subCategory}
+												</span>
+												<span className="bg-purple-900/40 text-purple-200 text-xs px-3 py-1 rounded-full border border-purple-800/50">
+													{exercise.position}
+												</span>
+											</div>
+											<div className='flex gap-2 text-white'>
+												<div className="flex items-center">
+													<Eye size={16} className="mr-1 text-purple-400/70" />
+													<span>{exercise.views?.toLocaleString() || "0"}</span>
+												</div>
+												<div className="flex items-center">
+													<Heart size={16} className="mr-1 text-purple-400/70" />
+													<span>{exercise.favorites?.toLocaleString() || "0"}</span>
+												</div>
+											</div>
 										</div>
 
-										<h3 className="text-xl font-semibold text-white mb-3 group-hover:text-purple-300 transition-colors">
+										<h3 className="text-xl font-semibold text-white mb-3 group-hover:text-purple-200 transition-colors">
 											{exercise.title}
 										</h3>
 
@@ -200,53 +276,81 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 											{exercise.description}
 										</p>
 
-										<div className="flex justify-between text-sm text-gray-400 pt-3 border-t border-gray-600">
-											<div className="flex items-center">
-												<Eye size={16} className="mr-1 text-purple-400/70" />
-												<span>{exercise.views.toLocaleString()}</span>
+										{/* Stats card - similar to TherapistCarousel but using exercise data */}
+										<div className="bg-gray-900/60 rounded-xl p-4 grid grid-cols-4 gap-1 border border-gray-700/40 group-hover:border-purple-500/20 transition-all duration-300 mb-4">
+											<div className="flex flex-col items-center text-center">
+												<Repeat size={18} className="text-purple-400 mb-1" />
+												<span className="text-white font-medium">{exercise.reps}</span>
+												<span className="text-xs text-gray-400">Reps</span>
 											</div>
-											<div className="flex items-center">
-												<Heart size={16} className="mr-1 text-purple-400/70" />
-												<span>{exercise.favorites.toLocaleString()}</span>
+
+											<div className="flex flex-col items-center text-center border-x border-gray-700/30">
+												<Clock size={18} className="text-purple-400 mb-1" />
+												<span className="text-white font-medium">{exercise.hold}</span>
+												<span className="text-xs text-gray-400">Hold</span>
+											</div>
+
+											<div className="flex flex-col items-center text-center border-r border-gray-700/30">
+												<Layers size={18} className="text-purple-400 mb-1" />
+												<span className="text-white font-medium">{exercise.set}</span>
+												<span className="text-xs text-gray-400">Sets</span>
+											</div>
+
+											<div className="flex flex-col items-center text-center">
+												<Calendar size={18} className="text-purple-400 mb-1" />
+												<span className="text-white font-medium">{exercise.perform.count}/{exercise.perform.type}</span>
+												<span className="text-xs text-gray-400">Perform</span>
 											</div>
 										</div>
+										<button
+											onClick={() => navigate(`/exercise/${exercise._id}`)}
+											className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white px-3 py-1 rounded-lg text-sm transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
+										>
+											View Exercise
+										</button>
 									</div>
 								</div>
 							</div>
 						))}
 					</div>
 
-					{/* Navigation buttons */}
+					{/* Mobile navigation buttons (visible on smaller screens) */}
 					{exercises.length > visibleCards && (
-						<>
+						<div className="sm:hidden flex justify-center mt-6 space-x-4">
 							<button
 								onClick={prevExercises}
-								disabled={startIdx === 0}
-								className={`absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-5 p-3 rounded-full shadow-lg ${startIdx === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-purple-600 text-white hover:bg-purple-700'} transition-colors z-10`}
+								disabled={startIdx === 0 || isAnimating}
+								className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx === 0 ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
+									'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+									} transition-all duration-300`}
 								aria-label="Previous exercises"
 							>
-								<ChevronLeft size={24} />
+								<ChevronLeft size={20} />
 							</button>
-
 							<button
 								onClick={nextExercises}
-								disabled={startIdx >= exercises.length - visibleCards}
-								className={`absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-5 p-3 rounded-full shadow-lg ${startIdx >= exercises.length - visibleCards ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-purple-600 text-white hover:bg-purple-700'} transition-colors z-10`}
+								disabled={startIdx >= exercises.length - visibleCards || isAnimating}
+								className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx >= exercises.length - visibleCards ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
+									'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+									} transition-all duration-300`}
 								aria-label="Next exercises"
 							>
-								<ChevronRight size={24} />
+								<ChevronRight size={20} />
 							</button>
-						</>
+						</div>
 					)}
 
 					{/* Pagination dots */}
 					{exercises.length > visibleCards && (
 						<div className="flex justify-center mt-6 space-x-2">
-							{Array(Math.max(1, exercises.length - visibleCards + 1)).fill(0).map((_, i) => (
+							{Array(Math.ceil((exercises.length - visibleCards + 1) / 1)).fill(0).map((_, i) => (
 								<button
 									key={i}
-									onClick={() => setStartIdx(i)}
-									className={`w-3 h-3 rounded-full transition-colors ${i === startIdx ? 'bg-purple-500' : 'bg-gray-600 hover:bg-purple-400'}`}
+									onClick={() => goToSlide(i)}
+									className={`w-2 h-2 rounded-full transition-all duration-300 ${i === Math.floor(startIdx / 1) ?
+										'bg-gradient-to-r from-purple-500 to-pink-500 w-6' :
+										'bg-gray-600 hover:bg-purple-400'
+										}`}
 									aria-label={`Go to slide ${i + 1}`}
 								/>
 							))}
@@ -254,7 +358,7 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 					)}
 				</div>
 			)}
-		</section>
+		</div>
 	);
 };
 

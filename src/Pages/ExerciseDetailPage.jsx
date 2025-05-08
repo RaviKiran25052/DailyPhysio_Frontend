@@ -334,25 +334,8 @@ const ExerciseDetailPage = ({ userData }) => {
               </div>
             </div>
 
-            {/* Exercise image */}
-            <div className="relative rounded-xl overflow-hidden mb-6 border border-gray-800">
-
-              <div className="aspect-[4/2] w-full">
-                <MediaCarousel images={exercise.image} video={isPro ? exercise.video : []} />
-              </div>
-
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-20"></div>
-
-              {/* Video button */}
-              {isPro && exercise.video && exercise.video.length > 0 && (
-                <button
-                  className="absolute bottom-3 right-3 flex items-center gap-2 bg-purple-600 hover:bg-purple-700 transition-colors rounded-lg px-3 py-2 text-sm"
-                  aria-label="View video"
-                >
-                  <PlayCircle size={16} />
-                  <span className="hidden sm:inline">View Video</span>
-                </button>
-              )}
+            <div className="aspect-[4/2] w-full">
+              <MediaCarousel images={exercise.image} video={isPro ? exercise.video : []} />
             </div>
 
             {/* Exercise description */}

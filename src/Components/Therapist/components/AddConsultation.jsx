@@ -79,7 +79,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
   };
 
   const toggleExerciseSelection = (exercise) => {
-    setSelectedExercises(prev => 
+    setSelectedExercises(prev =>
       prev.some(ex => ex._id === exercise._id)
         ? prev.filter(ex => ex._id !== exercise._id)
         : [...prev, exercise]
@@ -105,10 +105,14 @@ const AddConsultation = ({ onClose, onSuccess }) => {
           fullName: formData.name,
           email: formData.email,
           password: formData.password,
+          creator: {
+            createdBy: 'therapist',
+            createdById: therapistInfo._id
+          }
         });
-        userId = response.data.user._id;
+
+        userId = response.data._id;
       }
-      console.log(userId);
       // Create consultation
       const response = await axios.post(
         `${API_URL}/therapist/consultations`,
@@ -290,19 +294,17 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                   <div
                     key={exercise._id}
                     onClick={() => toggleExerciseSelection(exercise)}
-                    className={`bg-gray-700 p-4 rounded-lg cursor-pointer transition-colors ${
-                      selectedExercises.some(ex => ex._id === exercise._id)
+                    className={`bg-gray-700 p-4 rounded-lg cursor-pointer transition-colors ${selectedExercises.some(ex => ex._id === exercise._id)
                         ? 'ring-2 ring-purple-500'
                         : 'hover:bg-gray-600'
-                    }`}
+                      }`}
                   >
                     <div className="flex justify-between items-start">
                       <h3 className="font-medium text-white">{exercise.title}</h3>
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                        selectedExercises.some(ex => ex._id === exercise._id)
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${selectedExercises.some(ex => ex._id === exercise._id)
                           ? 'bg-purple-500 border-purple-500'
                           : 'border-gray-500'
-                      }`}>
+                        }`}>
                         {selectedExercises.some(ex => ex._id === exercise._id) && (
                           <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

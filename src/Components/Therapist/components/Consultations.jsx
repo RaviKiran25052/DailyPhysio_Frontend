@@ -1,53 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { RiSearchLine, RiAddLine, RiCalendarLine, RiUserLine, RiTimeLine, 
-         RiArrowLeftLine, RiRunLine, RiInformationLine } from 'react-icons/ri';
+import {
+  RiSearchLine, RiAddLine, RiCalendarLine, RiUserLine,
+  RiArrowLeftLine, RiRunLine, RiInformationLine
+} from 'react-icons/ri';
 import AddConsultation from './AddConsultation';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const ConsultationDetails = ({ consultation, onBack }) => {
   return (
-    <div className="p-6 animate-fadeIn">
+    <div className="animate-fadeIn">
       {/* Back Button */}
-      <button 
+      <button
         onClick={onBack}
-        className="flex items-center space-x-2 text-gray-400 hover:text-white mb-6 transition-colors"
+        className="flex items-center space-x-2 text-gray-400 hover:text-white m-6 border border-gray-400 p-2 rounded-md"
       >
         <RiArrowLeftLine size={20} />
         <span>Back to Consultations</span>
       </button>
 
-      <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
-        {/* Header */}
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h2 className="text-2xl font-bold mb-2">Consultation Details</h2>
-            <span className="text-gray-400">ID: {consultation._id}</span>
-          </div>
-          <span className={`px-4 py-2 rounded-full text-sm ${
-            consultation.request.status === 'active'
-              ? 'bg-green-500 bg-opacity-20 text-green-500'
-              : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
-          }`}>
-            {consultation.request.status}
-          </span>
-        </div>
-
+      <div className=" p-6">
         {/* Patient Information */}
-        <div className="bg-gray-900 rounded-lg p-6 mb-6">
+        <div className="bg-gray-800 rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold mb-4 flex items-center">
             <RiUserLine className="mr-2 text-purple-500" />
             Patient Information
           </h3>
           <div className="flex items-center space-x-4">
-            <img 
-              src={consultation.patient_id.profileImage} 
+            <img
+              src={consultation.patient_id.profileImage}
               alt={consultation.patient_id.fullName}
               className="w-16 h-16 rounded-full object-cover"
             />
             <div>
-              <div className="font-medium text-lg">{consultation.patient_id.fullName}</div>
+              <div className="font-medium text-lg">
+                {consultation.patient_id.fullName}
+                <span className={`px-3 py-1 ml-4 rounded-full text-base ${consultation.request.status === 'active'
+                  ? 'bg-green-500 bg-opacity-20 text-green-500'
+                  : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
+                  }`}>
+                  {consultation.request.status}
+                </span>
+              </div>
               <div className="text-gray-400">{consultation.patient_id.email}</div>
             </div>
           </div>
@@ -55,7 +50,7 @@ const ConsultationDetails = ({ consultation, onBack }) => {
 
         {/* Consultation Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="bg-gray-900 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center">
               <RiCalendarLine className="mr-2 text-purple-500" />
               Duration
@@ -78,7 +73,7 @@ const ConsultationDetails = ({ consultation, onBack }) => {
             </div>
           </div>
 
-          <div className="bg-gray-900 rounded-lg p-6">
+          <div className="bg-gray-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center">
               <RiInformationLine className="mr-2 text-purple-500" />
               Notes
@@ -88,7 +83,7 @@ const ConsultationDetails = ({ consultation, onBack }) => {
         </div>
 
         {/* Recommended Exercises */}
-        <div className="bg-gray-900 rounded-lg p-6">
+        <div className="bg-gray-800 rounded-lg p-6">
           <h3 className="text-lg font-semibold mb-4 flex items-center">
             <RiRunLine className="mr-2 text-purple-500" />
             Recommended Exercises
@@ -96,8 +91,8 @@ const ConsultationDetails = ({ consultation, onBack }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {consultation.recommendedExercises.map((exercise) => (
               <div key={exercise._id} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                <img 
-                  src={exercise.image[0]} 
+                <img
+                  src={exercise.image[0]}
                   alt={exercise.title}
                   className="w-full h-40 object-cover rounded-lg mb-3"
                 />
@@ -106,7 +101,7 @@ const ConsultationDetails = ({ consultation, onBack }) => {
                   {exercise.category} - {exercise.subCategory}
                 </div>
                 <div className="text-sm">
-                  <span className="text-purple-500">Sets:</span> {exercise.set} | 
+                  <span className="text-purple-500">Sets:</span> {exercise.set} |
                   <span className="text-purple-500"> Reps:</span> {exercise.reps} |
                   <span className="text-purple-500"> Hold:</span> {exercise.hold}s
                 </div>
@@ -122,7 +117,6 @@ const ConsultationDetails = ({ consultation, onBack }) => {
 const Consultations = () => {
   const [consultations, setConsultations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedConsultation, setSelectedConsultation] = useState(null);
   const [showAddConsultation, setShowAddConsultation] = useState(false);
@@ -130,7 +124,7 @@ const Consultations = () => {
   useEffect(() => {
     fetchConsultations();
   }, []);
-  
+
   const fetchConsultations = async () => {
     try {
       const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
@@ -144,7 +138,6 @@ const Consultations = () => {
       setLoading(false);
     } catch (err) {
       console.error('Error fetching consultations:', err);
-      setError('Failed to load consultations');
       setLoading(false);
     }
   };
@@ -170,20 +163,10 @@ const Consultations = () => {
     );
   }
 
-  if (error) {
-    return (
-      <div className="p-6">
-        <div className="bg-red-500 bg-opacity-20 border border-red-500 text-red-500 px-6 py-4 rounded-lg">
-          {error}
-        </div>
-      </div>
-    );
-  }
-
   if (selectedConsultation) {
-    return <ConsultationDetails 
-      consultation={selectedConsultation} 
-      onBack={() => setSelectedConsultation(null)} 
+    return <ConsultationDetails
+      consultation={selectedConsultation}
+      onBack={() => setSelectedConsultation(null)}
     />;
   }
 
@@ -210,7 +193,7 @@ const Consultations = () => {
               className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500 w-64 text-white"
             />
           </div>
-          <button 
+          <button
             onClick={() => setShowAddConsultation(true)}
             className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
           >
@@ -229,31 +212,27 @@ const Consultations = () => {
             onClick={() => setSelectedConsultation(consultation)}
           >
             <div className="p-6">
-              {/* Status Badge */}
-              <div className="flex justify-between items-start mb-4">
-                <span className={`px-3 py-1 rounded-full text-sm ${
-                  consultation.request.status === 'active'
-                    ? 'bg-green-500 bg-opacity-20 text-green-500'
-                    : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
-                }`}>
-                  {consultation.request.status}
-                </span>
-                <span className="text-gray-400 text-sm">
-                  ID: {consultation._id.slice(-6)}
-                </span>
-              </div>
 
               {/* Patient Info */}
-              <div className="flex items-center space-x-4 mb-4">
-                <img 
-                  src={consultation.patient_id.profileImage} 
-                  alt={consultation.patient_id.fullName}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-medium">{consultation.patient_id.fullName}</div>
-                  <div className="text-sm text-gray-400">{consultation.patient_id.email}</div>
+              <div className="flex justify-between items-center mb-4">
+                <div className='flex items-center space-x-4'>
+                  <img
+                    src={consultation.patient_id.profileImage}
+                    alt={consultation.patient_id.fullName}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <div className="font-medium">{consultation.patient_id.fullName}</div>
+                    <div className="text-sm text-gray-400">{consultation.patient_id.email}</div>
+                  </div>
                 </div>
+                {/* Status Badge */}
+                <span className={`px-3 py-1 rounded-full text-sm ${consultation.request.status === 'active'
+                  ? 'bg-green-500 bg-opacity-20 text-green-500'
+                  : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
+                  }`}>
+                  {consultation.request.status}
+                </span>
               </div>
 
               {/* Date Info */}
@@ -283,7 +262,7 @@ const Consultations = () => {
               )}
 
               {/* View Details Button */}
-              <button className="w-full mt-6 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors">
+              <button className="w-full mt-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors">
                 View Details
               </button>
             </div>
