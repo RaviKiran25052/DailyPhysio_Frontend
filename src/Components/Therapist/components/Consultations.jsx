@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { RiSearchLine, RiAddLine, RiCalendarLine, RiUserLine, RiTimeLine, 
          RiArrowLeftLine, RiRunLine, RiInformationLine } from 'react-icons/ri';
+import AddConsultation from './AddConsultation';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -124,29 +125,29 @@ const Consultations = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedConsultation, setSelectedConsultation] = useState(null);
+  const [showAddConsultation, setShowAddConsultation] = useState(false);
 
   useEffect(() => {
-    const fetchConsultations = async () => {
-      try {
-        const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
-        const response = await axios.get(`${API_URL}/therapist/consultations`, {
-          headers: {
-            Authorization: `Bearer ${therapistInfo.token}`
-          }
-        });
-
-        setConsultations(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching consultations:', err);
-        setError('Failed to load consultations');
-        setLoading(false);
-      }
-    };
-
     fetchConsultations();
   }, []);
+  
+  const fetchConsultations = async () => {
+    try {
+      const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
+      const response = await axios.get(`${API_URL}/therapist/consultations`, {
+        headers: {
+          Authorization: `Bearer ${therapistInfo.token}`
+        }
+      });
 
+      setConsultations(response.data);
+      setLoading(false);
+    } catch (err) {
+      console.error('Error fetching consultations:', err);
+      setError('Failed to load consultations');
+      setLoading(false);
+    }
+  };
   const filteredConsultations = consultations.filter(consultation => {
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -155,6 +156,11 @@ const Consultations = () => {
       consultation.patient_id.email.toLowerCase().includes(searchLower)
     );
   });
+
+  const handleAddSuccess = () => {
+    fetchConsultations(); // Refresh the consultations list
+    setShowAddConsultation(false);
+  };
 
   if (loading) {
     return (
@@ -183,6 +189,13 @@ const Consultations = () => {
 
   return (
     <div className="p-6">
+      {showAddConsultation && (
+        <AddConsultation
+          onClose={() => setShowAddConsultation(false)}
+          onSuccess={handleAddSuccess}
+        />
+      )}
+
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 space-y-4 md:space-y-0">
         <h2 className="text-2xl font-bold">Consultations</h2>
@@ -197,7 +210,10 @@ const Consultations = () => {
               className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500 w-64 text-white"
             />
           </div>
-          <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+          <button 
+            onClick={() => setShowAddConsultation(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          >
             <RiAddLine />
             <span>New Consultation</span>
           </button>
