@@ -5,9 +5,10 @@ import PopularClasses from '../Components/Home/PopularClasses';
 import FeaturedCourses from '../Components/Home/FeaturedCourses';
 import MembershipPlans from '../Components/Home/MembershipPlans';
 import CallToAction from '../Components/Home/CallToAction';
+import TrendingSection from '../Components/Home/TrendingSection';
 import Footer from '../Components/Footer';
-const HomePage = () => {
 
+const HomePage = () => {
 	const aboutRef = useRef(null);
 	const programsRef = useRef(null);
 	const exercisesRef = useRef(null);
@@ -17,13 +18,14 @@ const HomePage = () => {
 		<div className="bg-gray-900 min-h-screen">
 			<div ref={aboutRef} id="about">
 				<Hero/>
-
 			</div>
 			<TrustedBy />
 
 			<div ref={programsRef} id="programs">
 				<PopularClasses />
 			</div>
+
+			<TrendingSection />
 
 			<div ref={exercisesRef} id="exercises">
 				<FeaturedCourses />
@@ -36,7 +38,6 @@ const HomePage = () => {
 			<CallToAction />
 			<Footer />
 		</div>
-		
 	);
 };
 
