@@ -66,12 +66,7 @@ const TherapistHome = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <header className="bg-gray-800 border-b border-gray-700">
-          <div className="flex items-center justify-between px-6 py-4">
-            <h1 className="text-xl font-semibold">
-              {activeTab === 'main' ? 'Dashboard' :
-                activeTab === 'consultation' ? 'Consultation Management' :
-                  activeTab === 'exercise' ? 'Exercise Management' : 'User Management'}
-            </h1>
+          <div className="flex items-center justify-end px-6 py-4">
             <div className="flex items-center space-x-4">
               <span className="text-gray-300">
                 Welcome, {therapistInfo?.name || 'Therapist'}
