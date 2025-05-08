@@ -13,6 +13,7 @@ import AdminExerciseList from './Components/admin/AdminExerciseList';
 import UserManagement from './Components/admin/UserManagement';
 import TherapistManagement from './Components/admin/Therapist/TherapistManagement';
 import TherapistDashboard from './Components/Therapist/TherapistDashboard';
+import TherapistHome from './Components/Therapist/TherapistHome';
 import TherapistManagementTable from './Components/admin/Therapist/TherapistManagementTable';
 import TherapistConsultation from './Components/Therapist/TherapistConsultation';
 import axios from 'axios';
@@ -66,6 +67,7 @@ const AppContent = () => {
 
           {/* <Route element={<TherapistRouteProtect />}> */}
           <Route path="/therapist/" element={<TherapistDashboard />} />
+          <Route path="/therapist/home" element={<TherapistHome />} />
           <Route path="/therapist/new-consultation" element={<TherapistConsultation />} />
           {/* </Route> */}
 
