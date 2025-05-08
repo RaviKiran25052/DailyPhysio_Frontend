@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
+import Consultations from './components/Consultations'
 
 const TherapistHome = () => {
   const navigate = useNavigate();
@@ -27,12 +28,7 @@ const TherapistHome = () => {
       case 'main':
         return <Dashboard />;
       case 'consultation':
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Consultation Management</h2>
-            <p className="text-gray-300">Manage your consultations here.</p>
-          </div>
-        );
+        return <Consultations />;
       case 'exercise':
         return (
           <div className="p-6">
