@@ -57,11 +57,6 @@ const MyFavorites = () => {
     } catch (err) {
       console.error('Error removing favorite:', err);
       toast.error('Failed to remove from favorites');
-
-      // If API isn't ready, just update UI for demonstration
-      if (process.env.NODE_ENV === 'development') {
-        setFavorites(favorites.filter(favorite => favorite._id !== id));
-      }
     } finally {
       setDeleteLoading(null);
     }
@@ -161,9 +156,9 @@ const MyFavorites = () => {
                 className="bg-gray-800 rounded-lg overflow-hidden shadow-lg border border-gray-700 hover:border-purple-500 transition duration-300"
               >
                 {/* Media Carousel - Fixed height to match your second image */}
-                {(favorite.video?.length > 0 || favorite.image?.length > 0) && (
+                {(favorite?.video || favorite.image?.length > 0) && (
                   <div className="h-48 relative">
-                    <MediaCarousel video={favorite.video || []} images={favorite.image || []} />
+                    <MediaCarousel video={favorite.video || null} images={favorite.image || []} />
                   </div>
                 )}
 

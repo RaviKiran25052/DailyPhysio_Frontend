@@ -14,7 +14,7 @@ const CreatorExercisesPage = () => {
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [categories, setCategories] = useState([]);
-  const [creatorName, setCreatorName] = useState("");
+  const [creatorData, setCreatorData] = useState("");
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -30,7 +30,7 @@ const CreatorExercisesPage = () => {
         console.log(data);
 
         setExercises(data.exercises);
-        setCreatorName(data.creatorName.fullName)
+        setCreatorData(data.creatorData)
 
         // Extract unique categories
         const uniqueCategories = [...new Set(data.exercises.map(ex => ex.category))];
@@ -94,7 +94,7 @@ const CreatorExercisesPage = () => {
           <ArrowLeft size={20} className="mr-2" />
           <span>Back</span>
         </button>
-        <h1 className="text-2xl my-6 font-bold">{creatorName}'s Exercises</h1>
+        <h1 className="text-2xl my-6 font-bold">{creatorData.name || creatorData.fullName}'s Exercises</h1>
 
         {/* Categories filter */}
         {categories.length > 1 && (

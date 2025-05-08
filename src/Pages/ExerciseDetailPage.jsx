@@ -44,13 +44,15 @@ const ExerciseDetailPage = ({ userData }) => {
     if (!token) return;
 
     try {
-      const response = await axios.get(`${API_URL}/exercises/favorites/${id}`, {
+      const response = await axios.get(`${API_URL}/users/favorites/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
       const favorites = response.data;
+      console.log(favorites);
+
       setIsFavorite(favorites.isFavorite);
     } catch (error) {
       console.error('Error checking favorite status:', error);
@@ -60,21 +62,16 @@ const ExerciseDetailPage = ({ userData }) => {
   useEffect(() => {
     const fetchExercise = async () => {
       try {
-        console.log(1);
 
         const response = await axios.get(`${API_URL}/exercises/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
-        console.log(2);
         const data = response.data;
         setIsPro(response.data.membership !== "free");
         setExercise(data.exercise);
-
         setCreatorData(data.creatorData);
-        console.log(data);
-
         setRelatedExercises(data.relatedExercises);
 
         // Update form data with exercise title
@@ -82,8 +79,6 @@ const ExerciseDetailPage = ({ userData }) => {
           ...prev,
           name: data.exercise.title || 'Exercise Routine'
         }));
-
-        console.log(3);
         // Check favorite status
         await checkFavoriteStatus();
       } catch (error) {
@@ -105,26 +100,36 @@ const ExerciseDetailPage = ({ userData }) => {
       toast.warning('Please login to add this exercise to favorites');
       return;
     }
-
     setIsLoadingFavorite(true);
 
     try {
-      await axios.post(
-        `${API_URL}/exercises/favorites/${id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
+      if (!isFavorite) {
+        await axios.post(
+          `${API_URL}/users/favorites/`, {
+          exerciseId: id
+        },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        }
-      );
+        );
+        toast.success('Added to favorites');
+      } else {
+        await axios.delete(
+          `${API_URL}/users/favorites/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        toast.success('Removed from favorites');
+      }
 
-      setIsFavorite(true);
-      toast.success('Added to favorites');
+      setIsFavorite(!isFavorite);
     } catch (error) {
       if (error.response?.status === 400) {
-        // Already in favorites
-        setIsFavorite(true);
         toast.info('Already in your favorites');
       } else {
         console.error('Error adding to favorites:', error);
@@ -317,8 +322,8 @@ const ExerciseDetailPage = ({ userData }) => {
                 {/* Favorite button */}
                 <button
                   onClick={toggleFavorite}
-                  disabled={isLoadingFavorite || isFavorite}
-                  className={` p-2 z-10 rounded-full transition-all duration-200 ${isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite
+                  disabled={isLoadingFavorite}
+                  className={` p-2 z-10 rounded-full cursor-pointer transition-all duration-200 ${isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite
                     ? 'bg-red-500 text-white hover:bg-red-600'
                     : 'bg-gray-700/50 text-white hover:bg-gray-600'
                     }`}
@@ -426,10 +431,10 @@ const ExerciseDetailPage = ({ userData }) => {
                       onClick={toggleFollow}
                       disabled={isLoadingFollow}
                       className={`flex items-center text-sm px-3 py-1 rounded-full transition-colors ${isLoadingFollow
-                          ? 'bg-gray-700 text-gray-300 cursor-wait'
-                          : creatorData.isFollowing
-                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                            : 'bg-purple-600 hover:bg-purple-700 text-white'
+                        ? 'bg-gray-700 text-gray-300 cursor-wait'
+                        : creatorData.isFollowing
+                          ? 'bg-green-600 hover:bg-green-700 text-white'
+                          : 'bg-purple-600 hover:bg-purple-700 text-white'
                         }`}
                     >
                       {isLoadingFollow ? (
