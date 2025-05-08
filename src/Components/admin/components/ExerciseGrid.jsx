@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MediaCarousel from '../../Profile/MediaCarousel';
 import { Crown } from 'lucide-react';
 
 const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm }) => {
+	
 	if (totalExercises === 0) {
 		return (
 			<div className="text-center py-12">
@@ -13,7 +14,6 @@ const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm })
 			</div>
 		);
 	}
-
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 			{exercises.map((exercise) => (

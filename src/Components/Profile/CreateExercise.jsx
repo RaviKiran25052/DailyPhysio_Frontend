@@ -122,8 +122,8 @@ export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null,
 
 			setExistingVideo(exercise.video);
 
-			if (exercise.images && exercise.images.length > 0) {
-				setExistingImages(exercise.images);
+			if (exercise.image && exercise.image.length > 0) {
+				setExistingImages(exercise.image);
 			}
 		} else {
 			resetForm();
@@ -333,31 +333,14 @@ export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null,
 				submitData.append('video', videoFile);
 			}
 
-			// If we're in edit mode and there are existing images/videos we want to keep
-			if (isEdit) {
-				// Add info about existing videos to keep
-				if (existingVideo) {
-					submitData.append('existingVideo', JSON.stringify(existingVideo));
-				} else {
-					submitData.append('existingVideo', JSON.stringify());
-				}
-
-				// Add info about existing images to keep
-				if (existingImages.length) {
-					submitData.append('existingImages', JSON.stringify(existingImages));
-				}
-				
-				submitData.append('video', existingVideo);
-				submitData.append('images', existingImages);
-			}
-
 			// Add new images
 			imageFiles.forEach(imageData => {
 				submitData.append('images', imageData.file);
 			});
-
 			// Create or update based on mode
 			let response;
+			console.log(adminToken);
+			
 			if (isEdit) {
 				response = await axios.put(`${BASE_URL}/exercises/${exercise._id}`, submitData, {
 					headers: {

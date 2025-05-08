@@ -67,6 +67,7 @@ const AdminExerciseList = () => {
       const response = await axios.get(`${API_URL}/exercises`, config);
 
       const { exercises, pagination: paginationData } = response.data;
+
       setAllExercises(exercises);
       setTotalPages(paginationData.totalPages);
       setTotalExercises(paginationData.total);
@@ -298,7 +299,7 @@ const AdminExerciseList = () => {
         onClose={handleCloseModal}
         exercise={selectedExercise}
         adminToken={adminToken}
-        onSuccess={fetchAllExercises}
+        onSuccess={() => fetchAllExercises(adminToken)}
       />
     </main>
   );
