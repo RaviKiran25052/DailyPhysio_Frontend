@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-  ArrowLeft, 
   Eye, 
   Heart, 
   MapPin, 
@@ -39,6 +38,8 @@ const CreatorExercisesPage = () => {
           }
         });
         const data = response.data;
+        console.log(data);
+        
         setExercises(data.exercises);
         setCreatorData(data.creatorData);
 
@@ -98,29 +99,9 @@ const CreatorExercisesPage = () => {
       <div className="container mx-auto">
         <div className="flex gap-6">
           {/* Left Sidebar - Creator Details */}
-          <div className="w-1/4 min-w-[300px] p-6 sticky top-0 h-screen overflow-y-auto">
-            <button
-              onClick={() => navigate(-1)}
-              className="flex items-center text-gray-300 hover:text-purple-400 transition-colors mb-6"
-            >
-              <ArrowLeft size={20} className="mr-2" />
-              <span>Back</span>
-            </button>
-
+          <div className="w-1/4 min-w-[300px] p-6 sticky top-0 overflow-y-auto">
             {creatorData && (
               <div className="bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-700">
-                {/* Profile Image */}
-                <div className="relative mb-6">
-                  <img
-                    src={creatorData.profileImage || '/default-avatar.png'}
-                    alt={creatorData.name}
-                    className="w-full h-48 object-cover rounded-lg mb-4"
-                  />
-                  <div className="absolute top-2 right-2 bg-purple-600 text-white px-3 py-1 rounded-full text-sm">
-                    {creatorData.role || 'Creator'}
-                  </div>
-                </div>
-
                 {/* Basic Info */}
                 <div className="mb-6">
                   <h1 className="text-2xl font-bold text-white mb-2">
