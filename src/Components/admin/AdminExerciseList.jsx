@@ -8,9 +8,9 @@ import SearchBar from './components/SearchBar';
 import ExerciseTabs from './components/ExerciseTabs';
 import ExerciseGrid from './components/ExerciseGrid';
 import ExerciseDetail from './components/ExerciseDetail';
-import CreateExercise from '../Profile/CreateExercise'
 import Pagination from './components/Pagination';
 import { FaPlus } from 'react-icons/fa';
+import HandleExercise from '../HandleExercise';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -293,7 +293,7 @@ const AdminExerciseList = () => {
       )}
 
       {/* Modal for Add/Edit Exercise */}
-      <CreateExercise
+      <HandleExercise
         isEdit={showEditForm}
         isOpen={showAddForm || showEditForm}
         onClose={handleCloseModal}

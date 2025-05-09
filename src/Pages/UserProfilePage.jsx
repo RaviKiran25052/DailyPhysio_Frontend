@@ -5,8 +5,8 @@ import MyExercises from '../Components/Profile/MyExercises';
 import MyFavorites from '../Components/Profile/MyFavorites';
 import MyRoutines from '../Components/Profile/MyRoutines';
 import Following from '../Components/Profile/Following';
-import CreateExercise from '../Components/Profile/CreateExercise';
 import axios from 'axios';
+import HandleExercise from '../Components/HandleExercise';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -45,7 +45,7 @@ const UserProfilePage = () => {
       case 'following':
         return <Following />;
       case 'create':
-        return <CreateExercise />;
+        return <HandleExercise />;
       default:
         return <ProfileInfo />;
     }

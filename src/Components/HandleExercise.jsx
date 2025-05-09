@@ -1,12 +1,12 @@
 import { X } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
-import { FiSave, FiPlusCircle, FiX, FiVideo, FiImage, FiTag, FiList, FiEdit } from 'react-icons/fi';
+import { FiSave, FiPlusCircle, FiX, FiVideo, FiImage, FiTag, FiList } from 'react-icons/fi';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const BASE_URL = process.env.REACT_APP_API_URL || '';
 
-export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null, token, onSuccess }) {
+export default function HandleExercise({ isOpen, isEdit, onClose, exercise = null, token, onSuccess }) {
 	const [formData, setFormData] = useState({
 		title: '',
 		description: '',
@@ -89,7 +89,7 @@ export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null,
 				const validSubCats = validSubCategories[exercise.category] || [];
 				subCategoryIsOther = !validSubCats.includes(exercise.subCategory);
 				// Set available subcategories based on category
-				setAvailableSubCategories(validSubCats);				
+				setAvailableSubCategories(validSubCats);
 			}
 
 			setCustomFields({
@@ -146,12 +146,12 @@ export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null,
 	}, [formData.category]);
 
 	// Handle subcategory change
-	useEffect(() => {		
+	useEffect(() => {
 		if (formData.subCategory === 'Other' && formData.category !== 'Other') {
 			setCustomFields(prev => ({ ...prev, subCategoryEnabled: true }));
 		} else {
 			setCustomFields(prev => ({ ...prev, subCategoryEnabled: false }));
-			setFormData(prev => ({ ...prev, customSubCategory: exercise?.subCategory}));
+			setFormData(prev => ({ ...prev, customSubCategory: exercise?.subCategory }));
 		}
 	}, [formData.subCategory, formData.category]);
 
@@ -904,19 +904,19 @@ export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null,
 				</form>
 
 				<style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
+		  .custom-scrollbar::-webkit-scrollbar {
 			 height: 4px;
 			 width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #4B5563;
-          border-radius: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background-color: #8B5CF6;
-          border-radius: 8px;
-        }
-      `}</style>
+		  }
+		  .custom-scrollbar::-webkit-scrollbar-track {
+			 background: #4B5563;
+			 border-radius: 8px;
+		  }
+		  .custom-scrollbar::-webkit-scrollbar-thumb {
+			 background-color: #8B5CF6;
+			 border-radius: 8px;
+		  }
+		`}</style>
 			</div>
 		</div>
 	);
