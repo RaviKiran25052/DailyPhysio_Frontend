@@ -298,7 +298,7 @@ const AdminExerciseList = () => {
         isOpen={showAddForm || showEditForm}
         onClose={handleCloseModal}
         exercise={selectedExercise}
-        adminToken={adminToken}
+        token={adminToken}
         onSuccess={() => fetchAllExercises(adminToken)}
       />
     </main>

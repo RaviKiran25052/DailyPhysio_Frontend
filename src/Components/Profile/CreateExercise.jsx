@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 
 const BASE_URL = process.env.REACT_APP_API_URL || '';
 
-export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null, adminToken, onSuccess }) {
+export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null, token, onSuccess }) {
 	const [formData, setFormData] = useState({
 		title: '',
 		description: '',
@@ -339,13 +339,13 @@ export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null,
 			});
 			// Create or update based on mode
 			let response;
-			console.log(adminToken);
+			console.log(token);
 			
 			if (isEdit) {
 				response = await axios.put(`${BASE_URL}/exercises/${exercise._id}`, submitData, {
 					headers: {
 						'Content-Type': 'multipart/form-data',
-						Authorization: `Bearer ${adminToken}`
+						Authorization: `Bearer ${token}`
 					}
 				});
 				toast.success('Exercise updated successfully!');
@@ -355,7 +355,7 @@ export default function ExerciseForm({ isOpen, isEdit, onClose, exercise = null,
 				response = await axios.post(`${BASE_URL}/exercises/`, submitData, {
 					headers: {
 						'Content-Type': 'multipart/form-data',
-						Authorization: `Bearer ${adminToken}`
+						Authorization: `Bearer ${token}`
 					}
 				});
 				resetForm();
