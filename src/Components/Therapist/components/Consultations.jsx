@@ -32,7 +32,7 @@ const ExerciseSelector = ({ onSelect, onClose, selectedExercises }) => {
     fetchExercises();
   }, []);
 
-  const filteredExercises = exercises.filter(exercise => 
+  const filteredExercises = exercises.filter(exercise =>
     exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
     !selectedExercises.includes(exercise._id)
   );
@@ -89,7 +89,7 @@ const ExerciseSelector = ({ onSelect, onClose, selectedExercises }) => {
   );
 };
 
-const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
+const DeleteConfirmationModal = ({ isOpen, onClose, patient, onConfirm }) => {
   if (!isOpen) return null;
 
   return (
@@ -97,7 +97,7 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
       <div className="bg-gray-800 p-6 rounded-lg w-full max-w-md">
         <h3 className="text-lg font-semibold mb-4">Delete Consultation</h3>
         <p className="text-gray-300 mb-6">
-          Are you sure you want to delete this consultation? This action cannot be undone.
+          Are you sure you want to delete the consultation with {patient}? This action cannot be undone.
         </p>
         <div className="flex justify-end space-x-4">
           <button
@@ -139,16 +139,13 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
   const handleSave = async () => {
     try {
       const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
-      const newExerciseIds = recommendedExercises
-        .filter(ex => !consultation.recommendedExercises.find(origEx => origEx._id === ex._id))
-        .map(ex => ex._id);
 
       const response = await axios.put(
         `${API_URL}/therapist/consultations/${consultation._id}`,
         {
           activeDays,
           desp: notes,
-          newExercises: newExerciseIds
+          recommendedExercises
         },
         {
           headers: { Authorization: `Bearer ${therapistInfo.token}` }
@@ -181,7 +178,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
       const response = await axios.get(`${API_URL}/therapist/exercises`, {
         headers: { Authorization: `Bearer ${therapistInfo.token}` }
       });
-      
+
       const exercise = response.data.find(ex => ex._id === exerciseId);
       if (exercise) {
         setRecommendedExercises(prev => [...prev, exercise]);
@@ -221,6 +218,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
       <DeleteConfirmationModal
         isOpen={showDeleteConfirmation}
         onClose={() => setShowDeleteConfirmation(false)}
+        patient={consultation.patient_id.fullName}
         onConfirm={handleDelete}
       />
 
@@ -231,14 +229,6 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
         >
           <RiArrowLeftLine size={20} />
           <span>Back to Consultations</span>
-        </button>
-
-        <button
-          onClick={() => setShowDeleteConfirmation(true)}
-          className="flex items-center space-x-2 text-red-400 hover:text-white border border-red-400 hover:border-white p-2 rounded-md"
-        >
-          <RiDeleteBinLine size={20} />
-          <span>Delete Consultation</span>
         </button>
       </div>
 
@@ -258,11 +248,10 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
               <div>
                 <div className="font-medium text-lg">
                   {consultation.patient_id.fullName}
-                  <span className={`px-3 py-1 ml-4 rounded-full text-base ${
-                    consultation.request.status === 'active'
-                      ? 'bg-green-500 bg-opacity-20 text-green-500'
-                      : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
-                  }`}>
+                  <span className={`px-3 py-1 ml-4 rounded-full text-base ${consultation.request.status === 'active'
+                    ? 'bg-green-500 bg-opacity-20 text-green-500'
+                    : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
+                    }`}>
                     {consultation.request.status}
                   </span>
                 </div>
@@ -285,12 +274,21 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
-              >
-                Edit
-              </button>
+              <div className='flex items-center space-x-4'>
+                <button
+                  onClick={() => setShowDeleteConfirmation(true)}
+                  className="flex items-center space-x-2 text-red-400 hover:text-white border border-red-400 hover:border-white p-2 rounded-md"
+                >
+                  <RiDeleteBinLine size={20} />
+                  <span>Delete Consultation</span>
+                </button>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                >
+                  Edit
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -371,7 +369,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
                 {isEditing && (
                   <button
                     onClick={() => handleRemoveExercise(exercise._id)}
-                    className="absolute top-2 right-2 text-gray-400 hover:text-white"
+                    className="absolute -top-2 -right-2 rounded-md text-white bg-red-500 hover:bg-red-600"
                   >
                     <RiCloseLine size={20} />
                   </button>
