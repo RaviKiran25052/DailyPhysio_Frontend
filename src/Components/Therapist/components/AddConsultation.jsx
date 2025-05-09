@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { RiCloseLine, RiSearchLine, RiUserLine, RiRunLine, RiInformationLine, RiArrowLeftLine } from 'react-icons/ri';
+import { RiCloseLine, RiSearchLine, RiArrowLeftLine } from 'react-icons/ri';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -35,7 +35,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/therapist/users`, {
+      const response = await axios.get(`${API_URL}/users`, {
         headers: { Authorization: `Bearer ${therapistInfo.token}` }
       });
       setUsers(response.data);

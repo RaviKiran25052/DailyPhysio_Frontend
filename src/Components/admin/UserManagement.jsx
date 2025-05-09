@@ -45,12 +45,14 @@ const UserManagement = () => {
       };
 
       // Fetch users from the backend
-      const response = await axios.get(`${API_URL}/admin/users`, config);
-      const allUsers = response.data.users || [];
+      const response = await axios.get(`${API_URL}/users`, config);
+      const allUsers = response.data || [];
+      console.log(response.data);
+      
 
       // Separate regular and premium users
-      const regular = allUsers.filter(user => user.role === 'isUser' && user.membership.type === 'free');
-      const premium = allUsers.filter(user => user.role === 'isUser' && (user.membership.type === 'yearly' || user.membership.type === 'monthly'));
+      const regular = allUsers.filter(user => user.membership.type === 'free');
+      const premium = allUsers.filter(user => (user.membership.type === 'yearly' || user.membership.type === 'monthly'));
 
       setUsers(allUsers);
       setRegularUsers(regular);
