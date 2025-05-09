@@ -38,10 +38,13 @@ const CreatorExercisesPage = () => {
           }
         });
         const data = response.data;
-        console.log(data);
         
         setExercises(data.exercises);
         setCreatorData(data.creatorData);
+        if (data.creatorData.role === "isAdmin") {
+          navigate("/exercises/")
+        }
+        
 
         // Extract unique categories
         const uniqueCategories = [...new Set(data.exercises.map(ex => ex.category))];

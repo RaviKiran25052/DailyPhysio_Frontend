@@ -9,6 +9,21 @@ import AddConsultation from './AddConsultation';
 const API_URL = process.env.REACT_APP_API_URL;
 
 const ConsultationDetails = ({ consultation, onBack }) => {
+
+  function getDateDifference(expiresOn) {
+    const expiresDate = new Date(expiresOn); // Ensure it's a Date object
+    const today = new Date();
+
+    // Normalize both dates to midnight to avoid time/timezone issues
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const expiresMidnight = new Date(expiresDate.getFullYear(), expiresDate.getMonth(), expiresDate.getDate());
+
+    const diffTime = expiresMidnight - todayMidnight; // in milliseconds
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // convert to days
+
+    return diffDays;
+  }
+
   return (
     <div className="animate-fadeIn">
       {/* Back Button */}
@@ -27,24 +42,27 @@ const ConsultationDetails = ({ consultation, onBack }) => {
             <RiUserLine className="mr-2 text-purple-500" />
             Patient Information
           </h3>
-          <div className="flex items-center space-x-4">
-            <img
-              src={consultation.patient_id.profileImage}
-              alt={consultation.patient_id.fullName}
-              className="w-16 h-16 rounded-full object-cover"
-            />
-            <div>
-              <div className="font-medium text-lg">
-                {consultation.patient_id.fullName}
-                <span className={`px-3 py-1 ml-4 rounded-full text-base ${consultation.request.status === 'active'
-                  ? 'bg-green-500 bg-opacity-20 text-green-500'
-                  : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
-                  }`}>
-                  {consultation.request.status}
-                </span>
+          <div className='flex justify-between items-center'>
+            <div className="flex items-center space-x-4">
+              <img
+                src={consultation.patient_id.profileImage}
+                alt={consultation.patient_id.fullName}
+                className="w-16 h-16 rounded-full object-cover"
+              />
+              <div>
+                <div className="font-medium text-lg">
+                  {consultation.patient_id.fullName}
+                  <span className={`px-3 py-1 ml-4 rounded-full text-base ${consultation.request.status === 'active'
+                    ? 'bg-green-500 bg-opacity-20 text-green-500'
+                    : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
+                    }`}>
+                    {consultation.request.status}
+                  </span>
+                </div>
+                <div className="text-gray-400">{consultation.patient_id.email}</div>
               </div>
-              <div className="text-gray-400">{consultation.patient_id.email}</div>
             </div>
+            <button>edit</button>
           </div>
         </div>
 
@@ -68,7 +86,7 @@ const ConsultationDetails = ({ consultation, onBack }) => {
               </div>
               <div>
                 <div className="text-gray-400">Active Days</div>
-                <div className="font-medium">{consultation.request.activeDays} days</div>
+                <div className="font-medium">{getDateDifference(consultation.request?.expiresOn)} days</div>
               </div>
             </div>
           </div>
