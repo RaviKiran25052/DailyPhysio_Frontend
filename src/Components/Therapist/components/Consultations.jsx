@@ -2,41 +2,247 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   RiSearchLine, RiAddLine, RiCalendarLine, RiUserLine,
-  RiArrowLeftLine, RiRunLine, RiInformationLine
+  RiArrowLeftLine, RiRunLine, RiInformationLine, RiCloseLine,
+  RiDeleteBinLine
 } from 'react-icons/ri';
 import AddConsultation from './AddConsultation';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const ConsultationDetails = ({ consultation, onBack }) => {
+const ExerciseSelector = ({ onSelect, onClose, selectedExercises }) => {
+  const [exercises, setExercises] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  function getDateDifference(expiresOn) {
-    const expiresDate = new Date(expiresOn); // Ensure it's a Date object
-    const today = new Date();
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
+        const response = await axios.get(`${API_URL}/therapist/exercises`, {
+          headers: { Authorization: `Bearer ${therapistInfo.token}` }
+        });
+        setExercises(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching exercises:', error);
+        setLoading(false);
+      }
+    };
 
-    // Normalize both dates to midnight to avoid time/timezone issues
-    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const expiresMidnight = new Date(expiresDate.getFullYear(), expiresDate.getMonth(), expiresDate.getDate());
+    fetchExercises();
+  }, []);
 
-    const diffTime = expiresMidnight - todayMidnight; // in milliseconds
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // convert to days
+  const filteredExercises = exercises.filter(exercise => 
+    exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    !selectedExercises.includes(exercise._id)
+  );
 
-    return diffDays;
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-gray-800 p-6 rounded-lg w-full max-w-2xl">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mx-auto"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="animate-fadeIn">
-      {/* Back Button */}
-      <button
-        onClick={onBack}
-        className="flex items-center space-x-2 text-gray-400 hover:text-white m-6 border border-gray-400 p-2 rounded-md"
-      >
-        <RiArrowLeftLine size={20} />
-        <span>Back to Consultations</span>
-      </button>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-gray-800 p-6 rounded-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold">Select Exercises</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-white">
+            <RiCloseLine size={24} />
+          </button>
+        </div>
 
-      <div className=" p-6">
-        {/* Patient Information */}
+        <input
+          type="text"
+          placeholder="Search exercises..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-2 mb-4 bg-gray-700 rounded-lg"
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filteredExercises.map((exercise) => (
+            <div
+              key={exercise._id}
+              className="bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-600"
+              onClick={() => onSelect(exercise._id)}
+            >
+              <img
+                src={exercise.image[0]}
+                alt={exercise.title}
+                className="w-full h-32 object-cover rounded-lg mb-2"
+              />
+              <h4 className="font-medium">{exercise.title}</h4>
+              <div className="text-sm text-gray-400">
+                {exercise.category} - {exercise.subCategory}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-gray-800 p-6 rounded-lg w-full max-w-md">
+        <h3 className="text-lg font-semibold mb-4">Delete Consultation</h3>
+        <p className="text-gray-300 mb-6">
+          Are you sure you want to delete this consultation? This action cannot be undone.
+        </p>
+        <div className="flex justify-end space-x-4">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [activeDays, setActiveDays] = useState(getDateDifference(consultation.request?.expiresOn));
+  const [notes, setNotes] = useState(consultation.notes || '');
+  const [recommendedExercises, setRecommendedExercises] = useState(consultation.recommendedExercises || []);
+  const [showExerciseSelector, setShowExerciseSelector] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+  function getDateDifference(expiresOn) {
+    const expiresDate = new Date(expiresOn);
+    const today = new Date();
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const expiresMidnight = new Date(expiresDate.getFullYear(), expiresDate.getMonth(), expiresDate.getDate());
+    const diffTime = expiresMidnight - todayMidnight;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  }
+
+  const handleSave = async () => {
+    try {
+      const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
+      const newExerciseIds = recommendedExercises
+        .filter(ex => !consultation.recommendedExercises.find(origEx => origEx._id === ex._id))
+        .map(ex => ex._id);
+
+      const response = await axios.put(
+        `${API_URL}/therapist/consultations/${consultation._id}`,
+        {
+          activeDays,
+          desp: notes,
+          newExercises: newExerciseIds
+        },
+        {
+          headers: { Authorization: `Bearer ${therapistInfo.token}` }
+        }
+      );
+
+      if (response.data) {
+        setIsEditing(false);
+        if (onUpdate) onUpdate(response.data);
+      }
+    } catch (error) {
+      console.error('Error updating consultation:', error);
+    }
+  };
+
+  const handleCancel = () => {
+    setActiveDays(getDateDifference(consultation.request?.expiresOn));
+    setNotes(consultation.notes || '');
+    setRecommendedExercises(consultation.recommendedExercises);
+    setIsEditing(false);
+  };
+
+  const handleRemoveExercise = (exerciseId) => {
+    setRecommendedExercises(prev => prev.filter(ex => ex._id !== exerciseId));
+  };
+
+  const handleAddExercise = async (exerciseId) => {
+    try {
+      const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
+      const response = await axios.get(`${API_URL}/therapist/exercises`, {
+        headers: { Authorization: `Bearer ${therapistInfo.token}` }
+      });
+      
+      const exercise = response.data.find(ex => ex._id === exerciseId);
+      if (exercise) {
+        setRecommendedExercises(prev => [...prev, exercise]);
+      }
+      setShowExerciseSelector(false);
+    } catch (error) {
+      console.error('Error fetching exercise details:', error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
+      await axios.delete(
+        `${API_URL}/therapist/consultations/${consultation._id}`,
+        {
+          headers: { Authorization: `Bearer ${therapistInfo.token}` }
+        }
+      );
+      onBack();
+      if (onUpdate) onUpdate();
+    } catch (error) {
+      console.error('Error deleting consultation:', error);
+    }
+  };
+
+  return (
+    <div className="animate-fadeIn">
+      {showExerciseSelector && (
+        <ExerciseSelector
+          onSelect={handleAddExercise}
+          onClose={() => setShowExerciseSelector(false)}
+          selectedExercises={recommendedExercises.map(ex => ex._id)}
+        />
+      )}
+
+      <DeleteConfirmationModal
+        isOpen={showDeleteConfirmation}
+        onClose={() => setShowDeleteConfirmation(false)}
+        onConfirm={handleDelete}
+      />
+
+      <div className="flex justify-between items-center mx-6 my-6">
+        <button
+          onClick={onBack}
+          className="flex items-center space-x-2 text-gray-400 hover:text-white border border-gray-400 p-2 rounded-md"
+        >
+          <RiArrowLeftLine size={20} />
+          <span>Back to Consultations</span>
+        </button>
+
+        <button
+          onClick={() => setShowDeleteConfirmation(true)}
+          className="flex items-center space-x-2 text-red-400 hover:text-white border border-red-400 hover:border-white p-2 rounded-md"
+        >
+          <RiDeleteBinLine size={20} />
+          <span>Delete Consultation</span>
+        </button>
+      </div>
+
+      <div className="p-6">
         <div className="bg-gray-800 rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold mb-4 flex items-center">
             <RiUserLine className="mr-2 text-purple-500" />
@@ -52,21 +258,43 @@ const ConsultationDetails = ({ consultation, onBack }) => {
               <div>
                 <div className="font-medium text-lg">
                   {consultation.patient_id.fullName}
-                  <span className={`px-3 py-1 ml-4 rounded-full text-base ${consultation.request.status === 'active'
-                    ? 'bg-green-500 bg-opacity-20 text-green-500'
-                    : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
-                    }`}>
+                  <span className={`px-3 py-1 ml-4 rounded-full text-base ${
+                    consultation.request.status === 'active'
+                      ? 'bg-green-500 bg-opacity-20 text-green-500'
+                      : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
+                  }`}>
                     {consultation.request.status}
                   </span>
                 </div>
                 <div className="text-gray-400">{consultation.patient_id.email}</div>
               </div>
             </div>
-            <button>edit</button>
+            {isEditing ? (
+              <div className="space-x-2">
+                <button
+                  onClick={handleCancel}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                >
+                  Save
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+              >
+                Edit
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Consultation Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="bg-gray-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center">
@@ -76,17 +304,29 @@ const ConsultationDetails = ({ consultation, onBack }) => {
             <div className="space-y-3">
               <div>
                 <div className="text-gray-400">Created On</div>
-                <div className="font-medium">{new Date(consultation.createdAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}</div>
+                <div className="font-medium">
+                  {new Date(consultation.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </div>
               </div>
               <div>
                 <div className="text-gray-400">Active Days</div>
-                <div className="font-medium">{getDateDifference(consultation.request?.expiresOn)} days</div>
+                {isEditing ? (
+                  <input
+                    type="number"
+                    value={activeDays}
+                    onChange={(e) => setActiveDays(parseInt(e.target.value))}
+                    className="w-24 px-2 py-1 bg-gray-700 rounded border border-gray-600"
+                    min="1"
+                  />
+                ) : (
+                  <div className="font-medium">{activeDays} days</div>
+                )}
               </div>
             </div>
           </div>
@@ -96,19 +336,46 @@ const ConsultationDetails = ({ consultation, onBack }) => {
               <RiInformationLine className="mr-2 text-purple-500" />
               Notes
             </h3>
-            <p className="text-gray-300">{consultation.notes || 'No notes provided'}</p>
+            {isEditing ? (
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="w-full h-32 px-3 py-2 bg-gray-700 rounded border border-gray-600 resize-none"
+                placeholder="Add notes here..."
+              />
+            ) : (
+              <p className="text-gray-300">{notes || 'No notes provided'}</p>
+            )}
           </div>
         </div>
 
-        {/* Recommended Exercises */}
         <div className="bg-gray-800 rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4 flex items-center">
-            <RiRunLine className="mr-2 text-purple-500" />
-            Recommended Exercises
-          </h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold flex items-center">
+              <RiRunLine className="mr-2 text-purple-500" />
+              Recommended Exercises
+            </h3>
+            {isEditing && (
+              <button
+                onClick={() => setShowExerciseSelector(true)}
+                className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+              >
+                <RiAddLine />
+                <span>Add Exercise</span>
+              </button>
+            )}
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {consultation.recommendedExercises.map((exercise) => (
-              <div key={exercise._id} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+            {recommendedExercises.map((exercise) => (
+              <div key={exercise._id} className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative">
+                {isEditing && (
+                  <button
+                    onClick={() => handleRemoveExercise(exercise._id)}
+                    className="absolute top-2 right-2 text-gray-400 hover:text-white"
+                  >
+                    <RiCloseLine size={20} />
+                  </button>
+                )}
                 <img
                   src={exercise.image[0]}
                   alt={exercise.title}
@@ -185,6 +452,7 @@ const Consultations = () => {
     return <ConsultationDetails
       consultation={selectedConsultation}
       onBack={() => setSelectedConsultation(null)}
+      onUpdate={fetchConsultations}
     />;
   }
 
