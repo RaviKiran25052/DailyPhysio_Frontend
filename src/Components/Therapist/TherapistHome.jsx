@@ -29,12 +29,16 @@ const TherapistHome = () => {
     switch (tab) {
       case 'main':
         return <Dashboard />;
+      case 'profile':
+        return <div>Profile Management</div>;
       case 'consultation':
         return <Consultations />;
       case 'exercise':
         return <ExerciseManagement />;
       case 'user':
         return <UserManagement />;
+      case 'membership':
+        return <div>Membership Management</div>;
       default:
         return null;
     }

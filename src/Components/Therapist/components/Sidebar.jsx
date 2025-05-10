@@ -1,12 +1,15 @@
+import { Crown, UsersRound } from 'lucide-react';
 import React from 'react';
-import { RiDashboardLine, RiUserLine, RiFileListLine, RiRunLine } from 'react-icons/ri';
+import { RiDashboardLine, RiUserLine, RiFileListLine, RiRunLine, RiUser2Line } from 'react-icons/ri';
 
 const Sidebar = ({ tab, setTab }) => {
   const menuItems = [
     { id: 'main', label: 'Dashboard', icon: <RiDashboardLine size={20} /> },
+    { id: 'profile', label: 'Profile', icon: <RiUserLine size={20} /> },
     { id: 'consultation', label: 'Consultation', icon: <RiFileListLine size={20} /> },
     { id: 'exercise', label: 'Exercise Management', icon: <RiRunLine size={20} /> },
-    { id: 'user', label: 'User Management', icon: <RiUserLine size={20} /> },
+    { id: 'user', label: 'User Management', icon: <UsersRound size={20} /> },
+    { id: 'membership', label: 'Membership', icon: <Crown size={20} /> },
   ];
 
   return (

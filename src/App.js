@@ -16,7 +16,6 @@ import TherapistDashboard from './Components/Therapist/TherapistDashboard';
 import TherapistHome from './Components/Therapist/TherapistHome';
 import axios from 'axios';
 import CreatorExercisesPage from './Pages/CreatorExercisesPage';
-import UserCreationModal from './Components/UserCreationModal';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -66,8 +65,7 @@ const AppContent = () => {
 
           <Route path="/therapist/" element={<TherapistDashboard />} />
           <Route path="/therapist/home" element={<TherapistHome />} />
-          <Route path="/user" element={<UserCreationModal />} />
-
+          
           <Route path="/admin/login" element={<Adminlogin />} />
           <Route path="/admin/home" element={<AdminHome />} />
           <Route path="/admin/exercises" element={<AdminExerciseList />} />
