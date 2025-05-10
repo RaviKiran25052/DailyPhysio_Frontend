@@ -156,11 +156,6 @@ const MediaCarousel = ({ images = [], video = null }) => {
 					</div>
 				</div>
 			)}
-
-			{/* Media counter badge */}
-			<div className="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1 rounded-lg flex items-center shadow-md text-sm z-30">
-				{currentIndex + 1}/{mediaItems.length}
-			</div>
 		</div>
 	);
 };

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import MediaCarousel from '../../Profile/MediaCarousel';
+import React from 'react';
 import { Crown } from 'lucide-react';
+import MediaCarousel from '../../MediaCarousel';
 
 const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm }) => {
 	

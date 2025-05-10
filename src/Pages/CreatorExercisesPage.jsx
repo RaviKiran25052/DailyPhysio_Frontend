@@ -14,7 +14,7 @@ import {
   Tag
 } from 'lucide-react';
 import axios from 'axios';
-import MediaCarousel from '../Components/Profile/MediaCarousel';
+import MediaCarousel from '../Components/MediaCarousel';
 
 const API_URL = process.env.REACT_APP_API_URL || '';
 

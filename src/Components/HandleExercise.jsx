@@ -339,7 +339,6 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 			});
 			// Create or update based on mode
 			let response;
-			console.log(token);
 
 			if (isEdit) {
 				response = await axios.put(`${BASE_URL}/exercises/${exercise._id}`, submitData, {
@@ -363,8 +362,6 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 				onClose();
 				onSuccess();
 			}
-
-			console.log('Exercise saved:', response.data);
 
 		} catch (error) {
 			console.error('Error saving exercise:', error);

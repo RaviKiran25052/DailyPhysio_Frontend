@@ -7,6 +7,8 @@ import {
 } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 import HandleExercise from '../../HandleExercise';
+import MediaCarousel from '../../MediaCarousel';
+import { SquareArrowOutUpRight } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -30,7 +32,6 @@ const ExerciseManagement = () => {
       const response = await axios.get(`${API_URL}/therapist/exercises`, {
         headers: { Authorization: `Bearer ${therapistInfo.token}` }
       });
-      console.log(response.data);
       setExercises(response.data);
       setLoading(false);
     } catch (error) {
@@ -43,7 +44,7 @@ const ExerciseManagement = () => {
     try {
       const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
       const newType = currentType === 'public' ? 'private' : 'public';
-      
+
       await axios.put(
         `${API_URL}/exercises/${exerciseId}`,
         { custom: { type: newType } },
@@ -52,8 +53,8 @@ const ExerciseManagement = () => {
         }
       );
 
-      setExercises(prev => prev.map(ex => 
-        ex._id === exerciseId 
+      setExercises(prev => prev.map(ex =>
+        ex._id === exerciseId
           ? { ...ex, custom: { ...ex.custom, type: newType } }
           : ex
       ));
@@ -84,7 +85,7 @@ const ExerciseManagement = () => {
 
   const filteredExercises = exercises.filter(exercise => {
     const matchesSearch = exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         exercise.description.toLowerCase().includes(searchTerm.toLowerCase());
+      exercise.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = exercise.custom?.type === activeTab;
     return matchesSearch && matchesType;
   });
@@ -131,22 +132,20 @@ const ExerciseManagement = () => {
       <div className="flex space-x-4 mb-6">
         <button
           onClick={() => setActiveTab('public')}
-          className={`px-4 py-2 rounded-lg transition-colors ${
-            activeTab === 'public'
-              ? 'bg-purple-600 text-white'
-              : 'bg-gray-800 text-gray-400 hover:text-white'
-          }`}
+          className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'public'
+            ? 'bg-purple-600 text-white'
+            : 'bg-gray-800 text-gray-400 hover:text-white'
+            }`}
         >
           <RiLockUnlockLine className="inline-block mr-2" />
           Public Exercises
         </button>
         <button
           onClick={() => setActiveTab('private')}
-          className={`px-4 py-2 rounded-lg transition-colors ${
-            activeTab === 'private'
-              ? 'bg-purple-600 text-white'
-              : 'bg-gray-800 text-gray-400 hover:text-white'
-          }`}
+          className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'private'
+            ? 'bg-purple-600 text-white'
+            : 'bg-gray-800 text-gray-400 hover:text-white'
+            }`}
         >
           <RiLockLine className="inline-block mr-2" />
           Private Exercises
@@ -158,58 +157,77 @@ const ExerciseManagement = () => {
         {filteredExercises.map((exercise) => (
           <div
             key={exercise._id}
-            className="bg-gray-800 rounded-xl border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1"
+            className="relative bg-gray-800 rounded-xl border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/20 overflow-hidden flex flex-col"
           >
-            <div className="relative">
-              <img
-                src={exercise.image[0]}
-                alt={exercise.title}
-                className="w-full h-48 object-cover rounded-t-xl"
-              />
-              <div className="absolute top-2 right-2 flex space-x-2">
+            {/* Media carousel with overlay gradient */}
+            <div className="relative h-48">
+              <MediaCarousel images={exercise.image} video={exercise.video} />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-60" />
+
+              {/* Action buttons with tooltip effect */}
+              <div className="absolute top-2 right-2 flex space-x-2 z-10">
                 <button
-                  onClick={() => handleToggleType(exercise._id, exercise.custom?.type)}
-                  className={`p-2 rounded-lg ${
-                    exercise.custom?.type === 'public'
-                      ? 'bg-purple-600 hover:bg-purple-700'
-                      : 'bg-gray-600 hover:bg-gray-700'
-                  } text-white`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedExercise(exercise);
+                    setIsEdit(true);
+                    setShowExerciseModal(true);
+                  }}
+                  className="p-2 bg-gray-700/80 hover:bg-gray-600 text-white rounded-lg backdrop-blur-sm transform transition-transform hover:scale-110"
+                  aria-label="Edit exercise"
                 >
-                  {exercise.custom?.type === 'public' ? <RiLockUnlockLine /> : <RiLockLine />}
+                  <RiEditLine className="text-purple-200" />
                 </button>
                 <button
-                  onClick={() => handleDelete(exercise._id)}
-                  className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(exercise._id);
+                  }}
+                  className="p-2 bg-red-600/80 hover:bg-red-700 text-white rounded-lg backdrop-blur-sm transform transition-transform hover:scale-110"
+                  aria-label="Delete exercise"
                 >
-                  <RiDeleteBinLine />
+                  <RiDeleteBinLine className="text-red-100" />
                 </button>
               </div>
             </div>
 
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{exercise.title}</h3>
-              <p className="text-gray-400 text-sm mb-4 line-clamp-2">{exercise.description}</p>
-              
-              <div className="flex items-center justify-between">
-                <div className="text-sm text-gray-400">
-                  {exercise.category} - {exercise.subCategory}
+            {/* Content area with improved spacing and hover effects */}
+            <div
+              className="p-5 flex-1 flex flex-col cursor-pointer"
+              onClick={() => navigate(`/exercise/${exercise._id}`)}
+            >
+              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-white group-hover:text-purple-300 transition">
+                <span className="line-clamp-1">{exercise.title}</span>
+                <SquareArrowOutUpRight size={16} className="text-purple-400 transform transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+              </h3>
+
+              <p className="text-gray-400 text-sm mb-4 line-clamp-2 flex-1">{exercise.description}</p>
+
+              <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-700/50">
+                <div className="text-sm text-gray-400 flex items-center">
+                  <span className="inline-block px-2 py-1 bg-gray-700/50 rounded-md text-purple-200 mr-2">
+                    {exercise.category}
+                  </span>
+                  <span className="text-gray-500">
+                    {exercise.subCategory}
+                  </span>
                 </div>
-                <div className="flex space-x-2">
+
+                <div>
                   <button
-                    onClick={() => {
-                      setSelectedExercise(exercise);
-                      setIsEdit(true);
-                      setShowExerciseModal(true);
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleType(exercise._id, exercise.custom?.type);
                     }}
-                    className="p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg"
+                    className={`px-3 py-1 rounded-lg flex items-center gap-2 transition-colors ${exercise.custom?.type === 'public'
+                        ? 'bg-purple-600 hover:bg-purple-700'
+                        : 'bg-gray-600 hover:bg-gray-700'
+                      } text-white text-sm`}
                   >
-                    <RiEditLine />
-                  </button>
-                  <button
-                    onClick={() => navigate(`/exercise/${exercise._id}`)}
-                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
-                  >
-                    View Details
+                    {exercise.custom?.type === 'public'
+                      ? <><RiLockUnlockLine className="text-purple-200" /> <span>Private</span></>
+                      : <><RiLockLine className="text-gray-300" /> <span>Public</span></>
+                    }
                   </button>
                 </div>
               </div>
