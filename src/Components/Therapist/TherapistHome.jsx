@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './components/Dashboard';
 import Consultations from './components/Consultations'
 import ExerciseManagement from './components/ExerciseManagement';
+import UserManagement from './components/UserManagement';
 
 const TherapistHome = () => {
   const navigate = useNavigate();
@@ -33,12 +34,7 @@ const TherapistHome = () => {
       case 'exercise':
         return <ExerciseManagement />;
       case 'user':
-        return (
-          <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">User Management</h2>
-            <p className="text-gray-300">Manage your users here.</p>
-          </div>
-        );
+        return <UserManagement />;
       default:
         return null;
     }
