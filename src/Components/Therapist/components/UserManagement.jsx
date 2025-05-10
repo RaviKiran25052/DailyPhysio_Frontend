@@ -92,6 +92,14 @@ const UserManagement = () => {
       </div>
     );
   }
+  const formatDate = (dateString) => {
+		const date = new Date(dateString);
+		return date.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric'
+		});
+	};
 
   return (
     <div className="p-6">
@@ -120,7 +128,7 @@ const UserManagement = () => {
       </div>
 
       {/* User Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {filteredUsers.map((user) => (
           <div
             key={user._id}
@@ -132,7 +140,7 @@ const UserManagement = () => {
                   <RiUserLine className="text-2xl text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{user.name}</h3>
+                  <h3 className="text-lg font-semibold text-white">{user.fullName}</h3>
                   <div className="flex items-center text-gray-400 text-sm">
                     <RiMailLine className="mr-1" />
                     {user.email}
@@ -140,18 +148,21 @@ const UserManagement = () => {
                 </div>
               </div>
 
-              <div className="space-y-2 text-sm text-gray-400">
+              <div className="flex justify-between items-center space-y-2 text-sm text-gray-400">
                 <div className="flex items-center">
                   <RiCalendarLine className="mr-2" />
-                  <span>Joined: {new Date(user.createdAt).toLocaleDateString()}</span>
+                  <span>Created: {formatDate(user.createdAt)}</span>
                 </div>
-                <div className="flex items-center">
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    user.isActive ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                <span className={`px-3 py-1 rounded-full ${user.membership?.type === 'free'
+                  ? 'bg-blue-500/20 text-blue-400'
+                  : user.membership?.type === 'monthly'
+                    ? 'bg-yellow-500/20 text-yellow-500'
+                    : user.membership?.type === 'yearly'
+                      ? 'bg-purple-500/20 text-purple-500'
+                      : 'bg-gray-300 text-gray-600'
                   }`}>
-                    {user.isActive ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
+                  {user.membership?.type || 'No Plan'}
+                </span>
               </div>
             </div>
           </div>
