@@ -5,6 +5,8 @@ import Dashboard from './components/Dashboard';
 import Consultations from './components/Consultations'
 import ExerciseManagement from './components/ExerciseManagement';
 import UserManagement from './components/UserManagement';
+import Profile from './components/Profile';
+import MembershipManagement from './components/MembershipManagement';
 
 const TherapistHome = () => {
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ const TherapistHome = () => {
       case 'main':
         return <Dashboard />;
       case 'profile':
-        return <div>Profile Management</div>;
+        return <Profile />;
       case 'consultation':
         return <Consultations />;
       case 'exercise':
@@ -38,7 +40,7 @@ const TherapistHome = () => {
       case 'user':
         return <UserManagement />;
       case 'membership':
-        return <div>Membership Management</div>;
+        return <MembershipManagement />;
       default:
         return null;
     }
