@@ -9,16 +9,15 @@ import {
   RiCalendarLine,
   RiEditLine,
   RiUserLine,
-  RiMedalLine,
   RiBriefcaseLine,
-  RiFileTextLine,
-  RiTeamLine,
   RiVipCrownLine,
   RiUserSettingsLine,
   RiBarChartLine,
   RiShieldUserLine
 } from 'react-icons/ri';
 import ProfileEditModal from './ProfileEditModal';
+import PasswordChangeModal from '../../PasswordChangeModal';
+import ImageUploadModal from '../../Profile/ImageUploadModal';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -26,6 +25,9 @@ const Profile = () => {
   const [therapist, setTherapist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showImageUploadModal, setShowImageUploadModal] = useState(false);
+  const [imgLoading, setImgLoading] = useState(false)
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   useEffect(() => {
     fetchTherapistDetails();
@@ -50,6 +52,55 @@ const Profile = () => {
     setTherapist(updatedData);
     toast.success('Profile updated successfully');
   };
+
+  const handlePasswordSubmit = async (passwordData) => {
+    if (passwordData.new !== passwordData.confirm) {
+      toast.error('New passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
+      await axios.put(`${API_URL}/therapist`,
+        { password: passwordData.new },
+        {
+          headers: { Authorization: `Bearer ${therapistInfo.token}` }
+        }
+      );
+
+      toast.success('Password updated successfully');
+      setShowPasswordModal(false);
+    } catch (error) {
+      console.error('Error updating password:', error);
+      toast.error(error.response?.data?.message || 'Failed to update password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImageUpload = async (data) => {
+    setImgLoading(true);
+    try {
+      const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
+      const formData = data instanceof FormData ? data : new FormData();
+      await axios.put(`${API_URL}/therapist`,
+        formData,
+        {
+          headers: { Authorization: `Bearer ${therapistInfo.token}` }
+        }
+      );
+
+      toast.success('Profile Pic updated successfully');
+      setShowImageUploadModal(false);
+      fetchTherapistDetails();
+    } catch (error) {
+      console.error('Error updating Profile Pic:', error);
+      toast.error(error.response?.data?.message || 'Failed to update Profile Pic');
+    } finally {
+      setImgLoading(true)
+    }
+  }
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -98,7 +149,8 @@ const Profile = () => {
             <img
               src={therapist.profilePic}
               alt={therapist.name}
-              className="w-28 h-28 rounded-full object-cover border-4 border-white/30"
+              onClick={() => setShowImageUploadModal(true)}
+              className="w-28 h-28 rounded-full object-cover border-4 border-white/30 cursor-pointer"
             />
           ) : (
             <div className="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center text-gray-800 text-4xl font-bold">
@@ -264,11 +316,22 @@ const Profile = () => {
             <p className="text-gray-300 mb-2">Update your password and security preferences</p>
             <p className="text-gray-400 text-sm">Last password change: Never</p>
           </div>
-          <button className="mt-4 md:mt-0 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+          <button
+            onClick={() => setShowPasswordModal(true)}
+            className="mt-4 md:mt-0 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          >
             Change Password
           </button>
         </div>
       </Section>
+
+
+      <PasswordChangeModal
+        isOpen={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+        onSubmit={handlePasswordSubmit}
+        loading={loading}
+      />
 
       {showEditModal && (
         <ProfileEditModal
@@ -278,6 +341,15 @@ const Profile = () => {
           onUpdate={handleProfileUpdate}
         />
       )}
+      <ImageUploadModal
+        loading={imgLoading}
+        imagePreview={therapist.profilePic}
+        isOpen={showImageUploadModal}
+        onClose={() => {
+          setShowImageUploadModal(false);
+        }}
+        onSubmit={handleImageUpload}
+      />
     </div>
   );
 };

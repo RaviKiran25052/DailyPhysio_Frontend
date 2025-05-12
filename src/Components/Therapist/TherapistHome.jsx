@@ -48,7 +48,7 @@ const TherapistHome = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('therapistInfo');
-    navigate('/therapist/login');
+    navigate('/therapist/');
   };
 
   return (

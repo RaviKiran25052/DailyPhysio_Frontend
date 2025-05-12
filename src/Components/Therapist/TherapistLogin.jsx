@@ -64,7 +64,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 				onClose(response.data.status === 'active', true);
 				if (response.data.status === 'active') {
 					localStorage.setItem('therapistInfo', JSON.stringify(response.data));
-					navigate('/therapist/');
+					navigate('/therapist/home');
 				}
 			} catch (error) {
 				setError(
