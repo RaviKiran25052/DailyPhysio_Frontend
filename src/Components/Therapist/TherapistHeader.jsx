@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FaUser, FaBars, FaTimes } from 'react-icons/fa';
 
 const TherapistHeader = ({ onLogin, onRegister }) => {
-	const navigate = useNavigate();
 	const [showDropdown, setShowDropdown] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -31,9 +29,7 @@ const TherapistHeader = ({ onLogin, onRegister }) => {
 	return (
 		<header className="bg-gray-800 shadow-md">
 			<div className="container mx-auto px-4 py-4 flex justify-between items-center">
-				<div onClick={() => navigate('/')} className="cursor-pointer">
-					<h1 className="text-2xl font-bold text-white">ExerciseMD</h1>
-				</div>
+				<h1 className="text-2xl font-bold text-white">ExerciseMD</h1>
 
 				<div className="flex items-center">
 					{isLoggedIn ? (
@@ -68,7 +64,7 @@ const TherapistHeader = ({ onLogin, onRegister }) => {
 						<div className="space-x-2">
 							<button
 								onClick={onLogin}
-								className="px-4 py-2 text-sm text-white hover:text-purple-400 focus:outline-none"
+								className="px-4 py-2 text-sm text-white hover:text-purple-400 focus:outline-none cursor-pointer"
 							>
 								Log in
 							</button>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaUpload } from 'react-icons/fa';
 
 // Available specialization options
 const specializationOptions = [
@@ -27,13 +27,16 @@ const TherapistRegister = ({ onClose, onLogin }) => {
 		gender: 'male',
 		workingAt: '',
 		address: '',
-		phoneNumber: ''
+		phoneNumber: '',
+		profilePic: 'https://res.cloudinary.com/dalzs7bc2/image/upload/v1746784719/doc_jcxqwb.png'
 	});
 	const [errors, setErrors] = useState({});
 	const [selectedSpecialization, setSelectedSpecialization] = useState('');
 	const [otherSpecialization, setOtherSpecialization] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
+	const [profilePicPreview, setProfilePicPreview] = useState(formData.profilePic);
+	const fileInputRef = useRef(null);
 
 	// Handle input changes
 	const handleChange = (e) => {
@@ -52,17 +55,70 @@ const TherapistRegister = ({ onClose, onLogin }) => {
 		}
 	};
 
-	// Handle specialization selection from dropdown
+	// Handle profile picture upload
+	const handleProfilePicUpload = (e) => {
+		const file = e.target.files[0];
+		if (file) {
+			// Validate file type and size
+			const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+			const maxSize = 5 * 1024 * 1024; // 5MB
+
+			if (!allowedTypes.includes(file.type)) {
+				setErrors(prev => ({
+					...prev,
+					profilePic: 'Invalid file type. Please upload JPEG, PNG, GIF, or WebP.'
+				}));
+				return;
+			}
+
+			if (file.size > maxSize) {
+				setErrors(prev => ({
+					...prev,
+					profilePic: 'File size should be less than 5MB.'
+				}));
+				return;
+			}
+
+			// Create URL for preview
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setProfilePicPreview(reader.result);
+				setFormData(prev => ({
+					...prev,
+					profilePic: reader.result
+				}));
+			};
+			reader.readAsDataURL(file);
+
+			// Clear any previous errors
+			if (errors.profilePic) {
+				const { profilePic, ...restErrors } = errors;
+				setErrors(restErrors);
+			}
+		}
+	};
+
+	// Remove profile picture
+	const removeProfilePic = () => {
+		setProfilePicPreview('https://res.cloudinary.com/dalzs7bc2/image/upload/v1746784719/doc_jcxqwb.png');
+		setFormData(prev => ({
+			...prev,
+			profilePic: 'https://res.cloudinary.com/dalzs7bc2/image/upload/v1746784719/doc_jcxqwb.png'
+		}));
+		if (fileInputRef.current) {
+			fileInputRef.current.value = '';
+		}
+	};
+
+	// Rest of the existing methods remain the same...
 	const handleSpecializationSelect = (e) => {
 		setSelectedSpecialization(e.target.value);
 	};
 
-	// Handle other specialization input
 	const handleOtherSpecializationChange = (e) => {
 		setOtherSpecialization(e.target.value);
 	};
 
-	// Add specialization to the list
 	const addSpecialization = () => {
 		if (selectedSpecialization === 'Other') {
 			if (otherSpecialization.trim() && !formData.specializations.includes(otherSpecialization.trim())) {
@@ -88,7 +144,6 @@ const TherapistRegister = ({ onClose, onLogin }) => {
 		}
 	};
 
-	// Remove specialization from the list
 	const removeSpecialization = (specialization) => {
 		setFormData({
 			...formData,
@@ -96,10 +151,10 @@ const TherapistRegister = ({ onClose, onLogin }) => {
 		});
 	};
 
-	// Validate form
 	const validateForm = () => {
 		const newErrors = {};
 
+		// Existing validations remain the same...
 		if (!formData.name.trim()) {
 			newErrors.name = 'Name is required';
 		}
@@ -142,7 +197,6 @@ const TherapistRegister = ({ onClose, onLogin }) => {
 		return Object.keys(newErrors).length === 0;
 	};
 
-	// Handle form submission
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (validateForm()) {
@@ -195,6 +249,45 @@ const TherapistRegister = ({ onClose, onLogin }) => {
 				)}
 
 				<div className="p-6 max-h-[70vh] overflow-y-auto">
+					{/* Profile Picture Upload */}
+					<div className="flex flex-col items-center mb-6">
+						<div className="relative w-32 h-32 mb-4">
+							<img
+								src={profilePicPreview}
+								alt="Profile"
+								className="w-full h-full rounded-full object-cover border-4 border-purple-600"
+							/>
+							{profilePicPreview !== 'https://res.cloudinary.com/dalzs7bc2/image/upload/v1746784719/doc_jcxqwb.png' && (
+								<button
+									onClick={removeProfilePic}
+									className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none"
+								>
+									<FaTimes size={12} />
+								</button>
+							)}
+						</div>
+						<div className="flex items-center space-x-4">
+							<input
+								type="file"
+								ref={fileInputRef}
+								accept="image/jpeg,image/png,image/gif,image/webp"
+								onChange={handleProfilePicUpload}
+								className="hidden"
+								id="profilePicUpload"
+							/>
+							<label
+								htmlFor="profilePicUpload"
+								className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 cursor-pointer"
+							>
+								<FaUpload className="mr-2" /> Upload Photo
+							</label>
+						</div>
+						{errors.profilePic && (
+							<p className="mt-2 text-sm text-red-500">{errors.profilePic}</p>
+						)}
+					</div>
+
+
 					<form onSubmit={handleSubmit}>
 						<div className="space-y-6">
 							{/* Name */}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AccountInformation from './AccountInformation';
 import ProfileAvatar from './ProfileAvatar';
-import PasswordChangeModal from './PasswordChangeModal';
+import PasswordChangeModal from '../PasswordChangeModal';
 import ProfileEditModal from './ProfileEditModal';
 import ImageUploadModal from './ImageUploadModal';
 import AccountDetails from './AccountDetails';
@@ -20,9 +20,8 @@ const ProfileInfo = () => {
   const [profileData, setProfileData] = useState({
     fullName: '',
     email: '',
+    profileImage: null
   });
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -40,16 +39,19 @@ const ProfileInfo = () => {
             setProfileData({
               fullName: response.data.fullName,
               email: response.data.email,
+              profileImage: response.data.profileImage
             });
           }
         } catch (apiError) {
           console.error('Error fetching profile data:', apiError);
+          toast.error('Failed to fetch profile data');
         }
       };
       fetchUserData();
 
     } catch (error) {
       console.error('Error parsing user data:', error);
+      toast.error('An error occurred while loading profile');
     }
   }, []);
 
@@ -68,19 +70,19 @@ const ProfileInfo = () => {
       toast.error('New passwords do not match');
       return;
     }
-    
+
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`${API_URL}/users/profile`, 
-        { password: passwordData.new }, 
+      await axios.put(`${API_URL}/users/profile`,
+        { password: passwordData.new },
         {
           headers: {
             Authorization: `Bearer ${token}`
           }
         }
       );
-      
+
       toast.success('Password updated successfully');
       setShowPasswordModal(false);
     } catch (error) {
@@ -98,28 +100,42 @@ const ProfileInfo = () => {
     });
   };
 
-  const handleProfileSubmit = async () => {
+  const handleProfileSubmit = async (data) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put(`${API_URL}/users/profile`, 
-        { 
-          fullName: profileData.fullName,
-          email: profileData.email
-        }, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      const formData = data instanceof FormData ? data : new FormData();
+
+      // Add text fields if not part of FormData
+      if (!(data instanceof FormData)) {
+        formData.append('fullName', profileData.fullName);
+        formData.append('email', profileData.email);
+      }
+
+      const response = await axios.put(`${API_URL}/users/profile`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
         }
-      );
-      console.log(response.data)
-      localStorage.setItem('fullName', profileData.fullName);
+      });
+
+      localStorage.setItem('fullName', response.data.fullName);
+
+      // Update local state with new user data
+      setUserData(prevData => ({
+        ...prevData,
+        ...response.data
+      }));
+
+      setProfileData({
+        fullName: response.data.fullName,
+        email: response.data.email,
+        profileImage: response.data.profileImage
+      });
+
       toast.success('Profile updated successfully');
       setShowProfileEditModal(false);
-      
-      // Refresh the page to update the UI
-      window.location.reload();
+      setShowImageUploadModal(false);
     } catch (error) {
       console.error('Error updating profile:', error);
       toast.error(error.response?.data?.message || 'Failed to update profile');
@@ -128,27 +144,18 @@ const ProfileInfo = () => {
     }
   };
 
-  const handleImageUpload = (e) => {
-    e.preventDefault();
-    // Handle image upload logic here
-    console.log('Image upload submitted', selectedImage);
-    setShowImageUploadModal(false);
-    // Keep the preview to show in the UI (in a real app you'd update user.profileImage)
-  };
-
   const createdAtFormatted = formatDate(userData.createdAt);
 
   return (
     <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
       {/* Header/Banner */}
       <div className="h-32 bg-gradient-to-r from-purple-900 to-indigo-900 relative" />
-      
+
       {/* Profile Section */}
       <div className="px-6 pt-0 pb-6 relative">
         {/* Avatar with Edit Button */}
         <ProfileAvatar
           user={userData}
-          imagePreview={imagePreview}
           openImageUploadModal={() => setShowImageUploadModal(true)}
         />
 
@@ -227,16 +234,13 @@ const ProfileInfo = () => {
 
       {/* Image Upload Modal */}
       <ImageUploadModal
+        loading={loading}
+        imagePreview={profileData.profileImage}
         isOpen={showImageUploadModal}
         onClose={() => {
           setShowImageUploadModal(false);
-          setImagePreview(null);
-          setSelectedImage(null);
         }}
-        onSubmit={handleImageUpload}
-        imagePreview={imagePreview}
-        setImagePreview={setImagePreview}
-        setSelectedImage={setSelectedImage}
+        onSubmit={handleProfileSubmit}
       />
     </div>
   );

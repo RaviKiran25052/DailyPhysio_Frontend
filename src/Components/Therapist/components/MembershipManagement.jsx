@@ -137,16 +137,6 @@ const MembershipManagement = () => {
                 {membershipType === 'free' ? 'Free Plan' :
                  membershipType === 'monthly' ? 'Monthly Plan' : 'Yearly Plan'}
               </span>
-              {isActive && (
-                <span className="ml-3 px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full">
-                  Active
-                </span>
-              )}
-              {!isActive && (
-                <span className="ml-3 px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded-full">
-                  Inactive
-                </span>
-              )}
             </div>
             
             <div className="space-y-2 text-gray-300">
@@ -181,43 +171,6 @@ const MembershipManagement = () => {
               Update Plan
             </button>
           </div>
-        </div>
-      </div>
-
-      {/* Feature Comparison */}
-      <div className="bg-gray-800 rounded-xl border border-gray-700 p-6 mb-8">
-        <h3 className="text-xl font-semibold mb-4">Your Plan Features</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-700">
-                <th className="py-3 text-left">Feature</th>
-                <th className="py-3 text-left">Your Access</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-gray-700">
-                <td className="py-3">Consultations</td>
-                <td className="py-3">{features[membershipType].consultations}</td>
-              </tr>
-              <tr className="border-b border-gray-700">
-                <td className="py-3">Exercise Library</td>
-                <td className="py-3">{features[membershipType].exercises}</td>
-              </tr>
-              <tr className="border-b border-gray-700">
-                <td className="py-3">Analytics</td>
-                <td className="py-3">{features[membershipType].analytics}</td>
-              </tr>
-              <tr className="border-b border-gray-700">
-                <td className="py-3">User Management</td>
-                <td className="py-3">{features[membershipType].users}</td>
-              </tr>
-              <tr>
-                <td className="py-3">Support</td>
-                <td className="py-3">{features[membershipType].support}</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
 
