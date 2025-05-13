@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Activity, Calendar, Clock, Edit, Eye, Repeat, Trash, X, Printer } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Activity, Calendar, Clock, Edit, Eye, Repeat, Trash, X, Printer, Download } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import PrintRoutine from './PrintRoutine';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const API_URL = process.env.REACT_APP_API_URL || '';
 
@@ -15,6 +16,7 @@ const MyRoutines = ({ user }) => {
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [routineToDelete, setRoutineToDelete] = useState(null);
+  const printFrameRef = useRef(null);
   const [formData, setFormData] = useState({
     name: '',
     reps: 1,
@@ -42,15 +44,13 @@ const MyRoutines = ({ user }) => {
         return;
       }
 
-      const response = await axios.get(`${API_URL}/routines/`, {
+      const response = await axios.get(`${API_URL}/routines`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
       setRoutines(response.data.data);
-      console.log(response.data.data);
-      
     } catch (error) {
       console.error('Error fetching routines:', error);
       toast.error('Failed to load routines');
@@ -60,7 +60,7 @@ const MyRoutines = ({ user }) => {
   };
 
   const handleViewRoutine = (routine) => {
-    navigate(`/exercise/${routine.exerciseId._id}`, {
+    navigate(`/exercise/${routine.exercise._id}`, {
       state: {
         routineData: {
           reps: routine.reps,
@@ -181,6 +181,572 @@ const MyRoutines = ({ user }) => {
     }
   };
 
+  const handlePrintRoutine = (routine) => {
+    const printWindow = window.open('', '_blank');
+    
+    if (!printWindow) {
+      toast.error('Please allow pop-ups to print routines');
+      return;
+    }
+
+    const printContent = generatePrintContent([routine]);
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    
+    // Add event listeners after document is loaded
+    printWindow.onload = function() {
+      // Add download functionality
+      const downloadBtn = printWindow.document.getElementById('downloadPdf');
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+          const filename = `${routine.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_routine.pdf`;
+          
+          printWindow.document.getElementById('downloadWrapper').style.display = 'none';
+          
+          printWindow.print();
+          
+          // Show the download button again after print dialog is closed/cancelled
+          setTimeout(() => {
+            if (printWindow.document.getElementById('downloadWrapper')) {
+              printWindow.document.getElementById('downloadWrapper').style.display = 'flex';
+            }
+          }, 1000);
+        });
+      }
+    };
+  };
+
+  const handlePrintAllRoutines = () => {
+    if (routines.length === 0) {
+      toast.info('No routines to print');
+      return;
+    }
+
+    const printWindow = window.open('', '_blank');
+    
+    if (!printWindow) {
+      toast.error('Please allow pop-ups to print routines');
+      return;
+    }
+
+    const printContent = generatePrintContent(routines);
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    
+    // Add event listeners after document is loaded
+    printWindow.onload = function() {
+      // Add download functionality
+      const downloadBtn = printWindow.document.getElementById('downloadPdf');
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+          const filename = 'all_exercise_routines.pdf';
+          
+          printWindow.document.getElementById('downloadWrapper').style.display = 'none';
+          
+          printWindow.print();
+          
+          // Show the download button again after print dialog is closed/cancelled
+          setTimeout(() => {
+            if (printWindow.document.getElementById('downloadWrapper')) {
+              printWindow.document.getElementById('downloadWrapper').style.display = 'flex';
+            }
+          }, 1000);
+        });
+      }
+    };
+  };
+
+  const generatePrintContent = (routinesToPrint) => {
+    const printStyles = `
+      /* Non-print styles for the webpage view */
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+        color: #333;
+        background: #f5f7fb;
+        padding: 0;
+        margin: 0;
+      }
+      #downloadWrapper {
+        position: sticky;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        padding: 15px;
+        background: #6d28d9;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 1000;
+      }
+      #downloadPdf {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        color: #6d28d9;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      #downloadPdf:hover {
+        background: #f3f4f6;
+      }
+      .page-container {
+        max-width: 21cm;
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        padding: 1.5cm;
+      }
+      
+      /* Common styles for both screen and print */
+      * {
+        box-sizing: border-box;
+      }
+      .page-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+      .logo-area {
+        width: 60px;
+        height: 60px;
+        background: #6d28d9;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: white;
+        font-weight: bold;
+        font-size: 24px;
+      }
+      .title-area {
+        flex: 1;
+      }
+      .routine-container {
+        margin-bottom: 30px;
+        max-width: 100%;
+        border-bottom: 1px dashed #e5e7eb;
+        padding-bottom: 30px;
+        position: relative;
+        background: white;
+      }
+      .routine-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -15px;
+        width: 4px;
+        height: calc(100% - 30px);
+        background: linear-gradient(to bottom, #6d28d9, rgba(109, 40, 217, 0.1));
+        border-radius: 4px;
+      }
+      .routine-bg {
+        position: absolute;
+        right: 0;
+        top: 10px;
+        width: 150px;
+        height: 150px;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="rgba(109, 40, 217, 0.05)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>');
+        background-repeat: no-repeat;
+        background-position: right top;
+        opacity: 0.7;
+        pointer-events: none;
+      }
+      .routine-title {
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #6d28d9;
+        border-bottom: 2px solid #6d28d9;
+        padding-bottom: 8px;
+        text-align: center;
+        position: relative;
+      }
+      .routine-meta {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+        font-size: 14px;
+      }
+      .meta-item {
+        background: #f9f9f9;
+        padding: 8px 12px;
+        border-radius: 6px;
+        border-left: 4px solid #6d28d9;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
+      }
+      .meta-item::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20px;
+        height: 20px;
+        background: rgba(109, 40, 217, 0.1);
+        border-radius: 0 0 0 20px;
+      }
+      .meta-label {
+        font-weight: bold;
+        margin-right: 5px;
+        color: #6d28d9;
+      }
+      .meta-value {
+        color: #4b5563;
+        font-weight: 500;
+      }
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 15px 0 10px;
+        color: #374151;
+        border-left: 4px solid #6d28d9;
+        padding-left: 10px;
+        display: flex;
+        align-items: center;
+      }
+      .section-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #e5e7eb;
+        margin-left: 10px;
+      }
+      .instruction-text {
+        margin-bottom: 15px;
+        line-height: 1.6;
+        text-align: justify;
+        color: #1f2937;
+      }
+      .image-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+        margin: 15px 0;
+        justify-items: center;
+      }
+      .exercise-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        max-height: 280px;
+        object-fit: contain;
+        border: 1px solid #e5e7eb;
+      }
+      .full-width-image {
+        grid-column: 1 / -1;
+        max-width: 90%;
+        max-height: 320px;
+        object-fit: contain;
+        margin: 0 auto;
+      }
+      .video-link {
+        margin: 15px 0;
+        padding: 12px;
+        background: #f3f4f6;
+        border-radius: 8px;
+        border-left: 4px solid #6d28d9;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .video-link a {
+        color: #6d28d9;
+        text-decoration: none;
+        font-weight: bold;
+        background: rgba(109, 40, 217, 0.1);
+        padding: 5px 15px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-left: 10px;
+        transition: background 0.2s;
+      }
+      .video-link a:hover {
+        background: rgba(109, 40, 217, 0.2);
+      }
+      .footer {
+        margin-top: 25px;
+        font-size: 12px;
+        color: #6b7280;
+        text-align: center;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 15px;
+        position: relative;
+      }
+      .footer::before {
+        content: '';
+        position: absolute;
+        top: -3px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 5px;
+        background: #6d28d9;
+        border-radius: 10px;
+      }
+      .heading {
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin: 15px 0 5px;
+        color: #6d28d9;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .header-decoration {
+        display: block;
+        width: 120px;
+        height: 3px;
+        background: #6d28d9;
+        margin: 10px auto 25px;
+        position: relative;
+      }
+      .header-decoration::before, .header-decoration::after {
+        content: '';
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #6d28d9;
+        border-radius: 50%;
+        top: -2.5px;
+      }
+      .header-decoration::before {
+        left: 0;
+      }
+      .header-decoration::after {
+        right: 0;
+      }
+      .separator {
+        display: block;
+        width: 100%;
+        height: 1px;
+        background: #e5e7eb;
+        margin: 12px 0;
+      }
+      .description-box {
+        background: #f9fafb;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 15px;
+        border-left: 4px solid #6d28d9;
+        position: relative;
+      }
+      .description-box::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 50px;
+        height: 50px;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(109, 40, 217, 0.05)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>');
+        background-repeat: no-repeat;
+        background-position: right bottom;
+        transform: scale(2);
+      }
+      .pattern-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(rgba(109, 40, 217, 0.03) 2px, transparent 2px);
+        background-size: 24px 24px;
+        pointer-events: none;
+        z-index: -1;
+      }
+      .disclaimer {
+        font-size: 11px;
+        color: #6b7280;
+        margin-top: 8px;
+        text-align: center;
+        font-style: italic;
+      }
+      
+      /* Print-specific styles */
+      @media print {
+        @page {
+          size: A4;
+          margin: 1.2cm;
+        }
+        body {
+          background: white;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        #downloadWrapper {
+          display: none !important;
+        }
+        .page-container {
+          box-shadow: none;
+          padding: 0;
+          max-width: none;
+        }
+        .routine-container {
+          page-break-after: always;
+        }
+        /* Ensure URLs appear in printed PDFs next to links */
+        .video-link a::after {
+          content: " (" attr(href) ")";
+          font-size: 0.85em;
+          font-weight: normal;
+          font-style: italic;
+        }
+      }
+    `;
+
+    const routineHtml = routinesToPrint.map(routine => {
+      const exerciseData = routine.exerciseId || routine.exercise;
+      
+      // Handle image layout - if single image it's centered, if multiple in a grid
+      let imagesHtml = '';
+      if (exerciseData?.image && exerciseData.image.length > 0) {
+        const validImages = exerciseData.image.filter(img => img && img !== '');
+        
+        if (validImages.length === 1) {
+          // Single image gets full width
+          imagesHtml = `<img src="${validImages[0]}" alt="${exerciseData.title}" class="exercise-image full-width-image">`;
+        } else if (validImages.length > 0) {
+          // Multiple images in a grid
+          imagesHtml = validImages.map(img => 
+            `<img src="${img}" alt="${exerciseData.title}" class="exercise-image">`
+          ).join('');
+        }
+      }
+        
+      // For PDF printing, we need to make sure the links are absolute URLs
+      let videoUrl = exerciseData?.video || '';
+      // Add http:// prefix if missing
+      if (videoUrl && !videoUrl.startsWith('http://') && !videoUrl.startsWith('https://')) {
+        videoUrl = 'https://' + videoUrl;
+      }
+        
+      const videoHtml = videoUrl 
+        ? `<div class="video-link">
+            <strong>Exercise Video:</strong> 
+            <a href="${videoUrl}" target="_blank" rel="noopener">
+              View Video
+            </a>
+          </div>`
+        : '';
+
+      return `
+        <div class="routine-container">
+          <div class="routine-bg"></div>
+          <div class="pattern-bg"></div>
+          <h2 class="routine-title">${routine.name}</h2>
+          <div class="header-decoration"></div>
+          
+          <div class="routine-meta">
+            <div class="meta-item">
+              <span class="meta-label">Category:</span>
+              <span class="meta-value">${exerciseData?.category || 'N/A'}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Position:</span>
+              <span class="meta-value">${exerciseData?.position || 'N/A'}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Reps:</span>
+              <span class="meta-value">${routine.reps}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Hold:</span>
+              <span class="meta-value">${routine.hold}s</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Complete:</span>
+              <span class="meta-value">${routine.complete} times</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Perform:</span>
+              <span class="meta-value">${routine.perform.count} times/${routine.perform.type}</span>
+            </div>
+          </div>
+          
+          <h3 class="section-title">Description</h3>
+          <div class="description-box">
+            <p class="instruction-text">${exerciseData?.description || 'No description available'}</p>
+          </div>
+          
+          <h3 class="section-title">Instructions</h3>
+          <p class="instruction-text">${exerciseData?.instruction || 'No instructions available'}</p>
+          
+          <div class="separator"></div>
+          
+          <h3 class="section-title">Exercise Images</h3>
+          <div class="image-container">
+            ${imagesHtml || '<p class="instruction-text" style="text-align: center;">No images available</p>'}
+          </div>
+          
+          ${videoHtml}
+          
+          <p class="disclaimer">Please consult with your healthcare provider before starting any new exercise program.</p>
+        </div>
+      `;
+    }).join('');
+
+    const docTitle = routinesToPrint.length > 1 
+      ? 'My Exercise Routines' 
+      : routinesToPrint[0]?.name || 'Exercise Routine';
+
+    return `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${docTitle}</title>
+        <style>${printStyles}</style>
+      </head>
+      <body>
+        <div id="downloadWrapper">
+          <button id="downloadPdf" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Download PDF
+          </button>
+        </div>
+
+        <div class="page-container">
+          <div class="page-header">
+            <div class="logo-area">H2G</div>
+            <div class="title-area">
+              <h1 class="heading">${routinesToPrint.length > 1 ? 'My Exercise Routines' : 'Exercise Routine'}</h1>
+              <div class="header-decoration"></div>
+            </div>
+          </div>
+          
+          ${routineHtml}
+          <div class="footer">
+            <p>Generated from Hep2Go on ${new Date().toLocaleDateString()}</p>
+          </div>
+        </div>
+        
+        <script>
+          // Ensure all links open in a new tab and are properly formatted for PDF
+          document.querySelectorAll('a').forEach(link => {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener');
+            
+            // Make sure links have http/https prefix
+            let href = link.getAttribute('href');
+            if (href && !href.startsWith('http://') && !href.startsWith('https://')) {
+              link.setAttribute('href', 'https://' + href);
+            }
+          });
+        </script>
+      </body>
+      </html>
+    `;
+  };
+
   if (loading) {
     return (
       <div className="bg-gray-800 shadow-lg overflow-hidden p-10 flex justify-center">
@@ -191,15 +757,23 @@ const MyRoutines = ({ user }) => {
 
   return (
     <div className="max-w-4xl mx-auto" >
-      <h2 className="text-2xl font-bold mb-6 text-white flex items-center justify-between">
-        <div className="flex items-center">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-white flex items-center">
           <Activity className="mr-2 text-purple-500" size={24} />
           Workout Routines
-        </div>
+        </h2>
+        
         {routines.length > 0 && (
-          <PrintRoutine routines={routines} />
+          <button
+            onClick={handlePrintAllRoutines}
+            className="p-2 text-sm bg-purple-600 hover:bg-purple-500 rounded-lg text-white flex items-center transition-colors duration-200"
+            aria-label="Print all routines"
+          >
+            <Printer size={16} className="mr-1" />
+            <span>Print All</span>
+          </button>
         )}
-      </h2>
+      </div>
 
       {
         routines.length > 0 ? (
@@ -225,6 +799,14 @@ const MyRoutines = ({ user }) => {
 
                     <div className="flex gap-2">
                       <button
+                        onClick={() => handlePrintRoutine(routine)}
+                        className="p-2 text-sm bg-blue-600 hover:bg-blue-500 rounded-lg text-white flex items-center transition-colors duration-200"
+                        aria-label="Print routine"
+                      >
+                        <Printer size={16} className="mr-1" />
+                        <span className="hidden sm:inline">Print</span>
+                      </button>
+                      <button
                         onClick={() => handleViewRoutine(routine)}
                         className="p-2 text-sm bg-purple-600 hover:bg-purple-500 rounded-lg text-white flex items-center transition-colors duration-200"
                         aria-label="View routine"
@@ -232,7 +814,6 @@ const MyRoutines = ({ user }) => {
                         <Eye size={16} className="mr-1" />
                         <span className="hidden sm:inline">View</span>
                       </button>
-                      <PrintRoutine routines={routines} singleRoutine={routine} />
                       <button
                         onClick={() => handleEditClick(routine)}
                         className="p-2 text-sm border-2 border-purple-600 hover:bg-purple-500 rounded-lg text-purple-600 hover:text-white transition-colors duration-200"
