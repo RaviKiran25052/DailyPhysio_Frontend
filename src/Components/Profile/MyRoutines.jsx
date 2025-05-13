@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, Calendar, Clock, Edit, Eye, Repeat, Trash, X } from 'lucide-react';
+import { Activity, Calendar, Clock, Edit, Eye, Repeat, Trash, X, Printer } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import PrintRoutine from './PrintRoutine';
 
 const API_URL = process.env.REACT_APP_API_URL || '';
 
@@ -188,9 +189,14 @@ const MyRoutines = ({ user }) => {
 
   return (
     <div className="max-w-4xl mx-auto" >
-      <h2 className="text-2xl font-bold mb-6 text-white flex items-center">
-        <Activity className="mr-2 text-purple-500" size={24} />
-        Workout Routines
+      <h2 className="text-2xl font-bold mb-6 text-white flex items-center justify-between">
+        <div className="flex items-center">
+          <Activity className="mr-2 text-purple-500" size={24} />
+          Workout Routines
+        </div>
+        {routines.length > 0 && (
+          <PrintRoutine routines={routines} />
+        )}
       </h2>
 
       {
@@ -224,6 +230,7 @@ const MyRoutines = ({ user }) => {
                         <Eye size={16} className="mr-1" />
                         <span className="hidden sm:inline">View</span>
                       </button>
+                      <PrintRoutine routines={routines} singleRoutine={routine} />
                       <button
                         onClick={() => handleEditClick(routine)}
                         className="p-2 text-sm border-2 border-purple-600 hover:bg-purple-500 rounded-lg text-purple-600 hover:text-white transition-colors duration-200"
