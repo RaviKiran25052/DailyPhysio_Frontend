@@ -41,13 +41,15 @@ const MyRoutines = ({ user }) => {
         return;
       }
 
-      const response = await axios.get(`${API_URL}/routines/my-routines`, {
+      const response = await axios.get(`${API_URL}/routines/`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      setRoutines(response.data);
+      setRoutines(response.data.data);
+      console.log(response.data.data);
+      
     } catch (error) {
       console.error('Error fetching routines:', error);
       toast.error('Failed to load routines');
