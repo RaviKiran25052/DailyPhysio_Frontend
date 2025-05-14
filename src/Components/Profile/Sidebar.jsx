@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, Dumbbell, Heart, FileText, Users, Plus, LogOut } from 'lucide-react';
+import { User, Dumbbell, Heart, Users, LogOut, Crown } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -98,6 +98,17 @@ const Sidebar = ({ userData, currentPath, setActiveTab }) => {
               Create Exercise
             </button>
           </li> */}
+
+            <li>
+              <button
+                onClick={() => handleTabClick('membership')}
+                className={`w-full text-left px-4 py-2 rounded-md flex items-center ${currentPath === 'membership' ? 'bg-purple-600 text-white' : 'text-gray-300 hover:bg-gray-700'
+                  }`}
+              >
+                <Crown className="mr-3 text-xl" />
+                My Membership
+              </button>
+            </li>
           </ul>
         </nav>
 

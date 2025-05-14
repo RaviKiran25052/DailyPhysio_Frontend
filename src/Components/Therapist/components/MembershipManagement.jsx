@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { RiCheckLine, RiCloseLine, RiArrowRightLine, RiCoinLine, RiCalendarLine, RiTimeLine } from 'react-icons/ri';
-import MembershipUpdateModal from './MembershipUpdateModal';
+import { RiCheckLine, RiArrowRightLine, RiCoinLine, RiCalendarLine, RiTimeLine } from 'react-icons/ri';
+import MembershipUpdateModal from '../../MembershipUpdateModal';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -47,30 +47,6 @@ const MembershipManagement = () => {
   // Default values if membership is null
   const membershipType = membership?.type || 'free';
   const expiryDate = membership?.expiresAt ? new Date(membership.expiresAt) : null;
-  const isActive = membership?.isActive || false;
-  const features = {
-    free: {
-      consultations: '5 per month',
-      exercises: 'Limited access',
-      analytics: 'Basic',
-      users: 'Up to 10',
-      support: 'Email only'
-    },
-    monthly: {
-      consultations: 'Unlimited',
-      exercises: 'Full access',
-      analytics: 'Advanced',
-      users: 'Up to 50',
-      support: 'Priority email'
-    },
-    yearly: {
-      consultations: 'Unlimited',
-      exercises: 'Full access + Custom',
-      analytics: 'Advanced with exports',
-      users: 'Unlimited',
-      support: '24/7 dedicated'
-    }
-  };
 
   const plans = [
     {
