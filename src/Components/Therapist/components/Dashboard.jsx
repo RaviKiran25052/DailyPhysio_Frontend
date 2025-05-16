@@ -97,7 +97,7 @@ const Dashboard = () => {
 				data: Object.values(analyticsData.exerciseCategories || {}),
 				backgroundColor: [
 					'rgba(147, 51, 234, 0.7)',
-					'rgba(168, 85, 247, 0.7)',
+					'rgba(178, 85, 247, 0.7)',
 					'rgba(192, 132, 252, 0.7)',
 					'rgba(216, 180, 254, 0.7)',
 					'rgba(233, 213, 255, 0.7)',
@@ -139,10 +139,12 @@ const Dashboard = () => {
 
 	const doughnutOptions = {
 		responsive: true,
+		maintainAspectRatio: false,
 		plugins: {
 			legend: {
-				position: 'top',
+				position: 'bottom',
 				labels: {
+					padding: 30,
 					color: 'white'
 				}
 			}

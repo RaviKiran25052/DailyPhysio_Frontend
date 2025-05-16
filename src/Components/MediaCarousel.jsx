@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Image, Play, Pause } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { ChevronLeft, ChevronRight, Image, Play, Pause, Maximize, Minimize, X } from 'lucide-react';
 
 const MediaCarousel = ({ images = [], video = null }) => {
 	// Create media items with video first if available
@@ -9,7 +10,9 @@ const MediaCarousel = ({ images = [], video = null }) => {
 
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isPlaying, setIsPlaying] = useState(false);
+	const [isMaximized, setIsMaximized] = useState(false);
 	const videoRefs = useRef({});
+	const carouselRef = useRef(null);
 
 	// If no media is available, display placeholder
 	if (mediaItems.length === 0) {
@@ -72,16 +75,28 @@ const MediaCarousel = ({ images = [], video = null }) => {
 		}
 	};
 
+	const toggleMaximize = (e) => {
+		e.stopPropagation();
+		setIsMaximized(!isMaximized);
+	};
+
+	const closeMaximizedView = (e) => {
+		e.stopPropagation();
+		setIsMaximized(false);
+	};
+
 	const hasMultipleItems = mediaItems.length > 1;
 
-	return (
-		<div className="relative w-full h-full overflow-hidden rounded-xl">
+	// Main carousel component
+	const renderCarousel = (maximized = false) => (
+		<div className={`relative w-full h-full overflow-hidden ${maximized ? '' : 'rounded-xl'}`}>
 			{/* Media Display */}
 			{mediaItems.map((item, idx) => (
 				<div
 					key={idx}
-					className={`absolute top-0 left-0 w-full h-full transition-all duration-500 ${idx === currentIndex ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-110 z-0'
-						}`}
+					className={`absolute top-0 left-0 w-full h-full transition-all duration-500 ${
+						idx === currentIndex ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-110 z-0'
+					}`}
 				>
 					{item.type === 'video' ? (
 						<div className="relative w-full h-full">
@@ -146,17 +161,70 @@ const MediaCarousel = ({ images = [], video = null }) => {
 							<button
 								key={idx}
 								onClick={(e) => goToSlide(idx, e)}
-								className={`w-2 h-2 rounded-full transition-all pointer-events-auto ${idx === currentIndex
+								className={`w-2 h-2 rounded-full transition-all pointer-events-auto ${
+									idx === currentIndex
 										? 'bg-purple-500 w-4'
 										: 'bg-gray-400 hover:bg-purple-400'
-									}`}
+								}`}
 								aria-label={`Go to media ${idx + 1}`}
 							/>
 						))}
 					</div>
 				</div>
 			)}
+
+			{/* Maximize button (only show on hover in normal mode) */}
+			{!maximized && (
+				<div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-40">
+					<button
+						onClick={toggleMaximize}
+						className="bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white"
+						aria-label="Maximize carousel"
+					>
+						<Maximize size={16} />
+					</button>
+				</div>
+			)}
+
+			{/* Minimize button (only in maximized view) */}
+			{maximized && (
+				<div className="absolute top-4 right-4 z-50 flex space-x-2">
+					<button
+						onClick={toggleMaximize}
+						className="bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white"
+						aria-label="Minimize carousel"
+					>
+						<Minimize size={16} />
+					</button>
+					<button
+						onClick={closeMaximizedView}
+						className="bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white"
+						aria-label="Close carousel"
+					>
+						<X size={16} />
+					</button>
+				</div>
+			)}
 		</div>
+	);
+
+	return (
+		<>
+			{/* Normal carousel view with hover group for showing maximize button */}
+			<div ref={carouselRef} className="relative w-full h-full group">
+				{renderCarousel(false)}
+			</div>
+
+			{/* Maximized view portal */}
+			{isMaximized && createPortal(
+				<div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
+					<div className="w-full h-full md:w-5/6 md:h-5/6">
+						{renderCarousel(true)}
+					</div>
+				</div>,
+				document.body
+			)}
+		</>
 	);
 };
 
