@@ -29,7 +29,7 @@ const TherapistHeader = ({ onLogin, onRegister }) => {
 	return (
 		<header className="bg-gray-800 shadow-md">
 			<div className="container mx-auto px-4 py-4 flex justify-between items-center">
-				<h1 className="text-2xl font-bold text-white">ExerciseMD</h1>
+				<h1 className="text-2xl font-bold text-white">DailyPhysio</h1>
 
 				<div className="flex items-center">
 					{isLoggedIn ? (

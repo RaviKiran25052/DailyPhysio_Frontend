@@ -131,7 +131,7 @@ const TherapistDashboard = () => {
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-8 md:mb-0">
               <h1 className="text-4xl md:text-5xl font-bold mb-4 text-purple-800">
-                ExerciseMD for Therapists
+                DailyPhysio for Therapists
               </h1>
               <p className="text-xl text-gray-300 mb-8">
                 Your all-in-one platform for managing patient exercises, consultations, and tracking rehabilitation progress.
@@ -157,7 +157,7 @@ const TherapistDashboard = () => {
                 <div className="absolute -bottom-8 right-0 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000"></div>
                 <div className="relative">
                   <img
-                    src="/api/placeholder/600/400"
+                    src="/assets/start your healing.jpg"
                     alt="Therapist Dashboard Preview"
                     className="rounded-xl shadow-2xl"
                   />
@@ -228,7 +228,7 @@ const TherapistDashboard = () => {
       {/* How It Works Section */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-12 text-purple-700">How ExerciseMD Works</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-purple-700">How DailyPhysio Works</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
@@ -337,7 +337,7 @@ const TherapistDashboard = () => {
                   <path d="M17 2L12 7L7 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M12 7V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <span className="text-white font-bold text-xl">ExerciseMD</span>
+                <span className="text-white font-bold text-xl">DailyPhysio</span>
               </div>
               <p className="text-gray-400 mb-4">The complete platform for therapy and rehabilitation professionals.</p>
               <div className="flex space-x-4">
@@ -392,7 +392,7 @@ const TherapistDashboard = () => {
 
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm mb-4 md:mb-0">
-              © 2025 ExerciseMD. All rights reserved.
+              © 2025 DailyPhysio. All rights reserved.
             </div>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm">Terms of Service</a>

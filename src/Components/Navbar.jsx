@@ -163,8 +163,8 @@ const Navbar = () => {
             className="text-2xl font-bold"
             onClick={() => setActiveNavItem('home')}
           >
-            <span className="text-purple-500">Exercise</span>
-            <span className="text-white">MD</span>
+            <span className="text-purple-500">Daily</span>
+            <span className="text-white">Physio</span>
           </Link>
 
           <nav className="hidden md:flex space-x-8">
