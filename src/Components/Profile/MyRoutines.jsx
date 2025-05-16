@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, Calendar, Clock, Edit, Eye, FileText, Printer, Repeat, Trash, X } from 'lucide-react';
+import { Activity, Calendar, Clock, Edit, Eye, FileText, Printer, Repeat, Trash, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,12 @@ const MyRoutines = ({ user }) => {
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [routineToDelete, setRoutineToDelete] = useState(null);
-  const printFrameRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Pagination state for mobile view
+  const [currentPage, setCurrentPage] = useState(1);
+  const [routinesPerPage] = useState(6);
+  
   const [formData, setFormData] = useState({
     name: '',
     reps: 1,
@@ -27,6 +32,42 @@ const MyRoutines = ({ user }) => {
       type: 'day'
     }
   });
+
+  // Check if mobile view
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkIfMobile();
+    
+    // Add resize listener
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+
+  // Get current routines for pagination
+  const indexOfLastRoutine = currentPage * routinesPerPage;
+  const indexOfFirstRoutine = indexOfLastRoutine - routinesPerPage;
+  const currentRoutines = isMobile 
+    ? routines.slice(indexOfFirstRoutine, indexOfLastRoutine)
+    : routines;
+  
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const nextPage = () => {
+    if (currentPage < Math.ceil(routines.length / routinesPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   const handlePrintAll = () => {
     const printWindow = window.open('', '_blank');
@@ -1225,31 +1266,71 @@ const MyRoutines = ({ user }) => {
     );
   }
 
+  // Pagination component for mobile view
+  const Pagination = () => {
+    const pageCount = Math.ceil(routines.length / routinesPerPage);
+    
+    if (pageCount <= 1) return null;
+    
+    return (
+      <div className="flex items-center justify-center mt-6 space-x-2">
+        <button 
+          onClick={prevPage}
+          disabled={currentPage === 1}
+          className={`p-2 rounded-full ${currentPage === 1 ? 'text-gray-600 cursor-not-allowed' : 'text-purple-500 hover:bg-gray-700'}`}
+        >
+          <ChevronLeft size={20} />
+        </button>
+        
+        <span className="text-sm text-gray-400">
+          Page {currentPage} of {pageCount}
+        </span>
+        
+        <button 
+          onClick={nextPage}
+          disabled={currentPage === pageCount}
+          className={`p-2 rounded-full ${currentPage === pageCount ? 'text-gray-600 cursor-not-allowed' : 'text-purple-500 hover:bg-gray-700'}`}
+        >
+          <ChevronRight size={20} />
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div className="max-w-4xl mx-auto" >
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-white flex items-center">
+        <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center">
           <Activity className="mr-2 text-purple-500" size={24} />
           Workout Routines
         </h2>
-        <PrintButton
+        <div className="hidden sm:block">
+          <PrintButton
+            onClick={handlePrintAll}
+            icon={<Printer size={16} />}
+            text="Print All Routines"
+          />
+        </div>
+        <button
           onClick={handlePrintAll}
-          icon={<Printer size={16} />}
-          text="Print All Routines"
-        />
+          className="sm:hidden p-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-white"
+          aria-label="Print All Routines"
+        >
+          <Printer size={18} />
+        </button>
       </div>
       {
         routines.length > 0 ? (
           <div className="grid gap-6">
-            {routines.map(routine => (
+            {currentRoutines.map(routine => (
               <div
                 key={routine._id}
                 className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-purple-900/20 transition-all duration-300"
               >
-                <div className="p-5">
-                  <div className="flex justify-between items-center mb-4">
-                    <div>
-                      <h3 className="font-semibold text-xl text-white group-hover:text-purple-400 transition-colors">
+                <div className="p-4 sm:p-5">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
+                    <div className="mb-3 sm:mb-0">
+                      <h3 className="font-semibold text-lg sm:text-xl text-white group-hover:text-purple-400 transition-colors">
                         {routine.name}
                       </h3>
                       <p className="text-sm text-gray-400 flex items-center mt-1">
@@ -1260,65 +1341,100 @@ const MyRoutines = ({ user }) => {
                       </p>
                     </div>
 
-                    <div className="flex gap-2">
-                      <PrintButton
-                        onClick={() => handlePrintSingle(routine)}
-                        icon={<FileText size={16} />}
-                        text="Print"
-                      />
-                      <button
-                        onClick={() => handleViewRoutine(routine)}
-                        className="p-2 text-sm bg-purple-600 hover:bg-purple-500 rounded-lg text-white flex items-center transition-colors duration-200"
-                        aria-label="View routine"
-                      >
-                        <Eye size={16} className="mr-1" />
-                        <span className="hidden sm:inline">View</span>
-                      </button>
-                      <button
-                        onClick={() => handleEditClick(routine)}
-                        className="p-2 text-sm border-2 border-purple-600 hover:bg-purple-500 rounded-lg text-purple-600 hover:text-white transition-colors duration-200"
-                        aria-label="Edit routine"
-                      >
-                        <Edit size={16} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteClick(routine)}
-                        className="p-2 text-sm border-2 border-red-600 rounded-lg text-red-600 hover:bg-red-600 hover:text-white transition-colors duration-200"
-                        aria-label="Delete routine"
-                      >
-                        <Trash size={16} />
-                      </button>
+                    <div className="flex flex-wrap gap-2">
+                      {/* Mobile-friendly action buttons */}
+                      <div className="hidden sm:flex gap-2">
+                        <PrintButton
+                          onClick={() => handlePrintSingle(routine)}
+                          icon={<FileText size={16} />}
+                          text="Print"
+                        />
+                        <button
+                          onClick={() => handleViewRoutine(routine)}
+                          className="p-2 text-sm bg-purple-600 hover:bg-purple-500 rounded-lg text-white flex items-center transition-colors duration-200"
+                          aria-label="View routine"
+                        >
+                          <Eye size={16} className="mr-1" />
+                          <span>View</span>
+                        </button>
+                        <button
+                          onClick={() => handleEditClick(routine)}
+                          className="p-2 text-sm border-2 border-purple-600 hover:bg-purple-500 rounded-lg text-purple-600 hover:text-white transition-colors duration-200"
+                          aria-label="Edit routine"
+                        >
+                          <Edit size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(routine)}
+                          className="p-2 text-sm border-2 border-red-600 rounded-lg text-red-600 hover:bg-red-600 hover:text-white transition-colors duration-200"
+                          aria-label="Delete routine"
+                        >
+                          <Trash size={16} />
+                        </button>
+                      </div>
+                      
+                      {/* Mobile buttons - simplified icon only version */}
+                      <div className="flex sm:hidden gap-2">
+                        <button
+                          onClick={() => handlePrintSingle(routine)}
+                          className="p-2 bg-gray-700 hover:bg-gray-600 rounded-full text-purple-500"
+                          aria-label="Print routine"
+                        >
+                          <FileText size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleViewRoutine(routine)}
+                          className="p-2 bg-purple-600 hover:bg-purple-500 rounded-full text-white"
+                          aria-label="View routine"
+                        >
+                          <Eye size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleEditClick(routine)}
+                          className="p-2 border border-purple-600 hover:bg-purple-600 rounded-full text-purple-600 hover:text-white"
+                          aria-label="Edit routine"
+                        >
+                          <Edit size={16} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(routine)}
+                          className="p-2 border border-red-600 rounded-full text-red-600 hover:bg-red-600 hover:text-white"
+                          aria-label="Delete routine"
+                        >
+                          <Trash size={16} />
+                        </button>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
-                    <div className="bg-gray-900 rounded-lg p-3 border-l-4 border-purple-500">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-4">
+                    <div className="bg-gray-900 rounded-lg p-2 sm:p-3 border-l-4 border-purple-500">
                       <span className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Reps</span>
-                      <span className="font-semibold text-lg text-white flex items-center">
+                      <span className="font-semibold text-base sm:text-lg text-white flex items-center">
                         <Repeat size={14} className="text-purple-400 mr-1" />
                         {routine.reps}
                       </span>
                     </div>
 
-                    <div className="bg-gray-900 rounded-lg p-3 border-l-4 border-blue-500">
+                    <div className="bg-gray-900 rounded-lg p-2 sm:p-3 border-l-4 border-blue-500">
                       <span className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Hold</span>
-                      <span className="font-semibold text-lg text-white flex items-center">
+                      <span className="font-semibold text-base sm:text-lg text-white flex items-center">
                         <Clock size={14} className="text-blue-400 mr-1" />
                         {routine.hold}s
                       </span>
                     </div>
 
-                    <div className="bg-gray-900 rounded-lg p-3 border-l-4 border-green-500">
+                    <div className="bg-gray-900 rounded-lg p-2 sm:p-3 border-l-4 border-green-500">
                       <span className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Complete</span>
-                      <span className="font-semibold text-lg text-white flex items-center">
+                      <span className="font-semibold text-base sm:text-lg text-white flex items-center">
                         <Activity size={14} className="text-green-400 mr-1" />
                         {routine.complete}
                       </span>
                     </div>
 
-                    <div className="bg-gray-900 rounded-lg p-3 border-l-4 border-amber-500">
+                    <div className="bg-gray-900 rounded-lg p-2 sm:p-3 border-l-4 border-amber-500">
                       <span className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Perform</span>
-                      <span className="font-semibold text-lg text-white flex items-center">
+                      <span className="font-semibold text-base sm:text-lg text-white flex items-center">
                         {routine.perform.count}/{routine.perform.type}
                       </span>
                     </div>
@@ -1333,6 +1449,9 @@ const MyRoutines = ({ user }) => {
                 </div>
               </div>
             ))}
+            
+            {/* Pagination for mobile view only */}
+            {isMobile && <Pagination />}
           </div>
         ) : (
           <div className="text-center py-16 bg-gray-800 rounded-xl border border-dashed border-gray-700">

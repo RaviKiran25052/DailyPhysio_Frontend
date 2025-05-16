@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Eye, 
@@ -10,8 +10,9 @@ import {
   Briefcase, 
   Clock, 
   Award,
-  Star,
-  Tag
+  Tag,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import axios from 'axios';
 import MediaCarousel from '../Components/MediaCarousel';
@@ -27,6 +28,11 @@ const CreatorExercisesPage = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [categories, setCategories] = useState([]);
   const [creatorData, setCreatorData] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Current exercise index for mobile carousel
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [autoplayTimeout, setAutoplayTimeout] = useState(null);
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -45,7 +51,6 @@ const CreatorExercisesPage = () => {
           navigate("/exercises/")
         }
         
-
         // Extract unique categories
         const uniqueCategories = [...new Set(data.exercises.map(ex => ex.category))];
         setCategories(uniqueCategories);
@@ -58,12 +63,78 @@ const CreatorExercisesPage = () => {
     };
 
     fetchExercises();
+    
+    // Check for mobile view
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkIsMobile();
+    
+    // Add resize listener
+    window.addEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener('resize', checkIsMobile);
   }, [creatorId]);
 
   // Filter exercises by category
   const filteredExercises = activeCategory === 'all'
     ? exercises
     : exercises.filter(ex => ex.category === activeCategory);
+
+  useEffect(() => {
+    // Reset current index when category changes
+    setCurrentIndex(0);
+  }, [activeCategory]);
+
+  // Setup autoplay for mobile
+  useEffect(() => {
+    // Only set up autoplay if we're in mobile view
+    if (!isMobile) return;
+    
+    // Clear previous timeout when changing exercises
+    if (autoplayTimeout) {
+      clearTimeout(autoplayTimeout);
+    }
+
+    if (filteredExercises.length > 1) {
+      const timeout = setTimeout(() => {
+        nextExercise();
+      }, 3000);
+      setAutoplayTimeout(timeout);
+    }
+
+    return () => {
+      if (autoplayTimeout) {
+        clearTimeout(autoplayTimeout);
+      }
+    };
+  }, [currentIndex, filteredExercises, isMobile]);
+
+  // Navigation functions for mobile carousel
+  const nextExercise = () => {
+    if (filteredExercises.length <= 1) return;
+    
+    setCurrentIndex(prevIndex => {
+      if (prevIndex >= filteredExercises.length - 1) {
+        return 0; // Loop back to the first exercise
+      } else {
+        return prevIndex + 1;
+      }
+    });
+  };
+
+  const prevExercise = () => {
+    if (filteredExercises.length <= 1) return;
+    
+    setCurrentIndex(prevIndex => {
+      if (prevIndex <= 0) {
+        return filteredExercises.length - 1; // Loop to the last exercise
+      } else {
+        return prevIndex - 1;
+      }
+    });
+  };
 
   const handleExerciseClick = (exerciseId) => {
     navigate(`/exercise/${exerciseId}`);
@@ -97,14 +168,16 @@ const CreatorExercisesPage = () => {
     );
   }
 
+  console.log(creatorData);
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto">
-        <div className="flex gap-6">
+      <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Left Sidebar - Creator Details */}
-          <div className="w-1/4 min-w-[300px] p-6 sticky top-0 overflow-y-auto">
+          <div className="w-full lg:w-1/4 p-4 lg:p-6 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
             {creatorData && (
-              <div className="bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-700">
+              <div className="bg-gray-800 rounded-xl p-4 lg:p-6 shadow-lg border border-gray-700">
                 {/* Basic Info */}
                 <div className="mb-6">
                   <h1 className="text-2xl font-bold text-white mb-2">
@@ -126,10 +199,10 @@ const CreatorExercisesPage = () => {
                   </div>
                   <div className="bg-gray-700/50 p-3 rounded-lg">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Rating</span>
-                      <Star size={16} className="text-purple-400" />
+                      <span className="text-gray-400">Consultations</span>
+                      <Briefcase size={16} className="text-purple-400" />
                     </div>
-                    <p className="text-xl font-semibold mt-1">{creatorData.rating || '4.5'}/5</p>
+                    <p className="text-xl font-semibold mt-1">{creatorData.consultationCount || 0}</p>
                   </div>
                   <div className="bg-gray-700/50 p-3 rounded-lg">
                     <div className="flex items-center justify-between">
@@ -198,12 +271,12 @@ const CreatorExercisesPage = () => {
             )}
           </div>
 
-          {/* Right Content - Exercises Grid */}
-          <div className="flex-1 py-6 pr-6 overflow-y-auto">
+          {/* Right Content - Exercises Display */}
+          <div className="w-full lg:flex-1 p-4 lg:py-6 lg:pr-6">
             {/* Categories filter */}
             {categories.length > 1 && (
               <div className="mb-6">
-                <div className="flex space-x-2 pb-2">
+                <div className="flex flex-wrap gap-2 pb-2 overflow-x-auto">
                   <button
                     onClick={() => setActiveCategory('all')}
                     className={`px-3 py-2 rounded-md whitespace-nowrap ${
@@ -231,61 +304,194 @@ const CreatorExercisesPage = () => {
               </div>
             )}
 
-            {/* Exercises grid */}
             {filteredExercises.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredExercises.map(exercise => (
-                  <div
-                    key={exercise._id}
-                    className="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700 hover:border-purple-500 transition cursor-pointer transform hover:-translate-y-1 hover:shadow-xl"
-                    onClick={() => handleExerciseClick(exercise._id)}
-                  >
-                    {/* Media preview */}
-                    <div className="h-48 bg-gray-700 relative">
-                      {exercise.video?.length > 0 || exercise.image?.length > 0 ? (
-                        <MediaCarousel video={exercise.video || []} images={exercise.image || []} />
-                      ) : (
-                        <div className="h-full flex items-center justify-center bg-gray-700 text-gray-500">
-                          <p>No media</p>
+              <>
+                {/* Desktop Grid Layout */}
+                {!isMobile && (
+                  <>
+                    <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
+                      <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-gray-500">
+                        {activeCategory === 'all' ? 'All Exercises' : activeCategory}
+                      </span>
+                      <div className="h-1 w-16 bg-gradient-to-r from-purple-600 to-gray-500 mt-2"></div>
+                    </h2>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                      {filteredExercises.map(exercise => (
+                        <div
+                          key={exercise._id}
+                          className="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700 hover:border-purple-500 transition cursor-pointer transform hover:-translate-y-1 hover:shadow-xl"
+                          onClick={() => handleExerciseClick(exercise._id)}
+                        >
+                          {/* Media preview */}
+                          <div className="h-40 sm:h-48 bg-gray-700 relative">
+                            {exercise.video?.length > 0 || exercise.image?.length > 0 ? (
+                              <MediaCarousel video={exercise.video || []} images={exercise.image || []} />
+                            ) : (
+                              <div className="h-full flex items-center justify-center bg-gray-700 text-gray-500">
+                                <p>No media</p>
+                              </div>
+                            )}
+                            {exercise.isPremium && (
+                              <div className="absolute top-2 right-2 bg-yellow-600 text-white text-xs px-2 py-1 rounded-full">
+                                Premium
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Content */}
+                          <div className="p-4">
+                            <h3 className="text-lg font-medium text-white mb-2 line-clamp-1">{exercise.title}</h3>
+                            <p className="text-gray-400 text-sm mb-3 line-clamp-2">{exercise.description}</p>
+
+                            {/* Categories */}
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              <span className="bg-purple-900/60 text-purple-300 text-xs px-2 py-1 rounded-full">
+                                {exercise.category}
+                              </span>
+                              <span className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full">
+                                {exercise.position}
+                              </span>
+                            </div>
+
+                            {/* Stats */}
+                            <div className="flex items-center justify-between text-gray-400 text-xs pt-3 border-t border-gray-700">
+                              <div className="flex items-center">
+                                <Eye size={14} className="mr-1" />
+                                <span>{exercise.views || 0}</span>
+                              </div>
+                              <div className="flex items-center">
+                                <Heart size={14} className="mr-1" />
+                                <span>{exercise.favorites || 0}</span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      )}
-                      {exercise.isPremium && (
-                        <div className="absolute top-2 right-2 bg-yellow-600 text-white text-xs px-2 py-1 rounded-full">
-                          Premium
+                      ))}
+                    </div>
+                  </>
+                )}
+                
+                {/* Mobile Carousel Layout */}
+                {isMobile && (
+                  <div className="mb-6">
+                    {/* Exercise Counter */}
+                    <div className="flex justify-between items-center mb-4">
+                      <h2 className="text-xl font-bold text-white">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-gray-500">
+                          {activeCategory === 'all' ? 'All Exercises' : activeCategory}
+                        </span>
+                        <div className="h-1 w-16 bg-gradient-to-r from-purple-600 to-gray-500 mt-2"></div>
+                      </h2>
+                      <div className="text-gray-400">
+                        Exercise {currentIndex + 1} of {filteredExercises.length}
+                      </div>
+                    </div>
+
+                    {/* Single Exercise Card */}
+                    <div className="relative">
+                      <div className="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700 mb-4">
+                        {/* Media preview */}
+                        <div className="h-64 bg-gray-700 relative">
+                          {filteredExercises[currentIndex].video?.length > 0 || filteredExercises[currentIndex].image?.length > 0 ? (
+                            <MediaCarousel 
+                              video={filteredExercises[currentIndex].video || []} 
+                              images={filteredExercises[currentIndex].image || []} 
+                            />
+                          ) : (
+                            <div className="h-full flex items-center justify-center bg-gray-700 text-gray-500">
+                              <p>No media</p>
+                            </div>
+                          )}
+                          {filteredExercises[currentIndex].isPremium && (
+                            <div className="absolute top-2 right-2 bg-yellow-600 text-white text-xs px-2 py-1 rounded-full">
+                              Premium
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6">
+                          <h3 
+                            className="text-xl font-medium text-white mb-3 cursor-pointer hover:text-purple-300 transition-colors"
+                            onClick={() => handleExerciseClick(filteredExercises[currentIndex]._id)}
+                          >
+                            {filteredExercises[currentIndex].title}
+                          </h3>
+                          <p className="text-gray-300 text-sm mb-4">{filteredExercises[currentIndex].description}</p>
+
+                          {/* Categories */}
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            <span className="bg-purple-900/60 text-purple-300 text-xs px-3 py-1 rounded-full">
+                              {filteredExercises[currentIndex].category}
+                            </span>
+                            <span className="bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">
+                              {filteredExercises[currentIndex].position}
+                            </span>
+                          </div>
+
+                          {/* Action button */}
+                          <button
+                            onClick={() => handleExerciseClick(filteredExercises[currentIndex]._id)}
+                            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
+                          >
+                            View Exercise
+                          </button>
+
+                          {/* Stats */}
+                          <div className="flex items-center justify-end text-gray-400 text-sm mt-4 pt-4 border-t border-gray-700">
+                            <div className="flex items-center mr-4">
+                              <Eye size={16} className="mr-1" />
+                              <span>{filteredExercises[currentIndex].views || 0}</span>
+                            </div>
+                            <div className="flex items-center">
+                              <Heart size={16} className="mr-1" />
+                              <span>{filteredExercises[currentIndex].favorites || 0}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Navigation buttons */}
+                      {filteredExercises.length > 1 && (
+                        <div className="flex justify-between">
+                          <button
+                            onClick={prevExercise}
+                            className="bg-purple-600/20 hover:bg-purple-600/40 text-white p-3 rounded-full transition-colors"
+                            aria-label="Previous exercise"
+                          >
+                            <ChevronLeft size={24} />
+                          </button>
+                          <button
+                            onClick={nextExercise}
+                            className="bg-purple-600/20 hover:bg-purple-600/40 text-white p-3 rounded-full transition-colors"
+                            aria-label="Next exercise"
+                          >
+                            <ChevronRight size={24} />
+                          </button>
                         </div>
                       )}
                     </div>
 
-                    {/* Content */}
-                    <div className="p-4">
-                      <h3 className="text-lg font-medium text-white mb-2 line-clamp-1">{exercise.title}</h3>
-                      <p className="text-gray-400 text-sm mb-3 line-clamp-2">{exercise.description}</p>
-
-                      {/* Categories */}
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        <span className="bg-purple-900/60 text-purple-300 text-xs px-2 py-1 rounded-full">
-                          {exercise.category}
-                        </span>
-                        <span className="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded-full">
-                          {exercise.position}
-                        </span>
+                    {/* Pagination dots */}
+                    {filteredExercises.length > 1 && (
+                      <div className="flex justify-center mt-6 space-x-2">
+                        {filteredExercises.map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => setCurrentIndex(i)}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${i === currentIndex ?
+                              'bg-gradient-to-r from-purple-500 to-pink-500 w-6' :
+                              'bg-gray-600 hover:bg-purple-400'
+                              }`}
+                            aria-label={`Go to exercise ${i + 1}`}
+                          />
+                        ))}
                       </div>
-
-                      {/* Stats */}
-                      <div className="flex items-center justify-between text-gray-400 text-xs pt-3 border-t border-gray-700">
-                        <div className="flex items-center">
-                          <Eye size={14} className="mr-1" />
-                          <span>{exercise.views || 0}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Heart size={14} className="mr-1" />
-                          <span>{exercise.favorites || 0}</span>
-                        </div>
-                      </div>
-                    </div>
+                    )}
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             ) : (
               <div className="bg-gray-800 rounded-xl p-8 flex flex-col items-center justify-center">
                 <p className="text-gray-400 mb-4">No exercises found in this category.</p>

@@ -157,6 +157,7 @@ const ExerciseDetailPage = ({ userData }) => {
 
     try {
       if (creatorData.isFollowing) {
+        console.log(creatorData)
         // Unfollow the creator
         await axios.delete(
           `${API_URL}/users/following/${creatorData.id}`,
@@ -292,8 +293,8 @@ const ExerciseDetailPage = ({ userData }) => {
   }
 
   return (
-    <div className="min-h-screen px-2 md:px-16 bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-6">
+    <div className="min-h-screen px-2 sm:px-4 md:px-8 lg:px-16 bg-gray-900 text-white">
+      <div className="container mx-auto px-2 sm:px-4 py-6">
         <div className="flex items-center mb-4">
           <button
             onClick={() => navigate(-1)}
@@ -323,13 +324,13 @@ const ExerciseDetailPage = ({ userData }) => {
                 <button
                   onClick={toggleFavorite}
                   disabled={isLoadingFavorite}
-                  className={` p-2 z-10 rounded-full cursor-pointer transition-all duration-200 ${isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite
+                  className={`flex items-center justify-center w-9 h-9 p-1 z-10 rounded-full cursor-pointer transition-all duration-200 ${isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite
                     ? 'bg-red-500 text-white hover:bg-red-600'
                     : 'bg-gray-700/50 text-white hover:bg-gray-600'
                     }`}
                   aria-label={isFavorite ? 'Saved to favorites' : 'Add to favorites'}
                 >
-                  <Heart size={20} fill={isFavorite ? 'white' : 'none'} />
+                  <Heart size={18} fill={isFavorite ? 'white' : 'none'} />
                 </button>
               </div>
             </div>
@@ -365,7 +366,7 @@ const ExerciseDetailPage = ({ userData }) => {
           </div>
 
           {/* Right column - Recommended parameters and related exercises */}
-          <div className="w-full lg:w-1/3">
+          <div className="w-full lg:w-1/3 mt-4 lg:mt-0">
             {/* Recommended parameters */}
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 mb-6">
               <h2 className="text-lg font-semibold mb-4 flex items-center">
@@ -399,8 +400,8 @@ const ExerciseDetailPage = ({ userData }) => {
             {creatorData && (
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 mb-6">
                 <h2 className="text-lg font-semibold mb-4">Creator</h2>
-                <div className="flex justify-between items-start mb-3">
-                  <div className="flex items-center mb-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
+                  <div className="flex items-center mb-3 sm:mb-0">
                     <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
                       {creatorData.name ? creatorData.name.charAt(0) : 'A'}
                     </div>
@@ -413,7 +414,7 @@ const ExerciseDetailPage = ({ userData }) => {
                     <button
                       onClick={toggleFollow}
                       disabled={isLoadingFollow}
-                      className={`flex items-center text-sm px-3 py-1 rounded-full transition-colors ${isLoadingFollow
+                      className={`flex items-center justify-center text-sm px-3 py-1 rounded-full transition-colors ${isLoadingFollow
                         ? 'bg-gray-700 text-gray-300 cursor-wait'
                         : creatorData.isFollowing
                           ? 'bg-green-600 hover:bg-green-700 text-white'
@@ -489,7 +490,7 @@ const ExerciseDetailPage = ({ userData }) => {
       {/* Save Routine Popup */}
       {showRoutinePopup && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md relative">
+          <div className="bg-gray-800 rounded-lg p-5 w-full max-w-md relative">
             <button
               onClick={() => setShowRoutinePopup(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-white"
@@ -514,7 +515,7 @@ const ExerciseDetailPage = ({ userData }) => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Reps
