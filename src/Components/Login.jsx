@@ -10,8 +10,12 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
     email: '',
     password: '',
     confirmPassword: '',
+    otp: '',
   });
+  
+  // Add resetStep state to track password reset flow
   const [forgotPassword, setForgotPassword] = useState(false);
+  const [resetStep, setResetStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
   const [passwordError, setPasswordError] = useState('');
 
   const handleChange = (e) => {
@@ -33,9 +37,11 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
       email: '',
       password: '',
       confirmPassword: '',
+      otp: '',
     });
     onChange(!isSignIn);
     setForgotPassword(false);
+    setResetStep(1);
     setPasswordError('');
   };
 
@@ -45,9 +51,11 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
       email: '',
       password: '',
       confirmPassword: '',
+      otp: '',
     });
     onChange(isSignIn);
     setForgotPassword(false);
+    setResetStep(1);
     setPasswordError('');
     onClose();
   };
@@ -63,6 +71,19 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
         return false;
       }
     }
+    
+    // Password reset form validation
+    if (forgotPassword && resetStep === 3) {
+      if (formData.password !== formData.confirmPassword) {
+        setPasswordError('Passwords do not match');
+        return false;
+      }
+      if (formData.password.length < 6) {
+        setPasswordError('Password must be at least 6 characters');
+        return false;
+      }
+    }
+    
     return true;
   };
 
@@ -73,13 +94,66 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
       return;
     }
 
-    // Handle login/signup logic here
+    // Handle forgot password flow
     if (forgotPassword) {
-      console.log('Password Reset Request for:', formData.email);
-      // Show a success message for password reset
-      alert('Password reset link sent to your email');
+      try {
+        // Step 1: Send email for OTP
+        if (resetStep === 1) {
+          const response = await axios.post(`${API_URL}/users/forgot-password`, {
+            email: formData.email,
+          });
+          
+          if (response.status === 200) {
+            toast.success('OTP sent to your email', {
+              position: "top-center"
+            });
+            setResetStep(2);
+          }
+        }
+        // Step 2: Verify OTP
+        else if (resetStep === 2) {
+          const response = await axios.post(`${API_URL}/users/verify-otp`, {
+            email: formData.email,
+            otp: formData.otp,
+          });
+          
+          if (response.status === 200) {
+            toast.success('OTP verified successfully', {
+              position: "top-center"
+            });
+            setResetStep(3);
+          }
+        }
+        // Step 3: Reset Password
+        else if (resetStep === 3) {
+          const response = await axios.post(`${API_URL}/users/reset-password`, {
+            email: formData.email,
+            password: formData.password,
+            confirmPassword: formData.confirmPassword,
+          });
+          
+          if (response.status === 200) {
+            toast.success('Password reset successful', {
+              position: "top-center"
+            });
+            setForgotPassword(false);
+            setResetStep(1);
+            setFormData({
+              ...formData,
+              password: '',
+              confirmPassword: '',
+              otp: '',
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Password reset error:', error);
+        toast.error(error.response?.data?.message || 'An error occurred', {
+          position: "top-center"
+        });
+      }
     } else {
-      console.log(formData);
+      // Original login/signup logic
       if (isSignIn) {
         try {
           const response = await axios.post(`${API_URL}/users/login`, {
@@ -146,6 +220,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
   const handleForgotPassword = (e) => {
     e.preventDefault();
     setForgotPassword(true);
+    setResetStep(1);
   };
 
   const handleSuccess = (userData) => {
@@ -156,11 +231,41 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
       fullName: '',
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      otp: '',
     });
   };
 
+  // Back button for multi-step forgot password flow
+  const handleBackStep = () => {
+    if (resetStep > 1) {
+      setResetStep(resetStep - 1);
+    } else {
+      setForgotPassword(false);
+    }
+  };
+
   if (!isOpen) return null;
+
+  // Determine the title and subtitle based on the current mode and step
+  let title, subtitle;
+  if (forgotPassword) {
+    if (resetStep === 1) {
+      title = 'Reset Password';
+      subtitle = 'Enter your email to receive a verification code';
+    } else if (resetStep === 2) {
+      title = 'Enter OTP';
+      subtitle = 'Enter the 4-digit code sent to your email';
+    } else {
+      title = 'Create New Password';
+      subtitle = 'Enter and confirm your new password';
+    }
+  } else {
+    title = isSignIn ? 'Welcome Back' : 'Create Account';
+    subtitle = isSignIn 
+      ? 'Sign in to access your personalized exercise programs'
+      : 'Join thousands improving their health with expert guidance';
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -172,25 +277,16 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
       <div className="bg-gray-800 relative w-full max-w-md rounded-2xl shadow-2xl transform transition-all duration-300 scale-100 overflow-hidden">
         <div className="bg-gradient-to-r from-purple-600 to-purple-800 py-3 px-5 flex-shrink-0">
           <h2 className="text-lg font-bold text-white mt-2">
-            {forgotPassword
-              ? 'Reset Password'
-              : isSignIn
-                ? 'Welcome Back'
-                : 'Create Account'
-            }
+            {title}
           </h2>
           <p className="text-purple-200 mt-1 text-sm">
-            {forgotPassword
-              ? 'Enter your email to receive reset instructions'
-              : isSignIn
-                ? 'Sign in to access your personalized exercise programs'
-                : 'Join thousands improving their health with expert guidance'
-            }
+            {subtitle}
           </p>
         </div>
 
         <div className="p-5 overflow-y-auto flex-grow">
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Registration field - only shown in sign up mode */}
             {!isSignIn && !forgotPassword && (
               <div>
                 <label htmlFor="name" className="block text-gray-300 mb-1 text-sm font-medium">Full Name</label>
@@ -208,24 +304,48 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               </div>
             )}
 
-            <div>
-              <label htmlFor="email" className="block text-gray-300 mb-1 text-sm font-medium">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Enter your email"
-                required
-                autoComplete="username"
-              />
-            </div>
-
-            {!forgotPassword && (
+            {/* Email field - shown in all modes */}
+            {(resetStep === 1 || !forgotPassword) && (
               <div>
-                <label htmlFor="password" className="block text-gray-300 mb-1 text-sm font-medium">Password</label>
+                <label htmlFor="email" className="block text-gray-300 mb-1 text-sm font-medium">Email</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Enter your email"
+                  required
+                  autoComplete="username"
+                />
+              </div>
+            )}
+
+            {/* OTP field - only shown in forgot password step 2 */}
+            {forgotPassword && resetStep === 2 && (
+              <div>
+                <label htmlFor="otp" className="block text-gray-300 mb-1 text-sm font-medium">Verification Code</label>
+                <input
+                  type="text"
+                  id="otp"
+                  name="otp"
+                  value={formData.otp}
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 tracking-widest text-center text-lg"
+                  placeholder="Enter 4-digit code"
+                  maxLength="4"
+                  required
+                />
+              </div>
+            )}
+
+            {/* Password fields - shown in login, signup, and forgot password step 3 */}
+            {(!forgotPassword || resetStep === 3) && (
+              <div>
+                <label htmlFor="password" className="block text-gray-300 mb-1 text-sm font-medium">
+                  {forgotPassword ? 'New Password' : 'Password'}
+                </label>
                 <input
                   type="password"
                   id="password"
@@ -234,46 +354,59 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
                   autoComplete="current-password"
                   onChange={handleChange}
                   className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  placeholder={isSignIn ? "Enter your password" : "Create a password"}
+                  placeholder={forgotPassword ? "Create new password" : isSignIn ? "Enter your password" : "Create a password"}
                   required
                 />
               </div>
             )}
 
-            {!isSignIn && !forgotPassword && (
-              <>
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-gray-300 mb-1 text-sm font-medium">Confirm Password</label>
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder="Confirm your password"
-                    autoComplete="new-password"
-                    required
-                  />
-                  {passwordError && (
-                    <p className="text-red-400 text-sm mt-1">{passwordError}</p>
-                  )}
-                </div>
-              </>
-            )}
+            {/* Confirm password - shown in signup and forgot password step 3 */}
+            {(!isSignIn && !forgotPassword) || (forgotPassword && resetStep === 3) ? (
+              <div>
+                <label htmlFor="confirmPassword" className="block text-gray-300 mb-1 text-sm font-medium">Confirm Password</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  placeholder="Confirm your password"
+                  autoComplete="new-password"
+                  required
+                />
+                {passwordError && (
+                  <p className="text-red-400 text-sm mt-1">{passwordError}</p>
+                )}
+              </div>
+            ) : null}
 
+            {/* Submit button with context-aware label */}
             <button
               type="submit"
               className="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-2 px-4 rounded-md font-medium hover:from-purple-700 hover:to-purple-900 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
             >
               {forgotPassword
-                ? 'Send Reset Link'
-                : 'Sign In'
+                ? (resetStep === 1 ? 'Send Verification Code' : 
+                   resetStep === 2 ? 'Verify Code' : 
+                   'Reset Password')
+                : (isSignIn ? 'Sign In' : 'Sign Up')
               }
             </button>
           </form>
 
           <div className="mt-3 text-center">
+            {/* Back button for forgot password flow */}
+            {forgotPassword && (
+              <button
+                onClick={handleBackStep}
+                className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+              >
+                {resetStep > 1 ? 'Back to previous step' : 'Back to Sign In'}
+              </button>
+            )}
+
+            {/* Forgot password link - only in sign in mode */}
             {isSignIn && !forgotPassword && (
               <button
                 onClick={handleForgotPassword}
@@ -283,19 +416,20 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               </button>
             )}
 
-            <div className="mt-2">
-              <button
-                onClick={toggleMode}
-                className="text-purple-400 hover:text-purple-300 text-sm font-medium"
-              >
-                {forgotPassword
-                  ? 'Back to Sign In'
-                  : isSignIn
+            {/* Toggle between sign in and sign up - not in forgot password flow */}
+            {!forgotPassword && (
+              <div className="mt-2">
+                <button
+                  onClick={toggleMode}
+                  className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+                >
+                  {isSignIn
                     ? "Don't have an account? Sign up"
                     : "Already have an account? Sign in"
-                }
-              </button>
-            </div>
+                  }
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
