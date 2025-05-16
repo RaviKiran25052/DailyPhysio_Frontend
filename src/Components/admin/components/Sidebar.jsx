@@ -19,7 +19,7 @@ const Sidebar = ({ tab, setTab }) => {
 		<div className="bg-gray-900 text-white w-64 space-y-6 py-4">
 			<div className="px-4">
 				<Link to="/admin/home" className="flex items-center space-x-2">
-					<span className="text-xl font-extrabold text-purple-500">ExerciseMD</span>
+					<span className="text-xl font-extrabold text-purple-500">DailyPhysio</span>
 				</Link>
 			</div>
 
@@ -42,7 +42,7 @@ const Sidebar = ({ tab, setTab }) => {
 			<div className="px-4 mt-auto">
 				<div className="pt-2 border-t border-gray-700">
 					<div className="text-xs text-gray-500">
-						<p>© {new Date().getFullYear()} ExerciseMD Admin Dashboard</p>
+						<p>© {new Date().getFullYear()} DailyPhysio Admin Dashboard</p>
 					</div>
 				</div>
 			</div>

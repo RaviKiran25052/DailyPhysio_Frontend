@@ -7,6 +7,7 @@ import MyRoutines from '../Components/Profile/MyRoutines';
 import Following from '../Components/Profile/Following';
 import axios from 'axios';
 import HandleExercise from '../Components/HandleExercise';
+import MembershipManagement from '../Components/Profile/MembershipManagement';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -19,7 +20,7 @@ const UserProfilePage = () => {
 
     const fetchUserData = async () => {
       try {
-        
+
         const response = await axios.get(`${API_URL}/users/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -46,6 +47,8 @@ const UserProfilePage = () => {
         return <Following />;
       case 'create':
         return <HandleExercise />;
+      case 'membership':
+        return <MembershipManagement />;
       default:
         return <ProfileInfo />;
     }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Briefcase, Clock, Users, MapPin, Dumbbell, Star, Heart, Calendar } from 'lucide-react';
 import { FaUserMd } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const TherapistCarousel = ({ therapists = [], loading = false }) => {
 	// State for carousel positioning
@@ -9,6 +10,7 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 	const [hoveredCard, setHoveredCard] = useState(null);
 	const carouselRef = useRef(null);
 	const cardRefs = useRef([]);
+	const navigate = useNavigate();
 
 	// Determine visible cards count based on screen width
 	const [visibleCards, setVisibleCards] = useState(3);
@@ -320,7 +322,7 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 										</div>
 
 										{/* Button pinned at bottom */}
-										<button className="flex justify-center items-center bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white px-4 py-1.5 rounded-lg transition-all duration-300 shadow-lg hover:shadow-purple-500/25">
+										<button onClick={() => navigate(`/creator/exercise/${therapist._id}`)} className="flex justify-center items-center bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white px-4 py-1.5 rounded-lg transition-all duration-300 shadow-lg hover:shadow-purple-500/25">
 											<Dumbbell size={14} className="mr-1.5" />
 											View Exercises
 										</button>

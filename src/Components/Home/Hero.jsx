@@ -12,9 +12,9 @@ const Hero = () => {
       <div className="container mx-auto py-16 md:py-24 px-4 md:px-20 flex flex-col md:flex-row items-center relative z-10">
         {/* Left Content */}
         <div className="w-full md:w-1/2 mb-10 md:mb-0">
-          <p className="text-purple-400 uppercase tracking-wider mb-3 font-medium">ExerciseMD PRO is Coming!</p>
+          <p className="text-purple-400 uppercase tracking-wider mb-3 font-medium">DailyPhysio PRO is Coming!</p>
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Unlock Your Full <span className="text-purple-500">Physical</span> Potential with ExerciseMD
+            Unlock Your Full <span className="text-purple-500">Physical</span> Potential with DailyPhysio
           </h1>
           <p className="text-lg text-gray-300 mb-8">
             Access professional exercise programs designed by orthopedic experts.

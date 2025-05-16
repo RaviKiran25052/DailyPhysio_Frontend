@@ -13,7 +13,7 @@ const Header = ({ adminInfo, handleLogout, toggleSidebar }) => {
 				</button>
 
 				<div className="flex-1 md:flex-none">
-					<h1 className="text-lg font-semibold md:hidden text-purple-600">ExerciseMD</h1>
+					<h1 className="text-lg font-semibold md:hidden text-purple-600">DailyPhysio</h1>
 				</div>
 
 				<div className="flex items-center space-x-4">
