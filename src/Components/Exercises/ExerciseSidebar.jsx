@@ -150,7 +150,7 @@ const ExerciseSidebar = ({
             Filters
           </h2>
           <div className="bg-purple-600 text-xs font-medium px-2 py-1 rounded-full text-white">
-            {categories.length} Categories
+            {Object.keys(categories).length} Categories
           </div>
         </div>
 

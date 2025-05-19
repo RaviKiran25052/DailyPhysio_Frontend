@@ -38,13 +38,6 @@ const ExercisesPage = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(`${API_URL}/exercises/categories`);
-        const categoryToSubCategories = {};
-
-        for (const [category, items] of Object.entries(response.data.data.categories)) {
-          categoryToSubCategories[category] = items.map(item => item.subCategory);
-        }
-
-        console.log(categoryToSubCategories);
 
         setAllCategories(response.data.data.categories);
         setAllPositions(response.data.data.positions);
