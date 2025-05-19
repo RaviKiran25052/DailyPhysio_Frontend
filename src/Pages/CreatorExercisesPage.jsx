@@ -170,56 +170,56 @@ const CreatorExercisesPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-6">
+      <div className="mx-auto px-4 md:px-6">
+        <div className="flex flex-col lg:flex-row gap-2">
           {/* Left Sidebar - Creator Details */}
           <div className="w-full lg:w-1/4 p-4 lg:p-6 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
             {creatorData && (
               <div className="bg-gray-800 rounded-xl p-4 lg:p-6 shadow-lg border border-gray-700">
                 {/* Basic Info */}
-                <div className="mb-6">
+                <div className="mb-5">
                   <h1 className="text-2xl font-bold text-white mb-2">
-                    {creatorData.name || creatorData.fullName}
+                    Dr. {creatorData.name}
                   </h1>
-                  {creatorData.specialization && (
-                    <p className="text-purple-400 text-sm mb-3">{creatorData.specialization}</p>
+                  {creatorData.specializations && (
+                    <p className="text-purple-400 text-sm mb-3">{creatorData?.specializations?.join(" | ")}</p>
                   )}
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-gray-700/50 p-3 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Exercises</span>
+                <div className="flex flex-col gap-2 mb-5 text-sm">
+                  <div className="bg-gray-700/50 p-2 rounded-lg flex justify-between">
+                    <div className="flex items-center gap-2">
                       <Tag size={16} className="text-purple-400" />
+                      <span className="text-gray-400">Exercises</span>
                     </div>
-                    <p className="text-xl font-semibold mt-1">{exercises.length}</p>
+                    <p className="font-semibold mt-1">{exercises.length}</p>
                   </div>
-                  <div className="bg-gray-700/50 p-3 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Consultations</span>
+                  <div className="bg-gray-700/50 p-2 rounded-lg flex justify-between">
+                    <div className="flex items-center gap-2">
                       <Briefcase size={16} className="text-purple-400" />
+                      <span className="text-gray-400">Consultations</span>
                     </div>
-                    <p className="text-xl font-semibold mt-1">{creatorData.consultationCount || 0}</p>
+                    <p className="font-semibold mt-1">{creatorData.consultationCount || 0}</p>
                   </div>
-                  <div className="bg-gray-700/50 p-3 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Followers</span>
+                  <div className="bg-gray-700/50 p-2 rounded-lg flex justify-between">
+                    <div className="flex items-center gap-2">
                       <Users size={16} className="text-purple-400" />
+                      <span className="text-gray-400">Followers</span>
                     </div>
-                    <p className="text-xl font-semibold mt-1">{creatorData.followers || 0}</p>
+                    <p className="font-semibold mt-1">{creatorData.followers || 0}</p>
                   </div>
-                  <div className="bg-gray-700/50 p-3 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Experience</span>
+                  <div className="bg-gray-700/50 p-2 rounded-lg flex justify-between">
+                    <div className="flex items-center gap-2">
                       <Clock size={16} className="text-purple-400" />
+                      <span className="text-gray-400">Experience</span>
                     </div>
-                    <p className="text-xl font-semibold mt-1">{creatorData.experience || '5+ years'}</p>
+                    <p className="font-semibold mt-1">{creatorData.experience || '5+ years'}</p>
                   </div>
                 </div>
 
                 {/* Contact & Additional Info */}
-                <div className="space-y-4">
+                <div className="space-y-4 text-sm">
                   {creatorData.workingAt && (
                     <div className="flex items-center text-gray-300">
                       <Briefcase size={18} className="mr-3 text-purple-400" />
@@ -245,26 +245,6 @@ const CreatorExercisesPage = () => {
                     </div>
                   )}
                 </div>
-
-                {/* Achievements/Specializations */}
-                {creatorData.specializations && (
-                  <div className="mt-6">
-                    <h3 className="text-lg font-semibold mb-3 flex items-center">
-                      <Award size={18} className="mr-2 text-purple-400" />
-                      Specializations
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {creatorData.specializations.map((spec, index) => (
-                        <span
-                          key={index}
-                          className="bg-purple-900/40 text-purple-200 text-xs px-2 py-1 rounded"
-                        >
-                          {spec}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             )}
           </div>
@@ -273,7 +253,7 @@ const CreatorExercisesPage = () => {
           <div className="w-full lg:flex-1 p-4 lg:py-6 lg:pr-6">
             {/* Categories filter */}
             {categories.length > 1 && (
-              <div className="mb-6">
+              <div className="mb-5">
                 <div className="flex flex-wrap gap-2 pb-2 overflow-x-auto">
                   <button
                     onClick={() => setActiveCategory('all')}

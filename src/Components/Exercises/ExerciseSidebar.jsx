@@ -1,63 +1,32 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ChevronRight, Filter } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { ChevronRight, Filter, TriangleAlert } from 'lucide-react';
 
-const positions = ["All", "Kneeling", "Prone", "Quadruped", "Side Lying", "Sitting", "Standing", "Supine"];
-
-const categories = [
-  'Ankle and Foot',
-  'Cervical',
-  'Education',
-  'Elbow and Hand',
-  'Hip and Knee',
-  'Lumbar Thoracic',
-  'Oral Motor',
-  'Shoulder',
-  'Special'
-];
-
-const validSubCategories = {
-  'Ankle and Foot': ['AAROM', 'AROM', 'Ball', 'Bosu', 'Elastic Band', 'Elastic Taping', 'Isometric',
-    'Miscellaneous', 'Mobilization', 'PROM', 'Stabilization', 'Stretches'],
-  'Cervical': ['AAROM', 'AROM', 'Ball', 'Elastic Band', 'Isometric', 'Miscellaneous', 'Mobilization',
-    'PROM', 'Stabilization', 'Stretches'],
-  'Education': ['Anatomy', 'Body Mechanics', 'Gait Training', 'Miscellaneous', 'Positioning',
-    'Stair Training', 'Transfers'],
-  'Elbow and Hand': ['AAROM', 'AROM', 'Ball', 'Closed Chain', 'Elastic Band', 'Elastic Taping',
-    'Fine Motor', 'Flexbar', 'Free Weight', 'Gripper', 'Isometric', 'Machines and Cables',
-    'Miscellaneous', 'Mobilization', 'PROM', 'Putty', 'Stretches', 'TRX'],
-  'Hip and Knee': ['4 Way Hip', 'AAROM', 'AROM', 'Balance', 'Ball', 'Bosu', 'Boxes and Steps',
-    'Closed Chain', 'Cones', 'Elastic Band', 'Elastic Taping', 'Foam Roll', 'Free Weight',
-    'Glider Disk', 'Isometric', 'Kettlebell', 'Ladder Drills', 'Machines and Cables',
-    'Medicine Ball', 'Miscellaneous', 'Mobilization', 'Neural Glides', 'Open Chain',
-    'Plyometrics', 'PROM', 'Stretches', 'TRX'],
-  'Lumbar Thoracic': ['AROM', 'Ball', 'Bosu', 'Elastic Band', 'Elastic Taping', 'Foam Roll',
-    'Free Weight', 'Glider Disk', 'Kettlebell', 'Machines and Cables', 'Medicine Ball',
-    'Miscellaneous', 'Mobilization', 'Stabilization', 'Stretches', 'Traction', 'TRX'],
-  'Oral Motor': ['Cheeks', 'Lips', 'Miscellaneous', 'Speech', 'Swallow', 'TMJ', 'Tongue'],
-  'Shoulder': ['6 Way Shoulder', 'AAROM', 'AROM', 'Ball', 'Bosu', 'Elastic Band', 'Elastic Taping',
-    'Foam Roll', 'Free Weight', 'Glider Disk', 'Isometric', 'Kettlebell', 'Machines and Cables',
-    'Medicine Ball', 'Miscellaneous', 'Mobilization', 'Neural Glides', 'Pendulum', 'PROM',
-    'Pulley', 'Stabilization', 'Stretches', 'TRX', 'Wand'],
-  'Special': ['Amputee', 'Aquatics', 'Cardio', 'Miscellaneous', 'Modalities', 'Neuro', 'Oculomotor',
-    'Pediatric', 'Vestibular', 'Yoga']
-};
-
-const ExerciseSidebar = ({ 
-  selectedCategory, 
-  setSelectedCategory, 
-  selectedPosition, 
+const ExerciseSidebar = ({
+  categories = [],
+  positions = [],
+  selectedCategory,
+  setSelectedCategory,
+  selectedPosition,
   setSelectedPosition,
   selectedSubCategory,
   setSelectedSubCategory,
-  showFilters,
-  showPositionDropdown,
-  setShowPositionDropdown 
+  showFilters
 }) => {
+  const [validSubCategories, setValidSubCategories] = useState({});
   const [hoverCategory, setHoverCategory] = useState(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const [hoverTimeout, setHoverTimeout] = useState(null);
   const selectedCategoryRef = useRef(null);
   const popupRef = useRef(null);
+
+  useEffect(() => {
+    const data = {}
+    for (const [category, items] of Object.entries(categories)) {
+      data[category] = items.map(item => item.subCategory);
+    }
+
+    setValidSubCategories(data);
+  }, [categories]);
 
   // Scroll to selected category when component mounts or category changes
   useEffect(() => {
@@ -73,19 +42,19 @@ const ExerciseSidebar = ({
   // Add a buffer zone around the popup
   const handleMouseMove = (e) => {
     if (!hoverCategory || !popupRef.current) return;
-    
+
     const popup = popupRef.current.getBoundingClientRect();
     const buffer = 30; // Buffer zone in pixels
-    
+
     const mouseX = e.clientX;
     const mouseY = e.clientY;
-    
+
     // Check if mouse is moving toward the popup
-    const isMovingTowardPopup = 
+    const isMovingTowardPopup =
       // Moving right toward popup
-      (mouseX < popup.left && mouseX > popup.left - buffer && 
-       mouseY > popup.top - buffer && mouseY < popup.bottom + buffer);
-      
+      (mouseX < popup.left && mouseX > popup.left - buffer &&
+        mouseY > popup.top - buffer && mouseY < popup.bottom + buffer);
+
     if (isMovingTowardPopup) {
       // Clear any timeout that would close the popup
       if (hoverTimeout) {
@@ -105,26 +74,26 @@ const ExerciseSidebar = ({
 
   const handleCategoryMouseEnter = (category, event) => {
     const rect = event.currentTarget.getBoundingClientRect();
-    
+
     // Calculate window boundaries
     const windowHeight = window.innerHeight;
-    
+
     // Position for the popup
     let yPos = rect.top;
-    
+
     // Check if popup would go beyond bottom of screen
     const estimatedPopupHeight = validSubCategories[category]?.length * 20 + 100; // Rough estimate
     if (yPos + estimatedPopupHeight > windowHeight) {
       // Adjust position to show popup above if it would go off screen
       yPos = Math.max(20, windowHeight - estimatedPopupHeight - 20);
     }
-    
-    setHoverPosition({ 
+
+    setHoverPosition({
       x: rect.right,
       y: yPos
     });
     setHoverCategory(category);
-    
+
     // Clear any existing timeout
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
@@ -139,7 +108,7 @@ const ExerciseSidebar = ({
     }, 300);
     setHoverTimeout(timeout);
   };
-  
+
   const handlePopupMouseEnter = () => {
     // Clear timeout when mouse enters popup
     if (hoverTimeout) {
@@ -158,22 +127,22 @@ const ExerciseSidebar = ({
     if (hoverCategory) {
       setSelectedCategory(hoverCategory);
     }
-    
+
     // Then set the selected subcategory
     setSelectedSubCategory(subCategory);
-    
+
     // Clear hover states
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
       setHoverTimeout(null);
     }
-    
+
     setHoverCategory(null);
   };
 
   return (
     <aside className={`w-full ${showFilters ? 'block' : 'hidden'} md:block relative`}>
-      <div className="bg-gray-800 rounded-lg p-4 shadow-lg sticky top-20 overflow-hidden">
+      <div className="flex flex-col bg-gray-800 rounded-lg p-4 shadow-lg sticky top-20 overflow-hidden">
         {/* Sidebar Header */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-white flex items-center">
@@ -185,89 +154,96 @@ const ExerciseSidebar = ({
           </div>
         </div>
 
-        {/* Current Selection Display */}
-        <div className="flex flex-wrap items-center gap-2 mb-4 px-2 py-3 bg-gray-700/50 rounded-lg">
-          <div className="flex-1 flex items-center">
-            <span className="text-sm font-medium text-purple-300">{selectedCategory}</span>
-            <ChevronRight size={14} className="mx-1 text-gray-500" />
-            <span className="text-sm font-medium text-gray-200">
-              {selectedSubCategory ? selectedSubCategory : 'All'}
-            </span>
-            <ChevronRight size={14} className="mx-1 text-gray-500" />
-            <span className="text-sm font-medium text-gray-200">{selectedPosition}</span>
+        {categories.length === 0 ?
+          <div className="flex flex-col justify-center items-center h-60 bg-gray-700/50 rounded-lg">
+            <TriangleAlert size={36} className='text-purple-600 mb-6'/>
+            No Exercises Uploaded
           </div>
-        </div>
-        
-        {/* Categories */}
-        <div className="mb-5">
-          <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Category</h3>
-          <div className="bg-gray-700/30 rounded-lg p-1.5">
-            <ul className="max-h-[250px] overflow-y-auto pr-1 space-y-1 scrollbar-thin">
-              {categories.map(category => (
-                <li key={category}>
-                  <button
-                    className={`w-full text-left py-2 px-3 rounded-md text-sm transition-colors ${
-                      selectedCategory === category 
-                        ? 'bg-purple-600 text-white font-medium' 
-                        : 'hover:bg-gray-700 text-gray-300'
-                    }`}
-                    onClick={() => handleCategoryClick(category)}
-                    onMouseEnter={(e) => handleCategoryMouseEnter(category, e)}
-                    onMouseLeave={handleCategoryMouseLeave}
-                    ref={selectedCategory === category ? selectedCategoryRef : null}
-                  >
-                    {category}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Selected Subcategory Display */}
-        {selectedSubCategory && (
-          <div className="mb-5">
-            <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Subcategory</h3>
-            <div className="bg-gray-700/30 rounded-lg p-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-purple-300">{selectedSubCategory}</span>
-                <button 
-                  onClick={() => setSelectedSubCategory('')} 
-                  className="text-xs text-gray-400 hover:text-white"
-                >
-                  Clear
-                </button>
+          :
+          <>
+            {/* Current Selection Display */}
+            <div className="flex flex-wrap items-center gap-2 mb-4 px-2 py-3 bg-gray-700/50 rounded-lg">
+              <div className="flex-1 flex items-center">
+                <span className="text-sm font-medium text-purple-300">{selectedCategory}</span>
+                <ChevronRight size={14} className="mx-1 text-gray-500" />
+                <span className="text-sm font-medium text-gray-200">
+                  {selectedSubCategory ? selectedSubCategory : 'All'}
+                </span>
+                <ChevronRight size={14} className="mx-1 text-gray-500" />
+                <span className="text-sm font-medium text-gray-200">{selectedPosition}</span>
               </div>
             </div>
-          </div>
-        )}
-        
-        {/* Positions */}
-        <div>
-          <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Position</h3>
-          <div className="bg-gray-700/30 rounded-lg p-1.5">
-            <div className="grid grid-cols-2 gap-1.5">
-              {positions.map(position => (
-                <button
-                  key={position}
-                  onClick={() => setSelectedPosition(position)}
-                  className={`text-left py-2 px-3 rounded-md text-sm transition-colors ${
-                    selectedPosition === position 
-                      ? 'bg-purple-600 text-white font-medium' 
-                      : 'hover:bg-gray-700 text-gray-300'
-                  }`}
-                >
-                  {position}
-                </button>
-              ))}
+
+            {/* Categories */}
+            <div className="mb-5">
+              <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Category</h3>
+              <div className="bg-gray-700/30 rounded-lg p-1.5">
+                <ul className="max-h-[250px] overflow-y-auto pr-1 space-y-1 scrollbar-thin">
+                  {Object.keys(categories).map(category => (
+                    <li key={category}>
+                      <button
+                        className={`w-full text-left py-2 px-3 rounded-md text-sm transition-colors ${selectedCategory === category
+                          ? 'bg-purple-600 text-white font-medium'
+                          : 'hover:bg-gray-700 text-gray-300'
+                          }`}
+                        onClick={() => handleCategoryClick(category)}
+                        onMouseEnter={(e) => handleCategoryMouseEnter(category, e)}
+                        onMouseLeave={handleCategoryMouseLeave}
+                        ref={selectedCategory === category ? selectedCategoryRef : null}
+                      >
+                        {category}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
-        </div>
+
+            {/* Selected Subcategory Display */}
+            {selectedSubCategory && (
+              <div className="mb-5">
+                <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Subcategory</h3>
+                <div className="bg-gray-700/30 rounded-lg p-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-purple-300">{selectedSubCategory}</span>
+                    <button
+                      onClick={() => setSelectedSubCategory('')}
+                      className="text-xs text-gray-400 hover:text-white"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Positions */}
+            <div>
+              <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Position</h3>
+              <div className="bg-gray-700/30 rounded-lg p-1.5">
+                <div className="grid grid-cols-2 gap-1.5">
+                  {positions.map(position => (
+                    <button
+                      key={position}
+                      onClick={() => setSelectedPosition(position)}
+                      className={`text-left py-2 px-3 rounded-md text-sm transition-colors ${selectedPosition === position
+                        ? 'bg-purple-600 text-white font-medium'
+                        : 'hover:bg-gray-700 text-gray-300'
+                        }`}
+                    >
+                      {position}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        }
       </div>
 
       {/* Subcategories Popup */}
       {hoverCategory && validSubCategories[hoverCategory] && (
-        <div 
+        <div
           ref={popupRef}
           className="fixed bg-gray-900 shadow-xl rounded-lg p-2 z-50 w-64 overflow-y-auto max-h-96 border border-purple-500/30"
           style={{
@@ -296,11 +272,10 @@ const ExerciseSidebar = ({
             {validSubCategories[hoverCategory].map(subCategory => (
               <button
                 key={subCategory}
-                className={`text-left px-3 py-2 text-sm rounded-md text-gray-200 hover:text-white transition-colors ${
-                  selectedCategory === hoverCategory && selectedSubCategory === subCategory
-                    ? 'bg-purple-600 hover:bg-purple-700 font-medium' 
-                    : 'bg-gray-700 hover:bg-gray-600'
-                }`}
+                className={`text-left px-3 py-2 text-sm rounded-md text-gray-200 hover:text-white transition-colors ${selectedCategory === hoverCategory && selectedSubCategory === subCategory
+                  ? 'bg-purple-600 hover:bg-purple-700 font-medium'
+                  : 'bg-gray-700 hover:bg-gray-600'
+                  }`}
                 onClick={() => handleSubCategoryClick(subCategory)}
               >
                 {subCategory}

@@ -8,30 +8,6 @@ import ExerciseSidebar from '../Components/Exercises/ExerciseSidebar';
 
 const API_URL = process.env.REACT_APP_API_URL || '';
 
-// List of all possible categories and positions for dropdowns
-const allCategories = [
-  'Ankle and Foot',
-  'Cervical',
-  'Education',
-  'Elbow and Hand',
-  'Hip and Knee',
-  'Lumbar Thoracic',
-  'Oral Motor',
-  'Shoulder',
-  'Special'
-];
-
-const allPositions = [
-  'All',
-  'Kneeling',
-  'Prone',
-  'Quadruped',
-  'Side Lying',
-  'Sitting',
-  'Standing',
-  'Supine'
-];
-
 const ExercisesPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,6 +15,8 @@ const ExercisesPage = () => {
 
   // Check if we have category in location state (from Featured Courses)
   const initialCategory = location.state?.selectedCategory || 'Ankle and Foot';
+  const [allCategories, setAllCategories] = useState([]);
+  const [allPositions, setAllPositions] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
   const [selectedPosition, setSelectedPosition] = useState('All');
@@ -54,6 +32,30 @@ const ExercisesPage = () => {
 
   // If we came from featured exercises, show a notification
   const [showFeaturedNotification, setShowFeaturedNotification] = useState(!!location.state?.fromFeatured);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(`${API_URL}/exercises/categories`);
+        const categoryToSubCategories = {};
+
+        for (const [category, items] of Object.entries(response.data.data.categories)) {
+          categoryToSubCategories[category] = items.map(item => item.subCategory);
+        }
+
+        console.log(categoryToSubCategories);
+
+        setAllCategories(response.data.data.categories);
+        setAllPositions(response.data.data.positions);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching exercises:', error);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   // Clear location state after using it
   useEffect(() => {
@@ -259,7 +261,7 @@ const ExercisesPage = () => {
 
                 {showCategoryDropdown && (
                   <div className="absolute z-20 w-full mt-1 bg-gray-700 border border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                    {allCategories.map(category => (
+                    {Object.keys(allCategories).map(category => (
                       <button
                         key={category}
                         onClick={() => handleCategorySelect(category)}
@@ -303,6 +305,8 @@ const ExercisesPage = () => {
           {/* Desktop Sidebar - Always Show */}
           <div className="hidden md:block md:w-1/4 min-w-[250px]">
             <ExerciseSidebar
+              categories={allCategories}
+              positions={allPositions}
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
               selectedSubCategory={selectedSubCategory}
