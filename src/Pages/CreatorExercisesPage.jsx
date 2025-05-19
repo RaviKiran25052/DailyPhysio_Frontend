@@ -1,21 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  Eye, 
-  Heart, 
-  MapPin, 
-  Mail, 
-  Phone, 
-  Users, 
-  Briefcase, 
-  Clock, 
+import {
+  Eye,
+  Heart,
+  MapPin,
+  Mail,
+  Phone,
+  Users,
+  Briefcase,
+  Clock,
   Award,
-  Tag,
-  ChevronLeft,
-  ChevronRight
+  Tag
 } from 'lucide-react';
 import axios from 'axios';
 import MediaCarousel from '../Components/MediaCarousel';
+import ExerciseCarousel from './ExerciseCarousel';
 
 const API_URL = process.env.REACT_APP_API_URL || '';
 
@@ -38,20 +37,20 @@ const CreatorExercisesPage = () => {
     const fetchExercises = async () => {
       setLoading(true);
       try {
-        
+
         const response = await axios.get(`${API_URL}/exercises/creator/${creatorId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
         });
         const data = response.data;
-        
+
         setExercises(data.exercises);
         setCreatorData(data.creatorData);
         if (data.creatorData.role === "isAdmin") {
           navigate("/exercises/")
         }
-        
+
         // Extract unique categories
         const uniqueCategories = [...new Set(data.exercises.map(ex => ex.category))];
         setCategories(uniqueCategories);
@@ -64,15 +63,15 @@ const CreatorExercisesPage = () => {
     };
 
     fetchExercises();
-    
+
     // Check for mobile view
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     // Initial check
     checkIsMobile();
-    
+
     // Add resize listener
     window.addEventListener('resize', checkIsMobile);
     return () => window.removeEventListener('resize', checkIsMobile);
@@ -92,7 +91,7 @@ const CreatorExercisesPage = () => {
   useEffect(() => {
     // Only set up autoplay if we're in mobile view
     if (!isMobile) return;
-    
+
     // Clear previous timeout when changing exercises
     if (autoplayTimeout) {
       clearTimeout(autoplayTimeout);
@@ -115,7 +114,7 @@ const CreatorExercisesPage = () => {
   // Navigation functions for mobile carousel
   const nextExercise = () => {
     if (filteredExercises.length <= 1) return;
-    
+
     setCurrentIndex(prevIndex => {
       if (prevIndex >= filteredExercises.length - 1) {
         return 0; // Loop back to the first exercise
@@ -127,7 +126,7 @@ const CreatorExercisesPage = () => {
 
   const prevExercise = () => {
     if (filteredExercises.length <= 1) return;
-    
+
     setCurrentIndex(prevIndex => {
       if (prevIndex <= 0) {
         return filteredExercises.length - 1; // Loop to the last exercise
@@ -278,11 +277,10 @@ const CreatorExercisesPage = () => {
                 <div className="flex flex-wrap gap-2 pb-2 overflow-x-auto">
                   <button
                     onClick={() => setActiveCategory('all')}
-                    className={`px-3 py-2 rounded-md whitespace-nowrap ${
-                      activeCategory === 'all'
-                        ? 'bg-purple-600 text-white'
-                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                    }`}
+                    className={`px-3 py-2 rounded-md whitespace-nowrap ${activeCategory === 'all'
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                      }`}
                   >
                     All Categories
                   </button>
@@ -290,11 +288,10 @@ const CreatorExercisesPage = () => {
                     <button
                       key={category}
                       onClick={() => setActiveCategory(category)}
-                      className={`px-3 py-2 rounded-md whitespace-nowrap ${
-                        activeCategory === category
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                      }`}
+                      className={`px-3 py-2 rounded-md whitespace-nowrap ${activeCategory === category
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                        }`}
                     >
                       {category}
                     </button>
@@ -314,7 +311,7 @@ const CreatorExercisesPage = () => {
                       </span>
                       <div className="h-1 w-16 bg-gradient-to-r from-purple-600 to-gray-500 mt-2"></div>
                     </h2>
-                    
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                       {filteredExercises.map(exercise => (
                         <div
@@ -370,7 +367,7 @@ const CreatorExercisesPage = () => {
                     </div>
                   </>
                 )}
-                
+
                 {/* Mobile Carousel Layout */}
                 {isMobile && (
                   <div className="mb-6">
@@ -387,107 +384,10 @@ const CreatorExercisesPage = () => {
                       </div>
                     </div>
 
-                    {/* Single Exercise Card */}
-                    <div className="relative">
-                      <div className="bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700 mb-4">
-                        {/* Media preview */}
-                        <div className="h-64 bg-gray-700 relative">
-                          {filteredExercises[currentIndex].video?.length > 0 || filteredExercises[currentIndex].image?.length > 0 ? (
-                            <MediaCarousel 
-                              video={filteredExercises[currentIndex].video || []} 
-                              images={filteredExercises[currentIndex].image || []} 
-                            />
-                          ) : (
-                            <div className="h-full flex items-center justify-center bg-gray-700 text-gray-500">
-                              <p>No media</p>
-                            </div>
-                          )}
-                          {filteredExercises[currentIndex].isPremium && (
-                            <div className="absolute top-2 right-2 bg-yellow-600 text-white text-xs px-2 py-1 rounded-full">
-                              Premium
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-6">
-                          <h3 
-                            className="text-xl font-medium text-white mb-3 cursor-pointer hover:text-purple-300 transition-colors"
-                            onClick={() => handleExerciseClick(filteredExercises[currentIndex]._id)}
-                          >
-                            {filteredExercises[currentIndex].title}
-                          </h3>
-                          <p className="text-gray-300 text-sm mb-4">{filteredExercises[currentIndex].description}</p>
-
-                          {/* Categories */}
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            <span className="bg-purple-900/60 text-purple-300 text-xs px-3 py-1 rounded-full">
-                              {filteredExercises[currentIndex].category}
-                            </span>
-                            <span className="bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">
-                              {filteredExercises[currentIndex].position}
-                            </span>
-                          </div>
-
-                          {/* Action button */}
-                          <button
-                            onClick={() => handleExerciseClick(filteredExercises[currentIndex]._id)}
-                            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
-                          >
-                            View Exercise
-                          </button>
-
-                          {/* Stats */}
-                          <div className="flex items-center justify-end text-gray-400 text-sm mt-4 pt-4 border-t border-gray-700">
-                            <div className="flex items-center mr-4">
-                              <Eye size={16} className="mr-1" />
-                              <span>{filteredExercises[currentIndex].views || 0}</span>
-                            </div>
-                            <div className="flex items-center">
-                              <Heart size={16} className="mr-1" />
-                              <span>{filteredExercises[currentIndex].favorites || 0}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Navigation buttons */}
-                      {filteredExercises.length > 1 && (
-                        <div className="flex justify-between">
-                          <button
-                            onClick={prevExercise}
-                            className="bg-purple-600/20 hover:bg-purple-600/40 text-white p-3 rounded-full transition-colors"
-                            aria-label="Previous exercise"
-                          >
-                            <ChevronLeft size={24} />
-                          </button>
-                          <button
-                            onClick={nextExercise}
-                            className="bg-purple-600/20 hover:bg-purple-600/40 text-white p-3 rounded-full transition-colors"
-                            aria-label="Next exercise"
-                          >
-                            <ChevronRight size={24} />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Pagination dots */}
-                    {filteredExercises.length > 1 && (
-                      <div className="flex justify-center mt-6 space-x-2">
-                        {filteredExercises.map((_, i) => (
-                          <button
-                            key={i}
-                            onClick={() => setCurrentIndex(i)}
-                            className={`w-2 h-2 rounded-full transition-all duration-300 ${i === currentIndex ?
-                              'bg-gradient-to-r from-purple-500 to-pink-500 w-6' :
-                              'bg-gray-600 hover:bg-purple-400'
-                              }`}
-                            aria-label={`Go to exercise ${i + 1}`}
-                          />
-                        ))}
-                      </div>
-                    )}
+                    <ExerciseCarousel
+                      exercises={filteredExercises}
+                      onExerciseClick={handleExerciseClick}
+                    />
                   </div>
                 )}
               </>
