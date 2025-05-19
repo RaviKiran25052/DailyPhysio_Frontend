@@ -13,6 +13,7 @@ import {
 	ArcElement
 } from 'chart.js';
 import { RiUserLine, RiFileListLine, RiRunLine, RiUserFollowLine } from 'react-icons/ri';
+import { TriangleAlert } from 'lucide-react';
 
 // Register ChartJS components
 ChartJS.register(
@@ -220,7 +221,15 @@ const Dashboard = () => {
 				<div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
 					<h3 className="text-xl font-semibold mb-4">Exercise Categories</h3>
 					<div className="h-[300px] flex items-center justify-center">
-						<Doughnut data={doughnutData} options={doughnutOptions} />
+						{analyticsData.createdExercises > 0
+							?
+							<Doughnut data={doughnutData} options={doughnutOptions} />
+							:
+							<div className='flex flex-col items-center text-xl'>
+								<TriangleAlert size={60} className='text-purple-600 mb-6'/>
+								<p>No Exercises Created</p>
+							</div>
+						}
 					</div>
 				</div>
 			</div>
