@@ -3,8 +3,7 @@ import { Activity, Calendar, Clock, Edit, Eye, FileText, Printer, Repeat, Trash,
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import PrintButton from './PrintButton';
 
 const API_URL = process.env.REACT_APP_API_URL || '';
 
@@ -17,11 +16,11 @@ const MyRoutines = ({ user }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [routineToDelete, setRoutineToDelete] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   // Pagination state for mobile view
   const [currentPage, setCurrentPage] = useState(1);
   const [routinesPerPage] = useState(6);
-  
+
   const [formData, setFormData] = useState({
     name: '',
     reps: 1,
@@ -38,13 +37,13 @@ const MyRoutines = ({ user }) => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     // Initial check
     checkIfMobile();
-    
+
     // Add resize listener
     window.addEventListener('resize', checkIfMobile);
-    
+
     // Cleanup
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
@@ -52,10 +51,10 @@ const MyRoutines = ({ user }) => {
   // Get current routines for pagination
   const indexOfLastRoutine = currentPage * routinesPerPage;
   const indexOfFirstRoutine = indexOfLastRoutine - routinesPerPage;
-  const currentRoutines = isMobile 
+  const currentRoutines = isMobile
     ? routines.slice(indexOfFirstRoutine, indexOfLastRoutine)
     : routines;
-  
+
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const nextPage = () => {
@@ -68,475 +67,6 @@ const MyRoutines = ({ user }) => {
       setCurrentPage(currentPage - 1);
     }
   };
-
-  const handlePrintAll = () => {
-    const printWindow = window.open('', '_blank');
-
-    if (!printWindow) {
-      alert('Please allow pop-ups to print routines');
-      return;
-    }
-
-    const printContent = `
-    <!DOCTYPE html>
-<html>
-<head>
-  <title>Workout Routines</title>
-  <style>
-    @media print {
-      body {
-        font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
-        color: #e5e7eb;
-        line-height: 1.6;
-        background-color: #111827;
-        margin: 0;
-        padding: 0;
-      }
-      
-      .page-container {
-        max-width: 850px;
-        margin: 0 auto;
-        padding: 40px 20px;
-      }
-      
-      .page-title {
-        text-align: center;
-        color: #a78bfa;
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 40px;
-        letter-spacing: -0.5px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-      }
-      
-      .page-break {
-        page-break-after: always;
-        height: 0;
-        display: block;
-      }
-      
-      .routine-card {
-        padding: 30px;
-        margin-bottom: 30px;
-        border: 1px solid #374151;
-        border-radius: 12px;
-        background-color: #1f2937;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      }
-      
-      .routine-title {
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 8px;
-        color: #f9fafb;
-        letter-spacing: -0.5px;
-      }
-      
-      .routine-category {
-        font-size: 16px;
-        color: #9ca3af;
-        margin-bottom: 24px;
-        font-style: italic;
-      }
-      
-      .routine-details {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        margin-bottom: 36px;
-      }
-      
-      .detail-box {
-        padding: 16px;
-        background-color: #111827;
-        border-radius: 10px;
-        border-left: 4px solid #8b5cf6;
-        transition: transform 0.2s;
-      }
-      
-      .detail-label {
-        font-size: 12px;
-        text-transform: uppercase;
-        color: #9ca3af;
-        margin-bottom: 6px;
-        letter-spacing: 1px;
-      }
-      
-      .detail-value {
-        font-size: 18px;
-        font-weight: 600;
-        color: #f3f4f6;
-      }
-      
-      .content-section {
-        margin-bottom: 32px;
-      }
-      
-      h3 {
-        font-size: 20px;
-        margin-bottom: 16px;
-        color: #a78bfa;
-        border-bottom: 1px solid #4b5563;
-        padding-bottom: 8px;
-      }
-      
-      p {
-        margin: 0 0 16px;
-        color: #d1d5db;
-        line-height: 1.7;
-      }
-      
-      .routine-images {
-        column-count: 2;
-        column-gap: 20px;
-        margin-bottom: 30px;
-      }
-      
-      .routine-image {
-        width: 100%;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        break-inside: avoid;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        border: 1px solid #374151;
-      }
-      
-      .video-link {
-        display: inline-block;
-        margin-top: 8px;
-        color: #8b5cf6;
-        text-decoration: none;
-        padding: 8px 16px;
-        border: 1px solid #8b5cf6;
-        border-radius: 6px;
-        font-weight: 500;
-      }
-      
-      .routine-footer {
-        font-size: 12px;
-        color: #6b7280;
-        margin-top: 30px;
-        text-align: right;
-        border-top: 1px solid #374151;
-        padding-top: 16px;
-      }
-      
-      .no-print {
-        display: none;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="page-container">
-    <h1 class="page-title">Workout Routines</h1>
-    
-    ${routines.map((routine, index) => `
-      <div class="routine-card">
-        <div class="routine-title">${routine.name}</div>
-        <div class="routine-category">
-          ${routine.exerciseId?.category || routine.exercise?.category} • 
-          ${routine.exerciseId?.position || routine.exercise?.position}
-        </div>
-        
-        <div class="routine-details">
-          <div class="detail-box">
-            <div class="detail-label">Repetitions</div>
-            <div class="detail-value">${routine.reps}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Hold Time</div>
-            <div class="detail-value">${routine.hold}s</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Completion</div>
-            <div class="detail-value">${routine.complete}</div>
-          </div>
-          <div class="detail-box">
-            <div class="detail-label">Performance</div>
-            <div class="detail-value">${routine.perform.count}/${routine.perform.type}</div>
-          </div>
-        </div>
-        
-        <div class="content-section">
-          <h3>Description</h3>
-          <p>${routine.exerciseId?.description || routine.exercise?.description}</p>
-        </div>
-        
-        <div class="content-section">
-          <h3>Instructions</h3>
-          <p>${routine.exerciseId?.instruction || routine.exercise?.instruction}</p>
-        </div>
-        
-        <div class="content-section">
-          <h3>Reference Images</h3>
-          <div class="routine-images">
-            ${(routine.exerciseId?.image || routine.exercise?.image || []).map(img => `
-              <img class="routine-image" src="${img}" alt="${routine.name}" />
-            `).join('')}
-          </div>
-        </div>
-        
-        ${(routine.exerciseId?.video || routine.exercise?.video) ? `
-          <div class="content-section">
-            <h3>Video Tutorial</h3>
-            <a class="video-link" href="${routine.exerciseId?.video || routine.exercise?.video}" target="_blank">
-              Watch Demonstration Video
-            </a>
-          </div>
-        ` : ''}
-        
-        <div class="routine-footer">
-          Last modified: ${new Date(routine.updatedAt).toLocaleDateString()}
-        </div>
-      </div>
-      ${index < routines.length - 1 ? '<div class="page-break"></div>' : ''}
-    `).join('')}
-  </div>
-</body>
-</html>`;
-
-    printWindow.document.open();
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-
-    // Wait for images to load before printing
-    setTimeout(() => {
-      printWindow.print();
-      // Close the window after print dialog closes (or after a delay)
-      setTimeout(() => {
-        printWindow.close();
-      }, 500);
-    }, 500);
-  };
-
-  const handlePrintSingle = (routine) => {
-    const printWindow = window.open('', '_blank');
-
-    if (!printWindow) {
-      alert('Please allow pop-ups to print routine');
-      return;
-    }
-
-    const printContent = `
-      <!DOCTYPE html>
-<html>
-<head>
-  <title>${routine.name}</title>
-  <style>
-    @media print {
-      body {
-        font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
-        color: #e5e7eb;
-        line-height: 1.6;
-        background-color: #111827;
-        margin: 0;
-        padding: 0;
-      }
-      
-      .page-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 40px 20px;
-      }
-      
-      .routine-card {
-        padding: 30px;
-        margin-bottom: 30px;
-        border: 1px solid #374151;
-        border-radius: 12px;
-        background-color: #1f2937;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      }
-      
-      .routine-title {
-        font-size: 28px;
-        font-weight: 700;
-        color: #f9fafb;
-        margin-bottom: 8px;
-        letter-spacing: -0.5px;
-      }
-      
-      .routine-category {
-        font-size: 16px;
-        color: #9ca3af;
-        margin-bottom: 24px;
-        font-style: italic;
-      }
-      
-      .details-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        margin-bottom: 36px;
-      }
-      
-      .detail-box {
-        padding: 16px;
-        background-color: #111827;
-        border-radius: 10px;
-        border-left: 4px solid #8b5cf6;
-        transition: transform 0.2s;
-      }
-      
-      .detail-label {
-        font-size: 12px;
-        text-transform: uppercase;
-        color: #9ca3af;
-        margin-bottom: 6px;
-        letter-spacing: 1px;
-      }
-      
-      .detail-value {
-        font-size: 18px;
-        font-weight: 600;
-        color: #f3f4f6;
-      }
-      
-      .content-section {
-        margin-bottom: 32px;
-      }
-      
-      h3 {
-        font-size: 20px;
-        margin-bottom: 16px;
-        color: #a78bfa;
-        border-bottom: 1px solid #4b5563;
-        padding-bottom: 8px;
-      }
-      
-      p {
-        margin: 0 0 16px;
-        color: #d1d5db;
-        line-height: 1.7;
-      }
-      
-      .routine-images {
-        column-count: 2;
-        column-gap: 20px;
-        margin-bottom: 30px;
-      }
-      
-      .routine-image {
-        width: 100%;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        break-inside: avoid;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        border: 1px solid #374151;
-      }
-      
-      .video-link {
-        display: inline-block;
-        margin-top: 8px;
-        color: #8b5cf6;
-        text-decoration: none;
-        padding: 8px 16px;
-        border: 1px solid #8b5cf6;
-        border-radius: 6px;
-        font-weight: 500;
-      }
-      
-      .footer {
-        font-size: 12px;
-        color: #6b7280;
-        margin-top: 30px;
-        text-align: right;
-        border-top: 1px solid #374151;
-        padding-top: 16px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="page-container">
-    <div class="routine-card">
-      <div class="routine-title">${routine.name}</div>
-      <div class="routine-category">
-        ${routine.exerciseId?.category || routine.exercise?.category} • 
-        ${routine.exerciseId?.position || routine.exercise?.position}
-      </div>
-      
-      <div class="details-grid">
-        <div class="detail-box">
-          <div class="detail-label">Repetitions</div>
-          <div class="detail-value">${routine.reps}</div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Hold Time</div>
-          <div class="detail-value">${routine.hold}s</div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Completion</div>
-          <div class="detail-value">${routine.complete}</div>
-        </div>
-        <div class="detail-box">
-          <div class="detail-label">Performance</div>
-          <div class="detail-value">${routine.perform.count}/${routine.perform.type}</div>
-        </div>
-      </div>
-      
-      <div class="content-section">
-        <h3>Description</h3>
-        <p>${routine.exerciseId?.description || routine.exercise?.description}</p>
-      </div>
-      
-      <div class="content-section">
-        <h3>Instructions</h3>
-        <p>${routine.exerciseId?.instruction || routine.exercise?.instruction}</p>
-      </div>
-      
-      <div class="content-section">
-        <h3>Reference Images</h3>
-        <div class="routine-images">
-          ${(routine.exerciseId?.image || routine.exercise?.image || []).map(img => `
-            <img class="routine-image" src="${img}" alt="${routine.name}" />
-          `).join('')}
-        </div>
-      </div>
-      
-      ${(routine.exerciseId?.video || routine.exercise?.video) ? `
-        <div class="content-section">
-          <h3>Video Tutorial</h3>
-          <a class="video-link" href="${routine.exerciseId?.video || routine.exercise?.video}" target="_blank">
-            Watch Demonstration Video
-          </a>
-        </div>
-      ` : ''}
-      
-      <div class="footer">
-        Last modified: ${new Date(routine.updatedAt).toLocaleDateString()}
-      </div>
-    </div>
-  </div>
-</body>
-</html>
-    `;
-
-    printWindow.document.open();
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-
-    // Wait for images to load before printing
-    setTimeout(() => {
-      printWindow.print();
-      // Close the window after print dialog closes (or after a delay)
-      setTimeout(() => {
-        printWindow.close();
-      }, 500);
-    }, 500);
-  };
-
-  // This button will be visible in the app, but hidden when printing
-  const PrintButton = ({ onClick, icon, text, className }) => (
-    <button
-      onClick={onClick}
-      className={`p-2 text-sm bg-purple-600 hover:bg-purple-500 rounded-lg text-white flex items-center transition-colors duration-200 ${className}`}
-    >
-      {icon}
-      <span className="ml-1">{text}</span>
-    </button>
-  );
 
   useEffect(() => {
     if (user?._id) {
@@ -638,10 +168,11 @@ const MyRoutines = ({ user }) => {
       toast.warning('Please login to update routine');
       return;
     }
+    console.log(editRoutine.routineId);
 
     try {
       await axios.put(
-        `${API_URL}/routines/${editRoutine._id}`,
+        `${API_URL}/routines/${editRoutine.routineId}`,
         formData,
         {
           headers: {
@@ -651,10 +182,7 @@ const MyRoutines = ({ user }) => {
         }
       );
 
-      // Update the local state
-      setRoutines(routines.map(r =>
-        r._id === editRoutine._id ? { ...r, ...formData } : r
-      ));
+      fetchRoutines();
 
       toast.success('Routine updated successfully');
       setShowEditPopup(false);
@@ -674,14 +202,13 @@ const MyRoutines = ({ user }) => {
     }
 
     try {
-      await axios.delete(`${API_URL}/routines/${routineToDelete._id}`, {
+      await axios.delete(`${API_URL}/routines/${routineToDelete.routineId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      // Update the local state
-      setRoutines(routines.filter(r => r._id !== routineToDelete._id));
+      fetchRoutines();
 
       toast.success('Routine deleted successfully');
       setShowDeletePopup(false);
@@ -690,572 +217,6 @@ const MyRoutines = ({ user }) => {
       console.error('Error deleting routine:', error);
       toast.error('Failed to delete routine');
     }
-  };
-
-  const handlePrintRoutine = (routine) => {
-    const printWindow = window.open('', '_blank');
-    
-    if (!printWindow) {
-      toast.error('Please allow pop-ups to print routines');
-      return;
-    }
-
-    const printContent = generatePrintContent([routine]);
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-    
-    // Add event listeners after document is loaded
-    printWindow.onload = function() {
-      // Add download functionality
-      const downloadBtn = printWindow.document.getElementById('downloadPdf');
-      if (downloadBtn) {
-        downloadBtn.addEventListener('click', function() {
-          const filename = `${routine.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_routine.pdf`;
-          
-          printWindow.document.getElementById('downloadWrapper').style.display = 'none';
-          
-          printWindow.print();
-          
-          // Show the download button again after print dialog is closed/cancelled
-          setTimeout(() => {
-            if (printWindow.document.getElementById('downloadWrapper')) {
-              printWindow.document.getElementById('downloadWrapper').style.display = 'flex';
-            }
-          }, 1000);
-        });
-      }
-    };
-  };
-
-  const handlePrintAllRoutines = () => {
-    if (routines.length === 0) {
-      toast.info('No routines to print');
-      return;
-    }
-
-    const printWindow = window.open('', '_blank');
-    
-    if (!printWindow) {
-      toast.error('Please allow pop-ups to print routines');
-      return;
-    }
-
-    const printContent = generatePrintContent(routines);
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-    
-    // Add event listeners after document is loaded
-    printWindow.onload = function() {
-      // Add download functionality
-      const downloadBtn = printWindow.document.getElementById('downloadPdf');
-      if (downloadBtn) {
-        downloadBtn.addEventListener('click', function() {
-          const filename = 'all_exercise_routines.pdf';
-          
-          printWindow.document.getElementById('downloadWrapper').style.display = 'none';
-          
-          printWindow.print();
-          
-          // Show the download button again after print dialog is closed/cancelled
-          setTimeout(() => {
-            if (printWindow.document.getElementById('downloadWrapper')) {
-              printWindow.document.getElementById('downloadWrapper').style.display = 'flex';
-            }
-          }, 1000);
-        });
-      }
-    };
-  };
-
-  const generatePrintContent = (routinesToPrint) => {
-    const printStyles = `
-      /* Non-print styles for the webpage view */
-      body {
-        font-family: Arial, sans-serif;
-        line-height: 1.5;
-        color: #333;
-        background: #f5f7fb;
-        padding: 0;
-        margin: 0;
-      }
-      #downloadWrapper {
-        position: sticky;
-        top: 0;
-        display: flex;
-        justify-content: center;
-        padding: 15px;
-        background: #6d28d9;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        z-index: 1000;
-      }
-      #downloadPdf {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: white;
-        color: #6d28d9;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-      #downloadPdf:hover {
-        background: #f3f4f6;
-      }
-      .page-container {
-        max-width: 21cm;
-        margin: 0 auto;
-        background: white;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        padding: 1.5cm;
-      }
-      
-      /* Common styles for both screen and print */
-      * {
-        box-sizing: border-box;
-      }
-      .page-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 30px;
-      }
-      .logo-area {
-        width: 60px;
-        height: 60px;
-        background: #6d28d9;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 15px;
-        color: white;
-        font-weight: bold;
-        font-size: 24px;
-      }
-      .title-area {
-        flex: 1;
-      }
-      .routine-container {
-        margin-bottom: 30px;
-        max-width: 100%;
-        border-bottom: 1px dashed #e5e7eb;
-        padding-bottom: 30px;
-        position: relative;
-        background: white;
-      }
-      .routine-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -15px;
-        width: 4px;
-        height: calc(100% - 30px);
-        background: linear-gradient(to bottom, #6d28d9, rgba(109, 40, 217, 0.1));
-        border-radius: 4px;
-      }
-      .routine-bg {
-        position: absolute;
-        right: 0;
-        top: 10px;
-        width: 150px;
-        height: 150px;
-        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="rgba(109, 40, 217, 0.05)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>');
-        background-repeat: no-repeat;
-        background-position: right top;
-        opacity: 0.7;
-        pointer-events: none;
-      }
-      .routine-title {
-        font-size: 26px;
-        font-weight: bold;
-        margin-bottom: 15px;
-        color: #6d28d9;
-        border-bottom: 2px solid #6d28d9;
-        padding-bottom: 8px;
-        text-align: center;
-        position: relative;
-      }
-      .routine-meta {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        margin-bottom: 20px;
-        font-size: 14px;
-      }
-      .meta-item {
-        background: #f9f9f9;
-        padding: 8px 12px;
-        border-radius: 6px;
-        border-left: 4px solid #6d28d9;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        position: relative;
-        overflow: hidden;
-      }
-      .meta-item::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 20px;
-        height: 20px;
-        background: rgba(109, 40, 217, 0.1);
-        border-radius: 0 0 0 20px;
-      }
-      .meta-label {
-        font-weight: bold;
-        margin-right: 5px;
-        color: #6d28d9;
-      }
-      .meta-value {
-        color: #4b5563;
-        font-weight: 500;
-      }
-      .section-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin: 15px 0 10px;
-        color: #374151;
-        border-left: 4px solid #6d28d9;
-        padding-left: 10px;
-        display: flex;
-        align-items: center;
-      }
-      .section-title::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: #e5e7eb;
-        margin-left: 10px;
-      }
-      .instruction-text {
-        margin-bottom: 15px;
-        line-height: 1.6;
-        text-align: justify;
-        color: #1f2937;
-      }
-      .image-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 15px;
-        margin: 15px 0;
-        justify-items: center;
-      }
-      .exercise-image {
-        max-width: 100%;
-        height: auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        max-height: 280px;
-        object-fit: contain;
-        border: 1px solid #e5e7eb;
-      }
-      .full-width-image {
-        grid-column: 1 / -1;
-        max-width: 90%;
-        max-height: 320px;
-        object-fit: contain;
-        margin: 0 auto;
-      }
-      .video-link {
-        margin: 15px 0;
-        padding: 12px;
-        background: #f3f4f6;
-        border-radius: 8px;
-        border-left: 4px solid #6d28d9;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .video-link a {
-        color: #6d28d9;
-        text-decoration: none;
-        font-weight: bold;
-        background: rgba(109, 40, 217, 0.1);
-        padding: 5px 15px;
-        border-radius: 20px;
-        display: inline-block;
-        margin-left: 10px;
-        transition: background 0.2s;
-      }
-      .video-link a:hover {
-        background: rgba(109, 40, 217, 0.2);
-      }
-      .footer {
-        margin-top: 25px;
-        font-size: 12px;
-        color: #6b7280;
-        text-align: center;
-        border-top: 1px solid #e5e7eb;
-        padding-top: 15px;
-        position: relative;
-      }
-      .footer::before {
-        content: '';
-        position: absolute;
-        top: -3px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 50px;
-        height: 5px;
-        background: #6d28d9;
-        border-radius: 10px;
-      }
-      .heading {
-        text-align: center;
-        font-size: 28px;
-        font-weight: bold;
-        margin: 15px 0 5px;
-        color: #6d28d9;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-      .header-decoration {
-        display: block;
-        width: 120px;
-        height: 3px;
-        background: #6d28d9;
-        margin: 10px auto 25px;
-        position: relative;
-      }
-      .header-decoration::before, .header-decoration::after {
-        content: '';
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        background: #6d28d9;
-        border-radius: 50%;
-        top: -2.5px;
-      }
-      .header-decoration::before {
-        left: 0;
-      }
-      .header-decoration::after {
-        right: 0;
-      }
-      .separator {
-        display: block;
-        width: 100%;
-        height: 1px;
-        background: #e5e7eb;
-        margin: 12px 0;
-      }
-      .description-box {
-        background: #f9fafb;
-        border-radius: 8px;
-        padding: 12px;
-        margin-bottom: 15px;
-        border-left: 4px solid #6d28d9;
-        position: relative;
-      }
-      .description-box::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 50px;
-        height: 50px;
-        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(109, 40, 217, 0.05)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>');
-        background-repeat: no-repeat;
-        background-position: right bottom;
-        transform: scale(2);
-      }
-      .pattern-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: radial-gradient(rgba(109, 40, 217, 0.03) 2px, transparent 2px);
-        background-size: 24px 24px;
-        pointer-events: none;
-        z-index: -1;
-      }
-      .disclaimer {
-        font-size: 11px;
-        color: #6b7280;
-        margin-top: 8px;
-        text-align: center;
-        font-style: italic;
-      }
-      
-      /* Print-specific styles */
-      @media print {
-        @page {
-          size: A4;
-          margin: 1.2cm;
-        }
-        body {
-          background: white;
-          -webkit-print-color-adjust: exact !important;
-          print-color-adjust: exact !important;
-        }
-        #downloadWrapper {
-          display: none !important;
-        }
-        .page-container {
-          box-shadow: none;
-          padding: 0;
-          max-width: none;
-        }
-        .routine-container {
-          page-break-after: always;
-        }
-        /* Ensure URLs appear in printed PDFs next to links */
-        .video-link a::after {
-          content: " (" attr(href) ")";
-          font-size: 0.85em;
-          font-weight: normal;
-          font-style: italic;
-        }
-      }
-    `;
-
-    const routineHtml = routinesToPrint.map(routine => {
-      const exerciseData = routine.exerciseId || routine.exercise;
-      
-      // Handle image layout - if single image it's centered, if multiple in a grid
-      let imagesHtml = '';
-      if (exerciseData?.image && exerciseData.image.length > 0) {
-        const validImages = exerciseData.image.filter(img => img && img !== '');
-        
-        if (validImages.length === 1) {
-          // Single image gets full width
-          imagesHtml = `<img src="${validImages[0]}" alt="${exerciseData.title}" class="exercise-image full-width-image">`;
-        } else if (validImages.length > 0) {
-          // Multiple images in a grid
-          imagesHtml = validImages.map(img => 
-            `<img src="${img}" alt="${exerciseData.title}" class="exercise-image">`
-          ).join('');
-        }
-      }
-        
-      // For PDF printing, we need to make sure the links are absolute URLs
-      let videoUrl = exerciseData?.video || '';
-      // Add http:// prefix if missing
-      if (videoUrl && !videoUrl.startsWith('http://') && !videoUrl.startsWith('https://')) {
-        videoUrl = 'https://' + videoUrl;
-      }
-        
-      const videoHtml = videoUrl 
-        ? `<div class="video-link">
-            <strong>Exercise Video:</strong> 
-            <a href="${videoUrl}" target="_blank" rel="noopener">
-              View Video
-            </a>
-          </div>`
-        : '';
-
-      return `
-        <div class="routine-container">
-          <div class="routine-bg"></div>
-          <div class="pattern-bg"></div>
-          <h2 class="routine-title">${routine.name}</h2>
-          <div class="header-decoration"></div>
-          
-          <div class="routine-meta">
-            <div class="meta-item">
-              <span class="meta-label">Category:</span>
-              <span class="meta-value">${exerciseData?.category || 'N/A'}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Position:</span>
-              <span class="meta-value">${exerciseData?.position || 'N/A'}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Reps:</span>
-              <span class="meta-value">${routine.reps}</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Hold:</span>
-              <span class="meta-value">${routine.hold}s</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Complete:</span>
-              <span class="meta-value">${routine.complete} times</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Perform:</span>
-              <span class="meta-value">${routine.perform.count} times/${routine.perform.type}</span>
-            </div>
-          </div>
-          
-          <h3 class="section-title">Description</h3>
-          <div class="description-box">
-            <p class="instruction-text">${exerciseData?.description || 'No description available'}</p>
-          </div>
-          
-          <h3 class="section-title">Instructions</h3>
-          <p class="instruction-text">${exerciseData?.instruction || 'No instructions available'}</p>
-          
-          <div class="separator"></div>
-          
-          <h3 class="section-title">Exercise Images</h3>
-          <div class="image-container">
-            ${imagesHtml || '<p class="instruction-text" style="text-align: center;">No images available</p>'}
-          </div>
-          
-          ${videoHtml}
-          
-          <p class="disclaimer">Please consult with your healthcare provider before starting any new exercise program.</p>
-        </div>
-      `;
-    }).join('');
-
-    const docTitle = routinesToPrint.length > 1 
-      ? 'My Exercise Routines' 
-      : routinesToPrint[0]?.name || 'Exercise Routine';
-
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${docTitle}</title>
-        <style>${printStyles}</style>
-      </head>
-      <body>
-        <div id="downloadWrapper">
-          <button id="downloadPdf" type="button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            Download PDF
-          </button>
-        </div>
-
-        <div class="page-container">
-          <div class="page-header">
-            <div class="logo-area">H2G</div>
-            <div class="title-area">
-              <h1 class="heading">${routinesToPrint.length > 1 ? 'My Exercise Routines' : 'Exercise Routine'}</h1>
-              <div class="header-decoration"></div>
-            </div>
-          </div>
-          
-          ${routineHtml}
-          <div class="footer">
-            <p>Generated from Hep2Go on ${new Date().toLocaleDateString()}</p>
-          </div>
-        </div>
-        
-        <script>
-          // Ensure all links open in a new tab and are properly formatted for PDF
-          document.querySelectorAll('a').forEach(link => {
-            link.setAttribute('target', '_blank');
-            link.setAttribute('rel', 'noopener');
-            
-            // Make sure links have http/https prefix
-            let href = link.getAttribute('href');
-            if (href && !href.startsWith('http://') && !href.startsWith('https://')) {
-              link.setAttribute('href', 'https://' + href);
-            }
-          });
-        </script>
-      </body>
-      </html>
-    `;
   };
 
   if (loading) {
@@ -1269,24 +230,24 @@ const MyRoutines = ({ user }) => {
   // Pagination component for mobile view
   const Pagination = () => {
     const pageCount = Math.ceil(routines.length / routinesPerPage);
-    
+
     if (pageCount <= 1) return null;
-    
+
     return (
       <div className="flex items-center justify-center mt-6 space-x-2">
-        <button 
+        <button
           onClick={prevPage}
           disabled={currentPage === 1}
           className={`p-2 rounded-full ${currentPage === 1 ? 'text-gray-600 cursor-not-allowed' : 'text-purple-500 hover:bg-gray-700'}`}
         >
           <ChevronLeft size={20} />
         </button>
-        
+
         <span className="text-sm text-gray-400">
           Page {currentPage} of {pageCount}
         </span>
-        
-        <button 
+
+        <button
           onClick={nextPage}
           disabled={currentPage === pageCount}
           className={`p-2 rounded-full ${currentPage === pageCount ? 'text-gray-600 cursor-not-allowed' : 'text-purple-500 hover:bg-gray-700'}`}
@@ -1304,20 +265,13 @@ const MyRoutines = ({ user }) => {
           <Activity className="mr-2 text-purple-500" size={24} />
           Workout Routines
         </h2>
-        <div className="hidden sm:block">
+        <div>
           <PrintButton
-            onClick={handlePrintAll}
+            routines={routines}
             icon={<Printer size={16} />}
             text="Print All Routines"
           />
         </div>
-        <button
-          onClick={handlePrintAll}
-          className="sm:hidden p-2 bg-purple-600 hover:bg-purple-500 rounded-lg text-white"
-          aria-label="Print All Routines"
-        >
-          <Printer size={18} />
-        </button>
       </div>
       {
         routines.length > 0 ? (
@@ -1345,7 +299,7 @@ const MyRoutines = ({ user }) => {
                       {/* Mobile-friendly action buttons */}
                       <div className="hidden sm:flex gap-2">
                         <PrintButton
-                          onClick={() => handlePrintSingle(routine)}
+                          routines={routine}
                           icon={<FileText size={16} />}
                           text="Print"
                         />
@@ -1372,16 +326,14 @@ const MyRoutines = ({ user }) => {
                           <Trash size={16} />
                         </button>
                       </div>
-                      
+
                       {/* Mobile buttons - simplified icon only version */}
                       <div className="flex sm:hidden gap-2">
-                        <button
-                          onClick={() => handlePrintSingle(routine)}
-                          className="p-2 bg-gray-700 hover:bg-gray-600 rounded-full text-purple-500"
-                          aria-label="Print routine"
-                        >
-                          <FileText size={16} />
-                        </button>
+                        <PrintButton
+                          routines={routine}
+                          icon={<FileText size={16} />}
+                          text="Print"
+                        />
                         <button
                           onClick={() => handleViewRoutine(routine)}
                           className="p-2 bg-purple-600 hover:bg-purple-500 rounded-full text-white"
@@ -1449,7 +401,7 @@ const MyRoutines = ({ user }) => {
                 </div>
               </div>
             ))}
-            
+
             {/* Pagination for mobile view only */}
             {isMobile && <Pagination />}
           </div>

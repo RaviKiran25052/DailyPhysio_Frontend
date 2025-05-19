@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { FaTimes, FaUpload } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 // Available specialization options
 const specializationOptions = [
@@ -16,7 +17,7 @@ const specializationOptions = [
 	'Other'
 ];
 
-const TherapistRegister = ({ onClose, onLogin }) => {
+const  TherapistRegister = ({ onClose, onLogin }) => {
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
@@ -201,21 +202,21 @@ const TherapistRegister = ({ onClose, onLogin }) => {
 		e.preventDefault();
 		if (validateForm()) {
 			setLoading(true);
-			setError('');
 			try {
 				const { confirmPassword, ...dataToSubmit } = formData;
-				await axios.post(
+				const response = await axios.post(
 					`${process.env.REACT_APP_API_URL}/therapist/register`,
 					dataToSubmit
 				);
-
-				onClose(true);
+				if (response.data.status === "success") {
+					toast.success(response.data.message);
+					onClose(true);
+				}
 			} catch (error) {
-				setError(
-					error.response && error.response.data.message
-						? error.response.data.message
-						: 'Registration failed. Please try again.'
-				);
+				const msg = error.response && error.response.data.message
+					? error.response.data.message
+					: 'Registration failed. Please try again.'
+				toast.error(msg);
 			} finally {
 				setLoading(false);
 			}
@@ -241,12 +242,6 @@ const TherapistRegister = ({ onClose, onLogin }) => {
 						<FaTimes size={24} />
 					</button>
 				</div>
-
-				{error && (
-					<div className="mx-6 mt-4 bg-red-500 bg-opacity-20 border border-red-500 text-red-500 px-4 py-3 rounded">
-						{error}
-					</div>
-				)}
 
 				<div className="p-6 max-h-[70vh] overflow-y-auto">
 					{/* Profile Picture Upload */}

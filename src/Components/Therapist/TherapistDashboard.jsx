@@ -8,13 +8,10 @@ import RegistrationSuccessModal from './RegistrationSuccessModal';
 import {
   FaClipboardList,
   FaDumbbell,
-  FaUserPlus,
   FaUserMd,
   FaUsers,
   FaChartLine,
-  FaCalendarAlt,
-  FaCrown,
-  FaRegCreditCard
+  FaCalendarAlt
 } from 'react-icons/fa';
 
 const TherapistDashboard = () => {

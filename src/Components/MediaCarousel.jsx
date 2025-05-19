@@ -105,11 +105,12 @@ const MediaCarousel = ({ images = [], video = null }) => {
 								src={item.url || '/api/placeholder/400/300'}
 								className="w-full h-full object-cover"
 								loop
-								muted
+								controls={maximized}
+								autoPlay={maximized}
 								onPlay={() => setIsPlaying(true)}
 								onPause={() => setIsPlaying(false)}
 							/>
-							{idx === currentIndex && (
+							{(idx === currentIndex && !maximized) && (
 								<div
 									className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 hover:opacity-100 cursor-pointer z-20"
 									onClick={togglePlayPause}
@@ -121,7 +122,7 @@ const MediaCarousel = ({ images = [], video = null }) => {
 											<Play size={24} className="text-white" fill="white" />
 										)}
 									</div>
-								</div>
+								</div> 
 							)}
 						</div>
 					) : (
@@ -189,13 +190,6 @@ const MediaCarousel = ({ images = [], video = null }) => {
 			{/* Minimize button (only in maximized view) */}
 			{maximized && (
 				<div className="absolute top-4 right-4 z-50 flex space-x-2">
-					<button
-						onClick={toggleMaximize}
-						className="bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white"
-						aria-label="Minimize carousel"
-					>
-						<Minimize size={16} />
-					</button>
 					<button
 						onClick={closeMaximizedView}
 						className="bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white"

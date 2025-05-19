@@ -38,6 +38,7 @@ const CreatorExercisesPage = () => {
     const fetchExercises = async () => {
       setLoading(true);
       try {
+        
         const response = await axios.get(`${API_URL}/exercises/creator/${creatorId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -167,8 +168,6 @@ const CreatorExercisesPage = () => {
       </div>
     );
   }
-
-  console.log(creatorData);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -496,7 +495,7 @@ const CreatorExercisesPage = () => {
               <div className="bg-gray-800 rounded-xl p-8 flex flex-col items-center justify-center">
                 <p className="text-gray-400 mb-4">No exercises found in this category.</p>
                 <button
-                  onClick={() => setActiveCategory('all')}
+                  onClick={() => navigate('/exercises')}
                   className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition"
                 >
                   View All Exercises

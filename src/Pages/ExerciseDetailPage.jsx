@@ -51,7 +51,6 @@ const ExerciseDetailPage = ({ userData }) => {
       });
 
       const favorites = response.data;
-      console.log(favorites);
 
       setIsFavorite(favorites.isFavorite);
     } catch (error) {
@@ -326,7 +325,7 @@ const ExerciseDetailPage = ({ userData }) => {
             </div>
 
             {/* Exercise description */}
-            <div className="mb-6">
+            <div className="my-6">
               <h2 className="text-xl font-semibold mb-2">Description</h2>
               <p className="text-gray-300">{exercise?.description}</p>
             </div>
@@ -407,11 +406,14 @@ const ExerciseDetailPage = ({ userData }) => {
                       <p className='text-xs text-gray-400'>{creatorData.specializations?.length ? creatorData.specializations.join(" | ") : (exercise.custom?.createdBy === "admin" ? "Admin" : "Pro User")}</p>
                     </div>
                   </div>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+
                   {exercise.custom?.createdBy === "therapist" && (userData.membership?.type === "monthly" || userData.membership?.type === "yearly") &&
                     <button
                       onClick={toggleFollow}
                       disabled={isLoadingFollow}
-                      className={`flex items-center justify-center text-sm px-3 py-1 rounded-full transition-colors ${isLoadingFollow
+                      className={`flex items-center justify-center text-sm px-3 py-1 rounded-md transition-colors ${isLoadingFollow
                         ? 'bg-gray-700 text-gray-300 cursor-wait'
                         : creatorData.isFollowing
                           ? 'bg-green-600 hover:bg-green-700 text-white'
@@ -439,10 +441,10 @@ const ExerciseDetailPage = ({ userData }) => {
                       )}
                     </button>
                   }
+                  {(userData.membership?.type === "monthly" || userData.membership?.type === "yearly") &&
+                    <button onClick={() => navigate(`/creator/exercise/${exercise.custom.creatorId}`)} className='border-2 w-full border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
+                  }
                 </div>
-                {(userData.membership?.type === "monthly" || userData.membership?.type === "yearly") &&
-                  <button onClick={() => navigate(`/creator/exercise/${exercise.custom.creatorId}`)} className='border-2 w-full border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
-                }
               </div>
             )}
 
