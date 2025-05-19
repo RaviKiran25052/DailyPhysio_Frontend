@@ -564,7 +564,7 @@ const MyRoutines = ({ user }) => {
 
     } catch (error) {
       console.error('Error fetching routines:', error);
-      toast.error('Failed to load routines');
+      // toast.error('Failed to load routines');
     } finally {
       setLoading(false);
     }

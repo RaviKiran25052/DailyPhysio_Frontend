@@ -318,21 +318,7 @@ const ExerciseDetailPage = ({ userData }) => {
                   {exercise?.position}
                 </span>
               </div>
-              <div className="flex justify-between">
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">{exercise?.title}</h1>
-                {/* Favorite button */}
-                <button
-                  onClick={toggleFavorite}
-                  disabled={isLoadingFavorite}
-                  className={`flex items-center justify-center w-9 h-9 p-1 z-10 rounded-full cursor-pointer transition-all duration-200 ${isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite
-                    ? 'bg-red-500 text-white hover:bg-red-600'
-                    : 'bg-gray-700/50 text-white hover:bg-gray-600'
-                    }`}
-                  aria-label={isFavorite ? 'Saved to favorites' : 'Add to favorites'}
-                >
-                  <Heart size={18} fill={isFavorite ? 'white' : 'none'} />
-                </button>
-              </div>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2">{exercise?.title}</h1>
             </div>
 
             <div className="aspect-[4/2] w-full">
@@ -340,13 +326,13 @@ const ExerciseDetailPage = ({ userData }) => {
             </div>
 
             {/* Exercise description */}
-            <div className="mb-8">
+            <div className="mb-6">
               <h2 className="text-xl font-semibold mb-2">Description</h2>
               <p className="text-gray-300">{exercise?.description}</p>
             </div>
 
             {/* Exercise instructions */}
-            <div className="mb-8">
+            <div className="mb-6">
               <h2 className="text-xl font-semibold mb-2">Instructions</h2>
               <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
                 <p className="text-gray-300 whitespace-pre-line">{exercise?.instruction}</p>
@@ -354,13 +340,24 @@ const ExerciseDetailPage = ({ userData }) => {
             </div>
 
             {/* Action buttons */}
-            <div className="flex flex-wrap gap-3 mb-10">
+            <div className="flex flex-wrap gap-3 mb-8">
               <button
                 onClick={() => setShowRoutinePopup(true)}
                 className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg flex items-center gap-2 transition-colors"
               >
                 <Save size={18} />
                 <span>Save Routine</span>
+              </button>
+              <button
+                onClick={toggleFavorite}
+                disabled={isLoadingFavorite}
+                className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-colors ${isLoadingFavorite ? 'bg-gray-700 cursor-wait' : isFavorite
+                  ? 'bg-red-500 hover:bg-red-600 text-white'
+                  : 'bg-gray-700 hover:bg-gray-600 text-white'
+                  }`}
+              >
+                <Heart size={18} fill={isFavorite ? 'white' : 'none'} />
+                <span>{isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}</span>
               </button>
             </div>
           </div>
@@ -607,4 +604,4 @@ const ExerciseDetailPage = ({ userData }) => {
   );
 };
 
-export default ExerciseDetailPage; 
+export default ExerciseDetailPage;

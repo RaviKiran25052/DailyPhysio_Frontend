@@ -23,6 +23,8 @@ export default function TherapistManagementTable({ therapists, onUpdate, onBack 
 								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Email</th>
 								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Hospital/Clinic</th>
 								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Phone Number</th>
+								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Specialization</th>
+								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Experience</th>
 								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Status</th>
 							</tr>
 						</thead>
@@ -41,6 +43,14 @@ export default function TherapistManagementTable({ therapists, onUpdate, onBack 
 									</td>
 									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
 										{therapist.phoneNumber}
+									</td>
+									<td className="px-6 py-4 text-sm text-gray-300">
+										{therapist.specializations && therapist.specializations.length > 0 
+											? therapist.specializations.join(", ") 
+											: "Not specified"}
+									</td>
+									<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+										{therapist.experience ? `${therapist.experience} years` : "Not specified"}
 									</td>
 									<td className="px-6 py-4">
 										<div className="flex space-x-2">
@@ -64,7 +74,7 @@ export default function TherapistManagementTable({ therapists, onUpdate, onBack 
 							))}
 							{therapists.length === 0 && (
 								<tr>
-									<td colSpan="5" className="px-6 py-10 text-center text-gray-400">
+									<td colSpan="7" className="px-6 py-10 text-center text-gray-400">
 										No therapists found matching your search
 									</td>
 								</tr>
