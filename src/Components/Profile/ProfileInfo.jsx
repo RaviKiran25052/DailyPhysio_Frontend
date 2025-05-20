@@ -120,7 +120,7 @@ const ProfileInfo = () => {
       });
 
       localStorage.setItem('fullName', response.data.fullName);
-
+      window.location.reload()
       // Update local state with new user data
       setUserData(prevData => ({
         ...prevData,
@@ -160,7 +160,7 @@ const ProfileInfo = () => {
         />
 
         {/* Name and Details */}
-        <div className="pl-32">
+        <div className="md:pl-32 md:pt-0 pl-0 pt-14">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <h1 className="text-2xl font-bold text-white">{userData.fullName}</h1>
             <div className="mt-2 md:mt-0 flex items-center space-x-2">
@@ -202,7 +202,7 @@ const ProfileInfo = () => {
 
             {/* Payment History */}
             <div className="bg-gray-700 p-4 rounded-lg">
-              <h3 className="text-purple-400 font-medium mb-2">Payment History</h3>
+              <h3 className="text-purple-400 font-medium mb-2">Recent Payments</h3>
               <div className="bg-gray-600 rounded-md p-3 text-center">
                 <p className="text-gray-400 text-sm">No payment receipts available</p>
                 {userData.membership?.type === 'free' && (

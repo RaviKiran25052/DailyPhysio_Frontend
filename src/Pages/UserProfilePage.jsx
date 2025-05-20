@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Sidebar from '../Components/Profile/Sidebar';
 import ProfileInfo from '../Components/Profile/ProfileInfo';
 import MyExercises from '../Components/Profile/MyExercises';
@@ -8,7 +8,7 @@ import Following from '../Components/Profile/Following';
 import axios from 'axios';
 import HandleExercise from '../Components/HandleExercise';
 import MembershipManagement from '../Components/Profile/MembershipManagement';
-import { User, Dumbbell, Heart, Users, Crown } from 'lucide-react';
+import { User, Dumbbell, Heart, Users, Crown, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -16,6 +16,7 @@ const UserProfilePage = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [userData, setUserData] = useState({});
   const [isMobile, setIsMobile] = useState(false);
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -36,13 +37,13 @@ const UserProfilePage = () => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     // Initial check
     checkIfMobile();
-    
+
     // Add resize listener
     window.addEventListener('resize', checkIfMobile);
-    
+
     // Cleanup
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
@@ -79,24 +80,53 @@ const UserProfilePage = () => {
       { id: 'membership', icon: <Crown size={20} />, label: 'Membership' }
     ];
 
+    const scroll = (direction) => {
+      const container = scrollContainerRef.current;
+      if (container) {
+        const scrollAmount = direction === 'left' ? -100 : 100;
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    };
+
     return (
-      <div className="bg-gray-800 rounded-lg mb-4 overflow-x-auto">
-        <div className="flex justify-between min-w-max">
+      <div className="bg-gray-800 rounded-lg mb-4 relative">
+        {/* Left arrow button */}
+        <button
+          onClick={() => scroll('left')}
+          className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-700 text-gray-300 p-1 rounded-r-md z-10 hover:bg-gray-600"
+          aria-label="Scroll left"
+        >
+          <ChevronLeft size={20} />
+        </button>
+
+        {/* Tabs container */}
+        <div
+          ref={scrollContainerRef}
+          className="flex justify-between overflow-hidden mx-8 scroll-smooth"
+        >
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center py-3 px-4 ${
-                activeTab === tab.id 
-                  ? 'text-purple-500 border-b-2 border-purple-500' 
+              className={`flex flex-col items-center py-3 px-4 flex-shrink-0 ${activeTab === tab.id
+                  ? 'text-purple-500 border-b-2 border-purple-500'
                   : 'text-gray-400 hover:text-gray-300'
-              }`}
+                }`}
             >
               {tab.icon}
               <span className="text-xs mt-1">{tab.label}</span>
             </button>
           ))}
         </div>
+
+        {/* Right arrow button */}
+        <button
+          onClick={() => scroll('right')}
+          className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-700 text-gray-300 p-1 rounded-l-md z-10 hover:bg-gray-600"
+          aria-label="Scroll right"
+        >
+          <ChevronRight size={20} />
+        </button>
       </div>
     );
   };
@@ -107,7 +137,7 @@ const UserProfilePage = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Mobile Tabs - Show only on mobile */}
           {isMobile && <MobileTabBar />}
-          
+
           {/* Desktop Sidebar - Hide on mobile */}
           {!isMobile && (
             <div className="lg:w-1/4 md:sticky top-20 h-fit">

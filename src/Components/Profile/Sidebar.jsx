@@ -1,4 +1,3 @@
-import React from 'react';
 import { User, Dumbbell, Heart, Users, LogOut, Crown } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';

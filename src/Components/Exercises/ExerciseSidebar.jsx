@@ -284,25 +284,6 @@ const ExerciseSidebar = ({
           </div>
         </div>
       )}
-
-      {/* Custom scrollbar styles */}
-      <style jsx>{`
-        .scrollbar-thin {
-          scrollbar-width: thin;
-          scrollbar-color: rgba(124, 58, 237, 0.5) rgba(31, 41, 55, 0.5);
-        }
-        .scrollbar-thin::-webkit-scrollbar {
-          width: 4px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-track {
-          background: rgba(31, 41, 55, 0.5);
-          border-radius: 10px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-          background-color: rgba(124, 58, 237, 0.5);
-          border-radius: 10px;
-        }
-      `}</style>
     </aside>
   );
 };

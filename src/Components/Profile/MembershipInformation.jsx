@@ -36,33 +36,6 @@ const MembershipInformation = ({ user, formatDate }) => {
 					)}
 				</div>
 			</div>
-
-			{membershipType === 'free' && (
-				<div className="space-y-2">
-					<button className="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-500 transition">
-						Upgrade to Pro
-					</button>
-					<div className="flex items-center justify-center space-x-2">
-						<button className="flex-1 bg-gray-600 text-white py-2 rounded-md hover:bg-gray-500 transition text-sm">
-							Monthly
-						</button>
-						<button className="flex-1 bg-gray-600 text-white py-2 rounded-md hover:bg-gray-500 transition text-sm">
-							Yearly
-						</button>
-					</div>
-				</div>
-			)}
-
-			{isPaid && (
-				<div className="flex justify-between text-sm">
-					<button className="text-gray-300 hover:text-white transition">
-						{membershipType === 'monthly' ? 'Switch to Yearly' : 'Switch to Monthly'}
-					</button>
-					<button className="text-red-400 hover:text-red-300 transition">
-						Cancel Subscription
-					</button>
-				</div>
-			)}
 		</div>
 	);
 };

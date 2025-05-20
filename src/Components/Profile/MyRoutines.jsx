@@ -56,7 +56,6 @@ const MyRoutines = ({ user }) => {
     : routines;
 
   // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const nextPage = () => {
     if (currentPage < Math.ceil(routines.length / routinesPerPage)) {
       setCurrentPage(currentPage + 1);
@@ -265,20 +264,20 @@ const MyRoutines = ({ user }) => {
           <Activity className="mr-2 text-purple-500" size={24} />
           Workout Routines
         </h2>
-        <div>
+        {user.membership.type !== "free" &&
           <PrintButton
             routines={routines}
             icon={<Printer size={16} />}
             text="Print All Routines"
           />
-        </div>
+        }
       </div>
       {
         routines.length > 0 ? (
           <div className="grid gap-6">
-            {currentRoutines.map(routine => (
+            {currentRoutines.map((routine, index )=> (
               <div
-                key={routine._id}
+                key={index}
                 className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-purple-900/20 transition-all duration-300"
               >
                 <div className="p-4 sm:p-5">
@@ -295,14 +294,16 @@ const MyRoutines = ({ user }) => {
                       </p>
                     </div>
 
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 justify-end">
                       {/* Mobile-friendly action buttons */}
                       <div className="hidden sm:flex gap-2">
-                        <PrintButton
-                          routines={routine}
-                          icon={<FileText size={16} />}
-                          text="Print"
-                        />
+                        {user.membership.type !== "free" &&
+                          <PrintButton
+                            routines={routine}
+                            icon={<FileText size={16} />}
+                            text="Print"
+                          />
+                        }
                         <button
                           onClick={() => handleViewRoutine(routine)}
                           className="p-2 text-sm bg-purple-600 hover:bg-purple-500 rounded-lg text-white flex items-center transition-colors duration-200"
@@ -329,11 +330,13 @@ const MyRoutines = ({ user }) => {
 
                       {/* Mobile buttons - simplified icon only version */}
                       <div className="flex sm:hidden gap-2">
-                        <PrintButton
-                          routines={routine}
-                          icon={<FileText size={16} />}
-                          text="Print"
-                        />
+                        {user.membership.type !== "free" &&
+                          <PrintButton
+                            routines={routine}
+                            icon={<FileText size={16} />}
+                            text="Print"
+                          />
+                        }
                         <button
                           onClick={() => handleViewRoutine(routine)}
                           className="p-2 bg-purple-600 hover:bg-purple-500 rounded-full text-white"
