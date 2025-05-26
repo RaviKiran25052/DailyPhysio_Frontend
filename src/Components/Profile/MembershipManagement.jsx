@@ -33,7 +33,6 @@ const MembershipManagement = () => {
 
 	const handleMembershipUpdate = (updatedData) => {
 		setMembership(updatedData);
-		toast.success('Membership updated successfully');
 	};
 
 	if (loading) {
