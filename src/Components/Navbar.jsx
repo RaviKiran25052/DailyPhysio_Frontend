@@ -33,6 +33,21 @@ const Navbar = () => {
       setUserData({ fullName, token });
       setIsLoggedIn(true);
     }
+
+    // Add event listener for login state changes
+    const handleLoginStateChange = (event) => {
+      const { isLoggedIn, userData } = event.detail;
+      setIsLoggedIn(isLoggedIn);
+      if (userData) {
+        setUserData(userData);
+      }
+    };
+
+    window.addEventListener('userLoginStateChanged', handleLoginStateChange);
+
+    return () => {
+      window.removeEventListener('userLoginStateChanged', handleLoginStateChange);
+    };
   }, []);
 
   // Track scroll position to add background when scrolled
@@ -396,5 +411,6 @@ const Navbar = () => {
     </header>
   );
 };
+
 
 export default Navbar; 

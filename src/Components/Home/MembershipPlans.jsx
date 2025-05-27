@@ -1,6 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Login from '../Login';
+import MembershipUpdateModal from '../MembershipUpdateModal';
 
 const MembershipPlans = () => {
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isMembershipModalOpen, setIsMembershipModalOpen] = useState(false);
+  const [isSignIn, setIsSignIn] = useState(true);
+
+  const handleProPlanClick = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // User is not logged in, show login modal
+      setIsSignIn(true);
+      setIsLoginOpen(true);
+    } else {
+      // User is logged in, show membership update modal
+      setIsMembershipModalOpen(true);
+    }
+  };
+
+  const handleAuthSuccess = (userData) => {
+    // Store token and user data in localStorage
+    if (userData.token) {
+      localStorage.setItem('token', (userData.token));
+    }
+    if (userData.fullName) {
+      localStorage.setItem('fullName', (userData.fullName));
+    }
+    if (userData.email) {
+      localStorage.setItem('email', (userData.email));
+    }
+    
+    // Dispatch a custom event to notify Navbar about login state change
+    const loginEvent = new CustomEvent('userLoginStateChanged', {
+      detail: {
+        isLoggedIn: true,
+        userData: userData
+      }
+    });
+    window.dispatchEvent(loginEvent);
+    
+    // Close the login modal
+    setIsLoginOpen(false);
+  };
 
   return (
     <div className="py-16 bg-gray-900 text-white">
@@ -67,18 +109,14 @@ const MembershipPlans = () => {
               <div className="flex-grow"></div>
 
               <button
-                // onClick={handleProPlanClick}
+                onClick={handleProPlanClick}
                 className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 rounded-xl text-white text-lg font-medium transition duration-300"
               >
                 Upgrade to Pro
               </button>
 
               <div className="mt-4 text-center text-sm text-gray-400">
-                Want to Upgrade an existing account or upgrade Other Members? Please{' '}
-                <a href="/" className="text-blue-400 hover:underline cursor-pointer">
-                  Log in
-                </a>{' '}
-                First
+                Want to Upgrade an existing account or upgrade Other Members? Please Sign in first
               </div>
             </div>
           </div>
@@ -142,6 +180,26 @@ const MembershipPlans = () => {
           </div>
         </div>
       </div>
+
+      {/* Login Modal */}
+      <Login
+        isOpen={isLoginOpen}
+        isSignIn={isSignIn}
+        onChange={setIsSignIn}
+        onClose={() => setIsLoginOpen(false)}
+        onAuthSuccess={handleAuthSuccess}
+      />
+
+      {/* Membership Update Modal */}
+      <MembershipUpdateModal
+        isOpen={isMembershipModalOpen}
+        onClose={() => setIsMembershipModalOpen(false)}
+        currentPlan="free"
+        onUpdate={(data) => {
+          setIsMembershipModalOpen(false);
+          // Handle successful membership update if needed
+        }}
+      />
     </div>
   );
 };

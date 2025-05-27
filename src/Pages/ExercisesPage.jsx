@@ -403,12 +403,17 @@ const ExercisesPage = () => {
             {!isMobile && filteredExercises.length > 0 && !isLoading && (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                 {currentExercises.map((exercise) => (
-                  <ExerciseCard
+                  <button
                     key={exercise.id || exercise._id}
-                    exercise={exercise}
-                    layoutSize={layoutSize}
-                    onViewDetails={() => viewExerciseDetails(exercise)}
-                  />
+                    onClick={() => viewExerciseDetails(exercise)}
+                    className="w-full text-left transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg"
+                  >
+                    <ExerciseCard
+                      exercise={exercise}
+                      layoutSize={layoutSize}
+                      onViewDetails={() => viewExerciseDetails(exercise)}
+                    />
+                  </button>
                 ))}
               </div>
             )}

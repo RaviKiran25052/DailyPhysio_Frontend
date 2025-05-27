@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { RiCloseLine, RiSearchLine, RiArrowLeftLine } from 'react-icons/ri';
+import { toast } from 'react-toastify';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -45,15 +46,26 @@ const AddConsultation = ({ onClose, onSuccess }) => {
       setLoading(false);
     }
   };
-
+  const handleFormSubmission = () => {
+    const pass =  formData.password === formData.confirmPassword;
+    const email = formData.email.includes('@');
+    if (pass && email) {
+      setStep(2);
+    } else if (!pass) {
+      toast.error('Passwords do not match');
+    } else if (!email) {
+      toast.error('Invalid email');
+    }
+  };
   const fetchExercises = async () => {
     try {
-      const response = await axios.get(`${API_URL}/therapist/exercises`, {
+      const response = await axios.get(`${API_URL}/exercises`, {
         headers: { Authorization: `Bearer ${therapistInfo.token}` }
       });
-      setExercises(response.data);
+      setExercises(Array.isArray(response.data) ? response.data : response.data.exercises || []);
     } catch (error) {
       console.error('Error fetching exercises:', error);
+      setExercises([]);
     }
   };
 
@@ -66,10 +78,11 @@ const AddConsultation = ({ onClose, onSuccess }) => {
   });
 
   const filteredExercises = exercises.filter(exercise => {
+    if (!exercise) return false;
     const searchLower = exerciseSearchTerm.toLowerCase();
     return (
-      exercise.title.toLowerCase().includes(searchLower) ||
-      exercise.description.toLowerCase().includes(searchLower)
+      (exercise.title?.toLowerCase().includes(searchLower) || false) ||
+      (exercise.description?.toLowerCase().includes(searchLower) || false)
     );
   });
 
@@ -254,7 +267,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                         Cancel
                       </button>
                       <button
-                        onClick={() => setStep(2)}
+                        onClick={() => handleFormSubmission()}
                         className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
                       >
                         Continue
@@ -271,7 +284,8 @@ const AddConsultation = ({ onClose, onSuccess }) => {
             <div className="space-y-4">
               <div className="flex items-center justify-between mb-4">
                 <button
-                  onClick={() => setStep(1)}
+                  onClick={() => {setSelectedUser(null)
+                    setStep(1)}}
                   className="flex items-center text-gray-400 hover:text-white"
                 >
                   <RiArrowLeftLine className="mr-2" />

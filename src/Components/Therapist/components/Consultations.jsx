@@ -18,13 +18,14 @@ const ExerciseSelector = ({ onSelect, onClose, selectedExercises }) => {
     const fetchExercises = async () => {
       try {
         const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
-        const response = await axios.get(`${API_URL}/therapist/exercises`, {
+        const response = await axios.get(`${API_URL}/exercises`, {
           headers: { Authorization: `Bearer ${therapistInfo.token}` }
         });
-        setExercises(response.data);
+        setExercises(Array.isArray(response.data) ? response.data : response.data.exercises || []);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching exercises:', error);
+        setExercises([]);
         setLoading(false);
       }
     };
@@ -32,10 +33,14 @@ const ExerciseSelector = ({ onSelect, onClose, selectedExercises }) => {
     fetchExercises();
   }, []);
 
-  const filteredExercises = exercises.filter(exercise =>
-    exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    !selectedExercises.includes(exercise._id)
-  );
+  const filteredExercises = exercises.filter(exercise => {
+    if (!exercise) return false;
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      (exercise.title?.toLowerCase().includes(searchLower) || false) &&
+      !selectedExercises.includes(exercise._id)
+    );
+  });
 
   if (loading) {
     return (
