@@ -14,13 +14,12 @@ const ExercisesPage = () => {
   const carouselRef = useRef(null);
 
   // Check if we have category in location state (from Featured Courses)
-  const initialCategory = location.state?.selectedCategory || 'Ankle and Foot';
+  const initialCategory = location.state?.selectedCategory || 'All';
   const [allCategories, setAllCategories] = useState([]);
   const [allPositions, setAllPositions] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedSubCategory, setSelectedSubCategory] = useState('');
   const [selectedPosition, setSelectedPosition] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
   const [filteredExercises, setFilteredExercises] = useState([]);
   const [showFilters, setShowFilters] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,11 +64,11 @@ const ExercisesPage = () => {
     }
   }, [location.state, navigate]);
 
-  // Fixed exercises per page: 8 on desktop
-  const exercisesPerPage = 8;
+  // Fixed exercises per page: 9 on desktop
+  const exercisesPerPage = 9;
 
   // Fetch exercises with filters
-  const fetchExercises = async () => {
+  const fetchExercises = async (searchQuery = '') => {
     setIsLoading(true);
     try {
       // Build query parameters
@@ -103,10 +102,13 @@ const ExercisesPage = () => {
     fetchExercises();
   }, [selectedCategory, selectedSubCategory, selectedPosition]);
 
+  useEffect(() => {
+    setSelectedPosition('All');
+  }, [selectedCategory]);
+
   // Handle search
   const handleSearch = (query) => {
-    setSearchQuery(query);
-    fetchExercises();
+    fetchExercises(query);
   };
 
   // Add event listener for window resize
@@ -298,6 +300,7 @@ const ExercisesPage = () => {
           {/* Desktop Sidebar - Always Show */}
           <div className="hidden md:block md:w-1/4 min-w-[250px]">
             <ExerciseSidebar
+              loading={isLoading}
               categories={allCategories}
               positions={allPositions}
               selectedCategory={selectedCategory}
@@ -318,8 +321,6 @@ const ExercisesPage = () => {
               filteredExercises={filteredExercises}
               layoutSize={layoutSize}
               setLayoutSize={setLayoutSize}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
               handleSearch={handleSearch}
             />
 

@@ -194,7 +194,11 @@ const ExerciseManagement = () => {
             {/* Content area with improved spacing and hover effects */}
             <div
               className="p-5 flex-1 flex flex-col cursor-pointer"
-              onClick={() => navigate(`/exercise/${exercise._id}`)}
+              onClick={() => navigate(`/exercise/${exercise._id}`, {
+                state: {
+                  isTherapist: true
+                }
+              })}
             >
               <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-white group-hover:text-purple-300 transition">
                 <span className="line-clamp-1">{exercise.title}</span>
@@ -220,8 +224,8 @@ const ExerciseManagement = () => {
                       handleToggleType(exercise._id, exercise.custom?.type);
                     }}
                     className={`px-3 py-1 rounded-lg flex items-center gap-2 transition-colors ${exercise.custom?.type === 'public'
-                        ? 'bg-purple-600 hover:bg-purple-700'
-                        : 'bg-gray-600 hover:bg-gray-700'
+                      ? 'bg-purple-600 hover:bg-purple-700'
+                      : 'bg-gray-600 hover:bg-gray-700'
                       } text-white text-sm`}
                   >
                     {exercise.custom?.type === 'public'

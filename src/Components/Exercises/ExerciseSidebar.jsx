@@ -2,8 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { ChevronRight, Filter, TriangleAlert } from 'lucide-react';
 
 const ExerciseSidebar = ({
-  categories = [],
-  positions = [],
+  loading,
+  categories,
+  positions,
   selectedCategory,
   setSelectedCategory,
   selectedPosition,
@@ -26,7 +27,7 @@ const ExerciseSidebar = ({
     }
 
     setValidSubCategories(data);
-  }, [categories]);
+  }, []);
 
   // Scroll to selected category when component mounts or category changes
   useEffect(() => {
@@ -153,92 +154,97 @@ const ExerciseSidebar = ({
             {Object.keys(categories).length} Categories
           </div>
         </div>
-
-        {categories.length === 0 ?
-          <div className="flex flex-col justify-center items-center h-60 bg-gray-700/50 rounded-lg">
-            <TriangleAlert size={36} className='text-purple-600 mb-6'/>
-            No Exercises Uploaded
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
           </div>
-          :
-          <>
-            {/* Current Selection Display */}
-            <div className="flex flex-wrap items-center gap-2 mb-4 px-2 py-3 bg-gray-700/50 rounded-lg">
-              <div className="flex-1 flex items-center">
-                <span className="text-sm font-medium text-purple-300">{selectedCategory}</span>
-                <ChevronRight size={14} className="mx-1 text-gray-500" />
-                <span className="text-sm font-medium text-gray-200">
-                  {selectedSubCategory ? selectedSubCategory : 'All'}
-                </span>
-                <ChevronRight size={14} className="mx-1 text-gray-500" />
-                <span className="text-sm font-medium text-gray-200">{selectedPosition}</span>
+        ) :
+          (
+            categories?.length === 0 ?
+              <div className="flex flex-col justify-center items-center h-60 bg-gray-700/50 rounded-lg">
+                <TriangleAlert size={36} className='text-purple-600 mb-6' />
+                No Exercises Uploaded
               </div>
-            </div>
-
-            {/* Categories */}
-            <div className="mb-5">
-              <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Category</h3>
-              <div className="bg-gray-700/30 rounded-lg p-1.5">
-                <ul className="max-h-[250px] overflow-y-auto pr-1 space-y-1 scrollbar-thin">
-                  {Object.keys(categories).map(category => (
-                    <li key={category}>
-                      <button
-                        className={`w-full text-left py-2 px-3 rounded-md text-sm transition-colors ${selectedCategory === category
-                          ? 'bg-purple-600 text-white font-medium'
-                          : 'hover:bg-gray-700 text-gray-300'
-                          }`}
-                        onClick={() => handleCategoryClick(category)}
-                        onMouseEnter={(e) => handleCategoryMouseEnter(category, e)}
-                        onMouseLeave={handleCategoryMouseLeave}
-                        ref={selectedCategory === category ? selectedCategoryRef : null}
-                      >
-                        {category}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {/* Selected Subcategory Display */}
-            {selectedSubCategory && (
-              <div className="mb-5">
-                <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Subcategory</h3>
-                <div className="bg-gray-700/30 rounded-lg p-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-purple-300">{selectedSubCategory}</span>
-                    <button
-                      onClick={() => setSelectedSubCategory('')}
-                      className="text-xs text-gray-400 hover:text-white"
-                    >
-                      Clear
-                    </button>
+              :
+              <>
+                {/* Current Selection Display */}
+                <div className="flex flex-wrap items-center gap-2 mb-4 px-2 py-3 bg-gray-700/50 rounded-lg">
+                  <div className="flex-1 flex items-center">
+                    <span className="text-sm font-medium text-purple-300">{selectedCategory}</span>
+                    <ChevronRight size={14} className="mx-1 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-200">
+                      {selectedSubCategory ? selectedSubCategory : 'All'}
+                    </span>
+                    <ChevronRight size={14} className="mx-1 text-gray-500" />
+                    <span className="text-sm font-medium text-gray-200">{selectedPosition}</span>
                   </div>
                 </div>
-              </div>
-            )}
 
-            {/* Positions */}
-            <div>
-              <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Position</h3>
-              <div className="bg-gray-700/30 rounded-lg p-1.5">
-                <div className="grid grid-cols-2 gap-1.5">
-                  {positions.map(position => (
-                    <button
-                      key={position}
-                      onClick={() => setSelectedPosition(position)}
-                      className={`text-left py-2 px-3 rounded-md text-sm transition-colors ${selectedPosition === position
-                        ? 'bg-purple-600 text-white font-medium'
-                        : 'hover:bg-gray-700 text-gray-300'
-                        }`}
-                    >
-                      {position}
-                    </button>
-                  ))}
+                {/* Categories */}
+                <div className="mb-5">
+                  <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Category</h3>
+                  <div className="bg-gray-700/30 rounded-lg p-1.5">
+                    <ul className="max-h-[250px] overflow-y-auto pr-1 space-y-1 scrollbar-thin">
+                      {Object.keys(categories).map(category => (
+                        <li key={category}>
+                          <button
+                            className={`w-full text-left py-2 px-3 rounded-md text-sm transition-colors ${selectedCategory === category
+                              ? 'bg-purple-600 text-white font-medium'
+                              : 'hover:bg-gray-700 text-gray-300'
+                              }`}
+                            onClick={() => handleCategoryClick(category)}
+                            onMouseEnter={(e) => handleCategoryMouseEnter(category, e)}
+                            onMouseLeave={handleCategoryMouseLeave}
+                            ref={selectedCategory === category ? selectedCategoryRef : null}
+                          >
+                            {category}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </>
-        }
+
+                {/* Selected Subcategory Display */}
+                {selectedSubCategory && (
+                  <div className="mb-5">
+                    <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Subcategory</h3>
+                    <div className="bg-gray-700/30 rounded-lg p-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-purple-300">{selectedSubCategory}</span>
+                        <button
+                          onClick={() => setSelectedSubCategory('')}
+                          className="text-xs text-gray-400 hover:text-white"
+                        >
+                          Clear
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Positions */}
+                <div>
+                  <h3 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-2 px-1">Position</h3>
+                  <div className="bg-gray-700/30 rounded-lg p-1.5">
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {positions.map(position => (
+                        <button
+                          key={position}
+                          onClick={() => setSelectedPosition(position)}
+                          className={`text-left py-2 px-3 rounded-md text-sm transition-colors ${selectedPosition === position
+                            ? 'bg-purple-600 text-white font-medium'
+                            : 'hover:bg-gray-700 text-gray-300'
+                            }`}
+                        >
+                          {position}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </>
+          )}
       </div>
 
       {/* Subcategories Popup */}

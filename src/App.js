@@ -19,7 +19,7 @@ import CreatorExercisesPage from './Pages/CreatorExercisesPage';
 const AppContent = () => {
   const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin');
-  const isTherapist = location.pathname.startsWith('/therapist');
+  const isTherapist = location.pathname.startsWith('/therapist') || location.state?.isTherapist;
   
   return (
     <>

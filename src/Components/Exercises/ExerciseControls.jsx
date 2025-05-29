@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Grid, Search } from 'lucide-react';
 
-const ExerciseControls = ({ filteredExercises, layoutSize, setLayoutSize, searchQuery, setSearchQuery, handleSearch }) => {
-  const [inputValue, setInputValue] = useState(searchQuery);
+const ExerciseControls = ({ filteredExercises, layoutSize, setLayoutSize, handleSearch }) => {
+  const [inputValue, setInputValue] = useState('');
 
   const onSubmit = (e) => {
     e.preventDefault();
