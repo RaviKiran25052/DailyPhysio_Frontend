@@ -1,14 +1,14 @@
 const PrintButton = ({ routines, icon, text }) => {
 
-	const handlePrintAll = (routines) => {
-		const printWindow = window.open('', '_blank');
+  const handlePrintAll = (routines) => {
+    const printWindow = window.open('', '_blank');
 
-		if (!printWindow) {
-			alert('Please allow pop-ups to print routines');
-			return;
-		}
+    if (!printWindow) {
+      alert('Please allow pop-ups to print routines');
+      return;
+    }
 
-		const printContent = `
+    const printContent = `
     <!DOCTYPE html>
 <html>
 <head>
@@ -227,30 +227,30 @@ const PrintButton = ({ routines, icon, text }) => {
 </body>
 </html>`;
 
-		printWindow.document.open();
-		printWindow.document.write(printContent);
-		printWindow.document.close();
+    printWindow.document.open();
+    printWindow.document.write(printContent);
+    printWindow.document.close();
 
-		// Wait for images to load before printing
-		setTimeout(() => {
-			printWindow.print();
-			// Close the window after print dialog closes (or after a delay)
-			setTimeout(() => {
-				printWindow.close();
-			}, 500);
-		}, 500);
-	};
+    // Wait for images to load before printing
+    setTimeout(() => {
+      printWindow.print();
+      // Close the window after print dialog closes (or after a delay)
+      setTimeout(() => {
+        printWindow.close();
+      }, 500);
+    }, 500);
+  };
 
-	const handlePrintSingle = (routines) => {
-		const routine = routines[0];
-		const printWindow = window.open('', '_blank');
+  const handlePrintSingle = (routines) => {
+    const routine = routines[0];
+    const printWindow = window.open('', '_blank');
 
-		if (!printWindow) {
-			alert('Please allow pop-ups to print routine');
-			return;
-		}
+    if (!printWindow) {
+      alert('Please allow pop-ups to print routine');
+      return;
+    }
 
-		const printContent = `
+    const printContent = `
       <!DOCTYPE html>
 <html>
 <head>
@@ -368,6 +368,9 @@ const PrintButton = ({ routines, icon, text }) => {
         border-radius: 6px;
         font-weight: 500;
       }
+    .video-link:hover {
+      background-color: #4338ca;
+    }
       
       .footer {
         font-size: 12px;
@@ -430,7 +433,8 @@ const PrintButton = ({ routines, icon, text }) => {
       ${(routine.exerciseId?.video || routine.exercise?.video) ? `
         <div class="content-section">
           <h3>Video Tutorial</h3>
-          <a class="video-link" href="${routine.exerciseId?.video || routine.exercise?.video}" target="_blank">
+          <a class="video-link" href="${routine.exerciseId?.video || routine.exercise?.video}" 
+             target="_blank" rel="noopener noreferrer">
             Watch Demonstration Video
           </a>
         </div>
@@ -445,29 +449,29 @@ const PrintButton = ({ routines, icon, text }) => {
 </html>
     `;
 
-		printWindow.document.open();
-		printWindow.document.write(printContent);
-		printWindow.document.close();
+    printWindow.document.open();
+    printWindow.document.write(printContent);
+    printWindow.document.close();
 
-		// Wait for images to load before printing
-		setTimeout(() => {
-			printWindow.print();
-			// Close the window after print dialog closes (or after a delay)
-			setTimeout(() => {
-				printWindow.close();
-			}, 500);
-		}, 500);
-	};
+    // Wait for images to load before printing
+    setTimeout(() => {
+      printWindow.print();
+      // Close the window after print dialog closes (or after a delay)
+      setTimeout(() => {
+        printWindow.close();
+      }, 500);
+    }, 500);
+  };
 
-	return (
-		<button
-			onClick={routines.length > 1 ? () => {handlePrintAll(routines)} : () => {handlePrintSingle([routines])}}
-			className="p-2 text-sm bg-purple-600 hover:bg-purple-500 rounded-lg text-white flex items-center transition-colors duration-200"
-		>
-			{icon}
-			<span className="ml-1">{text}</span>
-		</button>
-	)
+  return (
+    <button
+      onClick={routines.length > 1 ? () => { handlePrintAll(routines) } : () => { handlePrintSingle([routines]) }}
+      className="p-2 text-sm bg-purple-600 hover:bg-purple-500 rounded-lg text-white flex items-center transition-colors duration-200"
+    >
+      {icon}
+      <span className="ml-1">{text}</span>
+    </button>
+  )
 }
 
 export default PrintButton

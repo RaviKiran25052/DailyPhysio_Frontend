@@ -27,7 +27,7 @@ const ExerciseSidebar = ({
     }
 
     setValidSubCategories(data);
-  }, []);
+  }, [categories]);
 
   // Scroll to selected category when component mounts or category changes
   useEffect(() => {

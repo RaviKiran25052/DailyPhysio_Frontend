@@ -139,27 +139,27 @@ const MediaCarousel = ({ images = [], video = null }) => {
 			{hasMultipleItems && (
 				<div className="absolute inset-0 z-30 pointer-events-none">
 					{/* Previous button */}
-					<button
+					<span
 						onClick={prevSlide}
 						className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white pointer-events-auto"
 						aria-label="Previous media"
 					>
 						<ChevronLeft size={16} />
-					</button>
+					</span>
 
 					{/* Next button */}
-					<button
+					<span
 						onClick={nextSlide}
 						className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white pointer-events-auto"
 						aria-label="Next media"
 					>
 						<ChevronRight size={16} />
-					</button>
+					</span>
 
 					{/* Pagination indicators */}
 					<div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
 						{mediaItems.map((_, idx) => (
-							<button
+							<div
 								key={idx}
 								onClick={(e) => goToSlide(idx, e)}
 								className={`w-2 h-2 rounded-full transition-all pointer-events-auto ${
@@ -177,26 +177,26 @@ const MediaCarousel = ({ images = [], video = null }) => {
 			{/* Maximize button (only show on hover in normal mode) */}
 			{!maximized && (
 				<div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-40">
-					<button
+					<div
 						onClick={toggleMaximize}
 						className="bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white"
 						aria-label="Maximize carousel"
 					>
 						<Maximize size={16} />
-					</button>
+					</div>
 				</div>
 			)}
 
 			{/* Minimize button (only in maximized view) */}
 			{maximized && (
 				<div className="absolute top-4 right-4 z-50 flex space-x-2">
-					<button
+					<span
 						onClick={closeMaximizedView}
 						className="bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white"
 						aria-label="Close carousel"
 					>
 						<X size={16} />
-					</button>
+					</span>
 				</div>
 			)}
 		</div>
