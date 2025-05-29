@@ -43,7 +43,7 @@ const Footer = () => {
           </div>
           
           {/* Feedback Section */}
-          <div className="max-w-md w-full bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-lg">
+          {/* <div className="max-w-md w-full bg-gray-800 rounded-xl p-6 border border-gray-700 shadow-lg">
             <h3 className="text-xl font-semibold mb-4 text-white text-center">Share Your Feedback</h3>
             <p className="text-gray-300 mb-4 text-center">Help us improve by sharing your experience with our services.</p>
             <form className="flex flex-col space-y-4">
@@ -60,7 +60,7 @@ const Footer = () => {
                 Submit Feedback
               </button>
             </form>
-          </div>
+          </div> */}
         </div>
         
         {/* Bottom Section */}
