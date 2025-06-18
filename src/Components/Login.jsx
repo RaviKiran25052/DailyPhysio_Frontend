@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { Eye, EyeOff } from 'lucide-react';
 const API_URL = process.env.REACT_APP_API_URL;
 
 const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
@@ -17,7 +18,10 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const [resetStep, setResetStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
   const [passwordError, setPasswordError] = useState('');
-
+  // Add state for password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -346,17 +350,27 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
                 <label htmlFor="password" className="block text-gray-300 mb-1 text-sm font-medium">
                   {forgotPassword ? 'New Password' : 'Password'}
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  autoComplete="current-password"
-                  onChange={handleChange}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  placeholder={forgotPassword ? "Create new password" : isSignIn ? "Enter your password" : "Create a password"}
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    autoComplete="current-password"
+                    onChange={handleChange}
+                    className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder={forgotPassword ? "Create new password" : isSignIn ? "Enter your password" : "Create a password"}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
             )}
 
@@ -364,17 +378,27 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {(!isSignIn && !forgotPassword) || (forgotPassword && resetStep === 3) ? (
               <div>
                 <label htmlFor="confirmPassword" className="block text-gray-300 mb-1 text-sm font-medium">Confirm Password</label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  placeholder="Confirm your password"
-                  autoComplete="new-password"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="Confirm your password"
+                    autoComplete="new-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                  >
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
                 {passwordError && (
                   <p className="text-red-400 text-sm mt-1">{passwordError}</p>
                 )}

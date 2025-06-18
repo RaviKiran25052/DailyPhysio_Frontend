@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { FaTimes, FaUpload } from 'react-icons/fa';
+import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 // Available specialization options
@@ -37,6 +38,9 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 	const [loading, setLoading] = useState(false);
 	const [profilePicPreview, setProfilePicPreview] = useState(formData.profilePic);
 	const fileInputRef = useRef(null);
+	// Add state for password visibility
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	// Handle input changes
 	const handleChange = (e) => {
@@ -329,15 +333,25 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 								<label className="block text-sm font-medium text-gray-400 mb-1">
 									Password <span className="text-red-500">*</span>
 								</label>
-								<input
-									type="password"
-									name="password"
-									value={formData.password}
-									onChange={handleChange}
-									className={`w-full px-3 py-2 bg-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
-									placeholder="Enter password"
-								/>
+								<div className="relative">
+									<input
+										type={showPassword ? "text" : "password"}
+										name="password"
+										value={formData.password}
+										onChange={handleChange}
+										className={`w-full px-3 py-2 bg-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-600'
+											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										placeholder="Enter password"
+									/>
+									<button
+										type="button"
+										className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+										onClick={() => setShowPassword(!showPassword)}
+										aria-label={showPassword ? "Hide password" : "Show password"}
+									>
+										{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+									</button>
+								</div>
 								{errors.password && (
 									<p className="mt-1 text-sm text-red-500">{errors.password}</p>
 								)}
@@ -348,15 +362,25 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 								<label className="block text-sm font-medium text-gray-400 mb-1">
 									Confirm Password <span className="text-red-500">*</span>
 								</label>
-								<input
-									type="password"
-									name="confirmPassword"
-									value={formData.confirmPassword}
-									onChange={handleChange}
-									className={`w-full px-3 py-2 bg-gray-700 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
-									placeholder="Confirm password"
-								/>
+								<div className="relative">
+									<input
+										type={showConfirmPassword ? "text" : "password"}
+										name="confirmPassword"
+										value={formData.confirmPassword}
+										onChange={handleChange}
+										className={`w-full px-3 py-2 bg-gray-700 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
+											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										placeholder="Confirm password"
+									/>
+									<button
+										type="button"
+										className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+										onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+										aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+									>
+										{showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+									</button>
+								</div>
 								{errors.confirmPassword && (
 									<p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
 								)}
