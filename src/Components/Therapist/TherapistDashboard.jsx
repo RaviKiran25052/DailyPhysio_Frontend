@@ -13,11 +13,13 @@ import {
   FaChartLine,
   FaCalendarAlt
 } from 'react-icons/fa';
+import AccountRejectedModal from './AccountRejectedModal';
 
 const TherapistDashboard = () => {
   const navigate = useNavigate();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showRejectedModal, setShowRejectedModal] = useState(false);
   const [showNotActivatedModal, setShowNotActivatedModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [activePlan, setActivePlan] = useState(1); // Default to Pro Monthly (index 1)
@@ -36,12 +38,14 @@ const TherapistDashboard = () => {
     setShowRegisterModal(!showRegisterModal);
   }
 
-  const handleLoginClose = (isVerfied, isSubmitted) => {
+  const handleLoginClose = (status = 'inactive', isSubmitted) => {
     setShowLoginModal(false);
 
-    if (isVerfied) {
+    if (status === 'active') {
       navigate('/therapist/home');
-    } else if (isSubmitted) {
+    } else if (status === 'rejected' && isSubmitted) {
+      setShowRejectedModal(true);
+    } else if (status === 'inactive' && isSubmitted) {
       setShowNotActivatedModal(true);
     }
   }
@@ -55,6 +59,11 @@ const TherapistDashboard = () => {
 
   const handleNotActivatedClose = () => {
     setShowNotActivatedModal(false);
+    setShowLoginModal(true);
+  }
+
+  const handleRejectedClose = () => {
+    setShowRejectedModal(false);
     setShowLoginModal(true);
   }
 
@@ -404,6 +413,7 @@ const TherapistDashboard = () => {
       {showLoginModal && <TherapistLogin onClose={handleLoginClose} onRegister={toggleAuthModals} />}
       {showRegisterModal && <TherapistRegister onClose={handleRegisterClose} onLogin={toggleAuthModals} selectedPlan={activePlan} />}
       {showNotActivatedModal && <AccountNotActivatedModal onLgin={handleNotActivatedClose} onClose={() => setShowNotActivatedModal(false)} />}
+      {showRejectedModal && <AccountRejectedModal onLgin={handleRejectedClose} onClose={() => setShowRejectedModal(false)} />}
       {showSuccessModal && <RegistrationSuccessModal onClose={handleSuccessModalClose} />}
     </div>
   );

@@ -35,7 +35,6 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 	const [selectedSpecialization, setSelectedSpecialization] = useState('');
 	const [otherSpecialization, setOtherSpecialization] = useState('');
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState('');
 	const [profilePicPreview, setProfilePicPreview] = useState(formData.profilePic);
 	const fileInputRef = useRef(null);
 
@@ -203,7 +202,9 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 		if (validateForm()) {
 			setLoading(true);
 			try {
-				const { confirmPassword, ...dataToSubmit } = formData;
+				const { confirmPassword, profilePic, ...dataToSubmit } = formData;
+				console.log(formData);
+				
 				const response = await axios.post(
 					`${process.env.REACT_APP_API_URL}/therapist/register`,
 					dataToSubmit
@@ -245,7 +246,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 
 				<div className="p-6 max-h-[70vh] overflow-y-auto">
 					{/* Profile Picture Upload */}
-					<div className="flex flex-col items-center mb-6">
+					{/* <div className="flex flex-col items-center mb-6">
 						<div className="relative w-32 h-32 mb-4">
 							<img
 								src={profilePicPreview}
@@ -280,7 +281,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 						{errors.profilePic && (
 							<p className="mt-2 text-sm text-red-500">{errors.profilePic}</p>
 						)}
-					</div>
+					</div> */}
 
 
 					<form onSubmit={handleSubmit}>

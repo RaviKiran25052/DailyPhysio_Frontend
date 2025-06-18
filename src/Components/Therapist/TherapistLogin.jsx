@@ -161,7 +161,9 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 						`${process.env.REACT_APP_API_URL}/therapist/login`,
 						formData
 					);
-					onClose(response.data.status === 'active', true);
+					console.log(response.data.status);
+					
+					onClose(response.data.status, true);
 					if (response.data.status === 'active') {
 						localStorage.setItem('therapistInfo', JSON.stringify(response.data));
 						navigate('/therapist/home');

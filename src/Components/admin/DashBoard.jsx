@@ -280,7 +280,7 @@ const DashBoard = () => {
 							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-300 to-transparent"></div>
 							<div className="space-y-1">
 								<div className="flex justify-between items-center">
-									<p className="text-sm text-purple-200 font-medium">Admin Created</p>
+									<p className="text-sm text-purple-200 font-medium">Users Registered</p>
 									<p className="text-2xl font-bold text-white">{analyticsData?.users?.regularUsersCount + analyticsData?.users?.proUsersCount - analyticsData?.users?.therapistCreatedUsersCount}</p>
 								</div>
 								<div className="flex justify-between items-center">

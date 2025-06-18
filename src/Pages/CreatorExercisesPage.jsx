@@ -9,7 +9,6 @@ import {
   Users,
   Briefcase,
   Clock,
-  Award,
   Tag
 } from 'lucide-react';
 import axios from 'axios';
@@ -301,8 +300,8 @@ const CreatorExercisesPage = () => {
                         >
                           {/* Media preview */}
                           <div className="h-40 sm:h-48 bg-gray-700 relative">
-                            {exercise.video?.length > 0 || exercise.image?.length > 0 ? (
-                              <MediaCarousel video={exercise.video || []} images={exercise.image || []} />
+                            {exercise.video != null || exercise.image?.length > 0 ? (
+                              <MediaCarousel video={exercise.video || null} images={exercise.image || []} />
                             ) : (
                               <div className="h-full flex items-center justify-center bg-gray-700 text-gray-500">
                                 <p>No media</p>

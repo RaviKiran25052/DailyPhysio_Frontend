@@ -36,7 +36,11 @@ const ExercisesPage = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`${API_URL}/exercises/categories`);
+        const response = await axios.get(`${API_URL}/exercises/categories`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
 
         setAllCategories(response.data.data.categories);
         setAllPositions(response.data.data.positions);

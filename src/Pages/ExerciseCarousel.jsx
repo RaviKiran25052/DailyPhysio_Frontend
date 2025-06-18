@@ -51,10 +51,6 @@ const ExerciseCarousel = ({ exercises = [], onExerciseClick }) => {
 		}, 300);
 	};
 
-	// Calculate indices for previous, current, and next cards
-	const prevIndex = (currentIndex - 1 + exercises.length) % exercises.length;
-	const nextIndex = (currentIndex + 1) % exercises.length;
-
 	return (
 		<div className="relative">
 			{/* Carousel container */}
