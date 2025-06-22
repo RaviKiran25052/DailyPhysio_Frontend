@@ -73,11 +73,6 @@ const ExerciseDetailPage = () => {
         setCreatorData(data.creatorData);
         setRelatedExercises(data.relatedExercises);
 
-        // Update form data with exercise title
-        setFormData(prev => ({
-          ...prev,
-          name: data.exercise.title || 'Exercise Routine'
-        }));
         // Check favorite status
         await checkFavoriteStatus();
       } catch (error) {
@@ -227,6 +222,20 @@ const ExerciseDetailPage = () => {
     }
   };
 
+  const handleSaveRoutinePopup = () => {
+    setFormData({
+      reps: exercise?.reps || 1,
+      hold: exercise?.hold || 1,
+      complete: exercise?.complete || 1,
+      perform: {
+        count: exercise?.perform?.count || 1,
+        type: exercise?.perform?.type || 'day'
+      },
+      name: exercise?.title
+    });
+    setShowRoutinePopup(true);
+  }
+
   // Submit form data to create a routine
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -341,7 +350,7 @@ const ExerciseDetailPage = () => {
             {/* Action buttons */}
             <div className="flex flex-wrap gap-3 mb-8">
               <button
-                onClick={() => setShowRoutinePopup(true)}
+                onClick={handleSaveRoutinePopup}
                 className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg flex items-center gap-2 transition-colors"
               >
                 <Save size={18} />
