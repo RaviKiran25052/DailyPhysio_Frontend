@@ -34,6 +34,12 @@ const UserManagement = () => {
     fetchUsers(loggedInAdmin.token);
   }, [navigate]);
 
+  // Helper function to get current active membership
+  const getCurrentMembership = (user) => {
+    if (!user.membership || !Array.isArray(user.membership)) return null;
+    return user.membership.find(m => m.status === 'active') || null;
+  };
+
   const fetchUsers = async (token) => {
     try {
       setLoading(true);
@@ -48,10 +54,18 @@ const UserManagement = () => {
       const response = await axios.get(`${API_URL}/users`, config);
       const allUsers = response.data || [];
 
-      // Separate regular and premium users
-      const regular = allUsers.filter(user => user.membership.type === 'free');
-      const premium = allUsers.filter(user => (user.membership.type === 'yearly' || user.membership.type === 'monthly'));
-      const thrptUsers = allUsers.filter(user => user.creator.createdBy === 'therapist');
+      // Separate regular and premium users based on current active membership
+      const regular = allUsers.filter(user => {
+        const currentMembership = getCurrentMembership(user);
+        return currentMembership && currentMembership.type === 'free';
+      });
+
+      const premium = allUsers.filter(user => {
+        const currentMembership = getCurrentMembership(user);
+        return currentMembership && (currentMembership.type === 'yearly' || currentMembership.type === 'monthly');
+      });
+
+      const thrptUsers = allUsers.filter(user => user.creator && user.creator.createdBy === 'therapist');
 
       setUsers(allUsers);
       setRegularUsers(regular);
@@ -76,9 +90,17 @@ const UserManagement = () => {
 
     if (value === '') {
       // If search is cleared, reset to all users
-      const regular = users.filter(user => user.role === 'isUser' && user.membership.type === 'free');
-      const premium = users.filter(user => user.role === 'isUser' && (user.membership.type === 'yearly' || user.membership.type === 'monthly'));
-      const therapist = users.filter(user => user.role === 'isUser' && user.creator.createdBy === 'therapist');
+      const regular = users.filter(user => {
+        const currentMembership = getCurrentMembership(user);
+        return user.role === 'isUser' && currentMembership && currentMembership.type === 'free';
+      });
+
+      const premium = users.filter(user => {
+        const currentMembership = getCurrentMembership(user);
+        return user.role === 'isUser' && currentMembership && (currentMembership.type === 'yearly' || currentMembership.type === 'monthly');
+      });
+
+      const therapist = users.filter(user => user.role === 'isUser' && user.creator && user.creator.createdBy === 'therapist');
 
       setRegularUsers(regular);
       setPremiumUsers(premium);
@@ -86,25 +108,29 @@ const UserManagement = () => {
     } else {
       // Filter users based on search term
       const filteredRegular = users.filter(
-        user =>
-          user.role === 'isUser' &&
-          user.membership.type === 'free' &&
-          (user.fullName.toLowerCase().includes(value) ||
-            user.email.toLowerCase().includes(value))
+        user => {
+          const currentMembership = getCurrentMembership(user);
+          return user.role === 'isUser' &&
+            currentMembership && currentMembership.type === 'free' &&
+            (user.fullName.toLowerCase().includes(value) ||
+              user.email.toLowerCase().includes(value));
+        }
       );
 
       const filteredPremium = users.filter(
-        user =>
-          user.role === 'isUser' &&
-          (user.membership.type === 'yearly' || user.membership.type === 'monthly') &&
-          (user.fullName.toLowerCase().includes(value) ||
-            user.email.toLowerCase().includes(value))
+        user => {
+          const currentMembership = getCurrentMembership(user);
+          return user.role === 'isUser' &&
+            currentMembership && (currentMembership.type === 'yearly' || currentMembership.type === 'monthly') &&
+            (user.fullName.toLowerCase().includes(value) ||
+              user.email.toLowerCase().includes(value));
+        }
       );
 
       const filteredTherapistUsers = users.filter(
         user =>
           user.role === 'isUser' &&
-          user.creator.createdBy === 'therapist' &&
+          user.creator && user.creator.createdBy === 'therapist' &&
           (user.fullName.toLowerCase().includes(value) ||
             user.email.toLowerCase().includes(value))
       );
@@ -127,16 +153,18 @@ const UserManagement = () => {
 
   // Calculate days remaining for premium users
   const calculateDaysRemaining = (user) => {
-    if (!user.membership || !user.membership.paymentDate) return 'N/A';
+    const currentMembership = getCurrentMembership(user);
 
-    const paymentDate = new Date(user.membership.paymentDate);
+    if (!currentMembership || !currentMembership.paymentDate) return 'N/A';
+
+    const paymentDate = new Date(currentMembership.paymentDate);
     const currentDate = new Date();
     const diffTime = Math.abs(currentDate - paymentDate);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    if (user.membership.type === 'monthly') {
+    if (currentMembership.type === 'monthly') {
       return Math.max(0, 30 - diffDays);
-    } else if (user.membership.type === 'yearly') {
+    } else if (currentMembership.type === 'yearly') {
       return Math.max(0, 365 - diffDays);
     }
 
@@ -156,6 +184,8 @@ const UserManagement = () => {
   };
 
   function formatDateTime(isoString) {
+    if (!isoString) return 'N/A';
+
     const date = new Date(isoString);
 
     const day = String(date.getDate()).padStart(2, '0');
@@ -288,7 +318,7 @@ const UserManagement = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={3} className="px-6 py-4 text-center text-sm text-gray-400">
+                      <td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-400">
                         No users found
                       </td>
                     </tr>
@@ -339,34 +369,48 @@ const UserManagement = () => {
                     <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
                       Days Remaining
                     </th>
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                      Status
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-gray-800 divide-y divide-gray-700">
                   {currentPremiumUsers.length > 0 ? (
-                    currentPremiumUsers.map((user, index) => (
-                      <tr key={user._id} className="hover:bg-gray-700">
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
-                          {indexOfFirstUser + index + 1}
-                        </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-white">
-                          {user.fullName}
-                        </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
-                          <span className="px-2 py-1 text-sm text-black bg-yellow-600 rounded-full">
-                            {user.membership.type === 'monthly' ? 'Monthly' : 'Yearly'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-                          {formatDateTime(user.membership.paymentDate)}
-                        </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-                          {calculateDaysRemaining(user)} days
-                        </td>
-                      </tr>
-                    ))
+                    currentPremiumUsers.map((user, index) => {
+                      const currentMembership = getCurrentMembership(user);
+                      return (
+                        <tr key={user._id} className="hover:bg-gray-700">
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
+                            {indexOfFirstUser + index + 1}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-white">
+                            {user.fullName}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
+                            <span className="px-2 py-1 text-sm text-black bg-yellow-600 rounded-full">
+                              {currentMembership?.type === 'monthly' ? 'Monthly' : 'Yearly'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
+                            {formatDateTime(currentMembership?.paymentDate)}
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
+                            {calculateDaysRemaining(user)} days
+                          </td>
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
+                            <span className={`px-2 py-1 text-xs rounded-full ${currentMembership?.status === 'active'
+                                ? 'bg-green-900 text-green-300'
+                                : 'bg-red-900 text-red-300'
+                              }`}>
+                              {currentMembership?.status || 'Unknown'}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
-                      <td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-400">
+                      <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-400">
                         No premium users found
                       </td>
                     </tr>
@@ -396,7 +440,7 @@ const UserManagement = () => {
             </>
           )}
 
-          {/* Premium Users Table */}
+          {/* Therapist Users Table */}
           {activeTab === 'therapist' && (
             <>
               <table className="min-w-full divide-y divide-gray-700 bg-gray-800 rounded-lg overflow-hidden shadow-lg">
@@ -436,13 +480,13 @@ const UserManagement = () => {
                           {user.therapistName}
                         </td>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
-                          {formatDateTime(user.membership.paymentDate)}
+                          {formatDateTime(user.createdAt)}
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-400">
+                      <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-400">
                         No users created by Therapists
                       </td>
                     </tr>
@@ -450,7 +494,7 @@ const UserManagement = () => {
                 </tbody>
               </table>
 
-              {/* Pagination for Premium Users */}
+              {/* Pagination for Therapist Users */}
               {therapistUsers.length > itemsPerPage && (
                 <div className="flex justify-center mt-4">
                   <nav className="flex items-center space-x-1">
@@ -477,4 +521,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement; 
+export default UserManagement;

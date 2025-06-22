@@ -264,7 +264,7 @@ const MyRoutines = ({ user }) => {
           <Activity className="mr-2 text-purple-500" size={24} />
           Workout Routines
         </h2>
-        {user.membership.type !== "free" &&
+        {user.membership.find(m => m.status === 'active' && m.type !== 'free') &&
           <PrintButton
             routines={routines}
             icon={<Printer size={16} />}
@@ -275,7 +275,7 @@ const MyRoutines = ({ user }) => {
       {
         routines.length > 0 ? (
           <div className="grid gap-6">
-            {currentRoutines.map((routine, index )=> (
+            {currentRoutines.map((routine, index) => (
               <div
                 key={index}
                 className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-purple-900/20 transition-all duration-300"
@@ -297,7 +297,7 @@ const MyRoutines = ({ user }) => {
                     <div className="flex flex-wrap gap-2 justify-end">
                       {/* Mobile-friendly action buttons */}
                       <div className="hidden sm:flex gap-2">
-                        {user.membership.type !== "free" &&
+                        {user.membership.find(m => m.status === 'active' && m.type !== 'free') &&
                           <PrintButton
                             routines={routine}
                             icon={<FileText size={16} />}
@@ -330,7 +330,7 @@ const MyRoutines = ({ user }) => {
 
                       {/* Mobile buttons - simplified icon only version */}
                       <div className="flex sm:hidden gap-2">
-                        {user.membership.type !== "free" &&
+                        {user.membership.find(m => m.status === 'active' && m.type !== 'free') &&
                           <PrintButton
                             routines={routine}
                             icon={<FileText size={16} />}
