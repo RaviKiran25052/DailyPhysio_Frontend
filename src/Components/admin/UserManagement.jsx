@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaUsers, FaCrown } from 'react-icons/fa';
+import { FaUserDoctor } from "react-icons/fa6";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -11,12 +12,11 @@ const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [regularUsers, setRegularUsers] = useState([]);
   const [premiumUsers, setPremiumUsers] = useState([]);
-  const [activeTab, setActiveTab] = useState('users'); // 'users' or 'premium'
+  const [therapistUsers, setTherapistUsers] = useState([]);
+  const [activeTab, setActiveTab] = useState('users'); // 'users', 'premium', 'therapist'
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [totalPremiumUsers, setTotalPremiumUsers] = useState(0);
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -47,19 +47,16 @@ const UserManagement = () => {
       // Fetch users from the backend
       const response = await axios.get(`${API_URL}/users`, config);
       const allUsers = response.data || [];
-      console.log(response.data);
-      
 
       // Separate regular and premium users
       const regular = allUsers.filter(user => user.membership.type === 'free');
       const premium = allUsers.filter(user => (user.membership.type === 'yearly' || user.membership.type === 'monthly'));
+      const thrptUsers = allUsers.filter(user => user.creator.createdBy === 'therapist');
 
       setUsers(allUsers);
       setRegularUsers(regular);
       setPremiumUsers(premium);
-      setTotalUsers(regular.length);
-      setTotalPremiumUsers(premium.length);
-
+      setTherapistUsers(thrptUsers);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -81,11 +78,11 @@ const UserManagement = () => {
       // If search is cleared, reset to all users
       const regular = users.filter(user => user.role === 'isUser' && user.membership.type === 'free');
       const premium = users.filter(user => user.role === 'isUser' && (user.membership.type === 'yearly' || user.membership.type === 'monthly'));
+      const therapist = users.filter(user => user.role === 'isUser' && user.creator.createdBy === 'therapist');
 
       setRegularUsers(regular);
       setPremiumUsers(premium);
-      setTotalUsers(regular.length);
-      setTotalPremiumUsers(premium.length);
+      setTherapistUsers(therapist);
     } else {
       // Filter users based on search term
       const filteredRegular = users.filter(
@@ -104,10 +101,17 @@ const UserManagement = () => {
             user.email.toLowerCase().includes(value))
       );
 
+      const filteredTherapistUsers = users.filter(
+        user =>
+          user.role === 'isUser' &&
+          user.creator.createdBy === 'therapist' &&
+          (user.fullName.toLowerCase().includes(value) ||
+            user.email.toLowerCase().includes(value))
+      );
+
       setRegularUsers(filteredRegular);
       setPremiumUsers(filteredPremium);
-      setTotalUsers(filteredRegular.length);
-      setTotalPremiumUsers(filteredPremium.length);
+      setTherapistUsers(filteredTherapistUsers);
     }
   };
 
@@ -144,6 +148,7 @@ const UserManagement = () => {
   const indexOfFirstUser = indexOfLastUser - itemsPerPage;
   const currentRegularUsers = regularUsers.slice(indexOfFirstUser, indexOfLastUser);
   const currentPremiumUsers = premiumUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const currentTherapistUsers = therapistUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   // Pagination
   const paginate = (pageNumber) => {
@@ -201,7 +206,7 @@ const UserManagement = () => {
             Regular Users
             <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === 'users' ? 'bg-purple-900 text-purple-300' : 'bg-gray-800 text-gray-300'
               }`}>
-              {totalUsers}
+              {regularUsers.length}
             </span>
           </button>
 
@@ -216,7 +221,22 @@ const UserManagement = () => {
             Premium Users
             <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === 'premium' ? 'bg-purple-900 text-purple-300' : 'bg-gray-800 text-gray-300'
               }`}>
-              {totalPremiumUsers}
+              {premiumUsers.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => handleTabChange('therapist')}
+            className={`${activeTab === 'therapist'
+              ? 'border-purple-500 text-purple-500'
+              : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
+              } whitespace-nowrap py-3 px-1 border-b-2 font-medium flex items-center`}
+          >
+            <FaUserDoctor className="mr-2" />
+            Therapist Users
+            <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === 'therapist' ? 'bg-purple-900 text-purple-300' : 'bg-gray-800 text-gray-300'
+              }`}>
+              {therapistUsers.length}
             </span>
           </button>
         </nav>
@@ -277,10 +297,10 @@ const UserManagement = () => {
               </table>
 
               {/* Pagination for Regular Users */}
-              {totalUsers > itemsPerPage && (
+              {regularUsers.length > itemsPerPage && (
                 <div className="flex justify-center mt-4">
                   <nav className="flex items-center space-x-1">
-                    {Array.from({ length: Math.ceil(totalUsers / itemsPerPage) }).map((_, index) => (
+                    {Array.from({ length: Math.ceil(regularUsers.length / itemsPerPage) }).map((_, index) => (
                       <button
                         key={index}
                         onClick={() => paginate(index + 1)}
@@ -355,10 +375,86 @@ const UserManagement = () => {
               </table>
 
               {/* Pagination for Premium Users */}
-              {totalPremiumUsers > itemsPerPage && (
+              {premiumUsers.length > itemsPerPage && (
                 <div className="flex justify-center mt-4">
                   <nav className="flex items-center space-x-1">
-                    {Array.from({ length: Math.ceil(totalPremiumUsers / itemsPerPage) }).map((_, index) => (
+                    {Array.from({ length: Math.ceil(premiumUsers.length / itemsPerPage) }).map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => paginate(index + 1)}
+                        className={`px-3 py-1 rounded-md ${currentPage === index + 1
+                          ? 'bg-purple-600 text-white'
+                          : 'bg-gray-800 text-purple-400 hover:bg-gray-700'
+                          }`}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                  </nav>
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Premium Users Table */}
+          {activeTab === 'therapist' && (
+            <>
+              <table className="min-w-full divide-y divide-gray-700 bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                <thead>
+                  <tr>
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                      S.No
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                      Email
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                      Created By
+                    </th>
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                      Created on
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-gray-800 divide-y divide-gray-700">
+                  {currentTherapistUsers.length > 0 ? (
+                    currentTherapistUsers.map((user, index) => (
+                      <tr key={user._id} className="hover:bg-gray-700">
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
+                          {indexOfFirstUser + index + 1}
+                        </td>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-white">
+                          {user.fullName}
+                        </td>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
+                          {user.email}
+                        </td>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
+                          {user.therapistName}
+                        </td>
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
+                          {formatDateTime(user.membership.paymentDate)}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-400">
+                        No users created by Therapists
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+
+              {/* Pagination for Premium Users */}
+              {therapistUsers.length > itemsPerPage && (
+                <div className="flex justify-center mt-4">
+                  <nav className="flex items-center space-x-1">
+                    {Array.from({ length: Math.ceil(therapistUsers.length / itemsPerPage) }).map((_, index) => (
                       <button
                         key={index}
                         onClick={() => paginate(index + 1)}

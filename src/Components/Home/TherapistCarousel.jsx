@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Briefcase, Clock, Users, MapPin, Dumbbell, Star, Heart, Calendar } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Briefcase, Clock, MapPin, Dumbbell } from 'lucide-react';
 import { FaUserMd } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
@@ -293,8 +293,8 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 												<span>{therapist.workingAt}</span>
 											</div>
 											<div className="flex items-center group-hover:text-purple-200 transition-colors duration-300">
-												<MapPin size={16} className="mr-2 text-purple-400" />
-												<p>{therapist.address || 'Address not available'}</p>
+												<MapPin size={16} className="mr-2 text-purple-400 flex-shrink-0" />
+												<span className='line-clamp-2'>{therapist.address || 'Address not available'}</span>
 											</div>
 										</div>
 
@@ -315,9 +315,9 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 											</div>
 
 											<div className="flex flex-col items-center text-center">
-												<Users size={18} className="text-purple-400 mb-1" />
-												<span className="text-white font-medium">{therapist.followers}</span>
-												<span className="text-xs text-gray-400">Followers</span>
+												<Dumbbell size={18} className="text-purple-400 mb-1" />
+												<span className="text-white font-medium">{therapist.exerciseCount}</span>
+												<span className="text-xs text-gray-400">Exercises</span>
 											</div>
 										</div>
 
