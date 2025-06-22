@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaTimes } from 'react-icons/fa';
+import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const TherapistLogin = ({ onClose, onRegister }) => {
@@ -19,6 +20,9 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 	// Add forgot password state
 	const [forgotPassword, setForgotPassword] = useState(false);
 	const [resetStep, setResetStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
+	// Add state for password visibility
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 	// Handle input changes
 	const handleChange = (e) => {
@@ -289,15 +293,25 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 								<label className="block text-sm font-medium text-gray-400 mb-1">
 									{forgotPassword ? 'New Password' : 'Password'}
 								</label>
-								<input
-									type="password"
-									name="password"
-									value={formData.password}
-									onChange={handleChange}
-									className={`w-full px-3 py-2 bg-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
-									placeholder={forgotPassword ? "Create new password" : "Enter password"}
-								/>
+								<div className="relative">
+									<input
+										type={showPassword ? "text" : "password"}
+										name="password"
+										value={formData.password}
+										onChange={handleChange}
+										className={`w-full px-3 py-2 bg-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-600'
+											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										placeholder={forgotPassword ? "Create new password" : "Enter password"}
+									/>
+									<button
+										type="button"
+										className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+										onClick={() => setShowPassword(!showPassword)}
+										aria-label={showPassword ? "Hide password" : "Show password"}
+									>
+										{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+									</button>
+								</div>
 								{errors.password && (
 									<p className="mt-1 text-sm text-red-500">{errors.password}</p>
 								)}
@@ -310,15 +324,25 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 								<label className="block text-sm font-medium text-gray-400 mb-1">
 									Confirm Password
 								</label>
-								<input
-									type="password"
-									name="confirmPassword"
-									value={formData.confirmPassword}
-									onChange={handleChange}
-									className={`w-full px-3 py-2 bg-gray-700 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
-									placeholder="Confirm new password"
-								/>
+								<div className="relative">
+									<input
+										type={showConfirmPassword ? "text" : "password"}
+										name="confirmPassword"
+										value={formData.confirmPassword}
+										onChange={handleChange}
+										className={`w-full px-3 py-2 bg-gray-700 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
+											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										placeholder="Confirm new password"
+									/>
+									<button
+										type="button"
+										className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+										onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+										aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+									>
+										{showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+									</button>
+								</div>
 								{errors.confirmPassword && (
 									<p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>
 								)}
