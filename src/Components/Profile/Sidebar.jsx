@@ -1,4 +1,4 @@
-import { User, Dumbbell, Heart, Users, LogOut, Crown } from 'lucide-react';
+import { User, Dumbbell, Heart, Users, LogOut, Crown, BriefcaseMedical } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -97,6 +97,17 @@ const Sidebar = ({ userData, currentPath, setActiveTab }) => {
               Create Exercise
             </button>
           </li> */}
+
+            <li>
+              <button
+                onClick={() => handleTabClick('consultation')}
+                className={`w-full text-left px-4 py-2 rounded-md flex items-center ${currentPath === 'consultation' ? 'bg-purple-600 text-white' : 'text-gray-300 hover:bg-gray-700'
+                  }`}
+              >
+                <BriefcaseMedical className="mr-3 text-xl" />
+                Consulted Exercises
+              </button>
+            </li>
 
             <li>
               <button

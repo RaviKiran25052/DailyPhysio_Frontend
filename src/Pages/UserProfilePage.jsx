@@ -8,7 +8,8 @@ import Following from '../Components/Profile/Following';
 import axios from 'axios';
 import HandleExercise from '../Components/HandleExercise';
 import MembershipManagement from '../Components/Profile/MembershipManagement';
-import { User, Dumbbell, Heart, Users, Crown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { User, Dumbbell, Heart, Users, Crown, ChevronLeft, ChevronRight, BriefcaseMedical } from 'lucide-react';
+import ConsultedExercises from '../Components/Profile/ConsultedExercises';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -63,6 +64,8 @@ const UserProfilePage = () => {
         return <Following />;
       case 'create':
         return <HandleExercise />;
+      case 'consultation':
+        return <ConsultedExercises />;
       case 'membership':
         return <MembershipManagement />;
       default:
@@ -77,6 +80,7 @@ const UserProfilePage = () => {
       { id: 'routines', icon: <Dumbbell size={20} />, label: 'Routines' },
       { id: 'favorites', icon: <Heart size={20} />, label: 'Favorites' },
       { id: 'following', icon: <Users size={20} />, label: 'Following' },
+      { id: 'consultation', icon: <BriefcaseMedical size={20} />, label: 'Consulted' },
       { id: 'membership', icon: <Crown size={20} />, label: 'Membership' }
     ];
 

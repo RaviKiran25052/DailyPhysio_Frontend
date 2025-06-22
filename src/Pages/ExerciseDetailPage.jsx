@@ -151,8 +151,6 @@ const ExerciseDetailPage = () => {
 
     try {
       if (creatorData.isFollowing) {
-        console.log(creatorData)
-        // Unfollow the creator
         await axios.delete(
           `${API_URL}/users/following/${creatorData.id}`,
           {
