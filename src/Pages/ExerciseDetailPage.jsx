@@ -24,6 +24,7 @@ const ExerciseDetailPage = () => {
   const [showRoutinePopup, setShowRoutinePopup] = useState(false);
 
   // Check if we have routine data from location state
+  const consultedData = location.state?.consultedData;
   const routineData = location.state?.routineData;
 
   // Form data - initialize with routine data if available
@@ -63,6 +64,9 @@ const ExerciseDetailPage = () => {
       try {
 
         const response = await axios.get(`${API_URL}/exercises/${id}`, {
+          params: {
+            consultedData
+          },
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -380,20 +384,20 @@ const ExerciseDetailPage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-700 p-3 rounded-lg">
                   <div className="text-xs text-gray-400 mb-1">Reps</div>
-                  <div className="text-lg font-semibold">{exercise?.reps || 1}</div>
+                  <div className="text-lg font-semibold">{routineData?.reps || exercise?.reps}</div>
                 </div>
                 <div className="bg-gray-700 p-3 rounded-lg">
                   <div className="text-xs text-gray-400 mb-1">Hold (seconds)</div>
-                  <div className="text-lg font-semibold">{exercise?.hold || 1}</div>
+                  <div className="text-lg font-semibold">{routineData?.hold || exercise?.hold}</div>
                 </div>
                 <div className="bg-gray-700 p-3 rounded-lg">
                   <div className="text-xs text-gray-400 mb-1">Sets</div>
-                  <div className="text-lg font-semibold">{exercise?.set || 1}</div>
+                  <div className="text-lg font-semibold">{routineData?.set || exercise?.set}</div>
                 </div>
                 <div className="bg-gray-700 p-3 rounded-lg">
                   <div className="text-xs text-gray-400 mb-1">Perform</div>
                   <div className="text-lg font-semibold">
-                    {exercise?.perform?.count || 1}/{exercise?.perform?.type || 'day'}
+                    {routineData?.perform?.count || exercise?.perform?.count}/{routineData?.perform?.type || exercise?.perform?.type || 'day'}
                   </div>
                 </div>
               </div>

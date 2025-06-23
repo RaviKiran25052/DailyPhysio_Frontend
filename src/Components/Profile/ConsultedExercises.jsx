@@ -9,7 +9,6 @@ const API_URL = process.env.REACT_APP_API_URL || '';
 const ConsultedExercises = () => {
 	const [consultedData, setConsultedData] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
 	const [selectedConsultation, setSelectedConsultation] = useState(null);
 	const [viewMode, setViewMode] = useState('therapists'); // 'therapists' or 'exercises'
 	const navigate = useNavigate();
@@ -28,7 +27,7 @@ const ConsultedExercises = () => {
 			});
 			setConsultedData(response.data.consultedData);
 		} catch (err) {
-			setError(err.response?.data?.message || 'Failed to fetch consulted exercises');
+			console.error(err.response?.data?.message || 'Failed to fetch consulted exercises');
 		} finally {
 			setLoading(false);
 		}
@@ -63,24 +62,6 @@ const ConsultedExercises = () => {
 		);
 	}
 
-	if (error) {
-		return (
-			<div className="min-h-screen bg-gray-900 flex items-center justify-center">
-				<div className="text-center">
-					<div className="bg-red-900/50 border border-red-700 rounded-lg p-6 max-w-md">
-						<p className="text-red-300 mb-4">{error}</p>
-						<button
-							onClick={fetchConsultedExercises}
-							className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
-						>
-							Try Again
-						</button>
-					</div>
-				</div>
-			</div>
-		);
-	}
-
 	if (viewMode === 'exercises' && selectedConsultation) {
 		return (
 			<div className="min-h-screen bg-gray-900 text-white">
@@ -110,86 +91,97 @@ const ConsultedExercises = () => {
 
 					{/* Exercises Grid */}
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-						{selectedConsultation.recommendedExercises.map((exercise) => (
-							<div key={exercise._id} className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105">
-								{/* Exercise Image/Video */}
-								<div className="relative h-48 bg-gradient-to-br from-purple-900/50 to-gray-900">
-									{exercise?.video && exercise.image?.length > 0 ? (
-										<MediaCarousel video={exercise?.video || null} images={exercise.image || []} />
-									) : (
-										<div className="w-full h-full flex items-center justify-center">
-											<ImageIcon size={48} className="text-gray-600" />
-										</div>
-									)}
-									{exercise.isPremium && (
-										<div className="absolute top-3 right-3 bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-											<Crown size={12} />
-											Premium
-										</div>
-									)}
-									{exercise.video && (
-										<div className="absolute inset-0 flex items-center justify-center">
-											<div className="bg-purple-600 hover:bg-purple-700 rounded-full p-3 cursor-pointer transition-colors">
-												<Play size={24} fill="white" />
+						{selectedConsultation.recommendedExercises.map((exercise) => {
+							console.log(selectedConsultation)
+
+							return (
+								<div key={exercise._id} className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105">
+									{/* Exercise Image/Video */}
+									<div className="relative h-48 bg-gradient-to-br from-purple-900/50 to-gray-900">
+										{exercise?.video || exercise.image?.length > 0 ? (
+											<MediaCarousel video={exercise?.video || null} images={exercise.image || []} />
+										) : (
+											<div className="w-full h-full flex items-center justify-center">
+												<ImageIcon size={48} className="text-gray-600" />
+											</div>
+										)}
+										{exercise.isPremium && (
+											<div className="absolute top-3 right-3 bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1 z-10">
+												<Crown size={12} />
+												Premium
+											</div>
+										)}
+										{exercise.video && (
+											<div className="absolute inset-0 flex items-center justify-center">
+												<div className="bg-purple-600 hover:bg-purple-700 rounded-full p-3 cursor-pointer transition-colors">
+													<Play size={24} fill="white" />
+												</div>
+											</div>
+										)}
+									</div>
+
+									{/* Exercise Details */}
+									<div className="p-6">
+										<div className="flex justify-between items-start mb-3">
+											<h3 className="text-lg font-semibold text-white">{exercise.title}</h3>
+											<div className="flex items-center gap-1 text-gray-400 text-sm">
+												<Eye size={14} />
+												{exercise.views}
 											</div>
 										</div>
-									)}
+
+										<p className="text-gray-400 text-sm mb-4 line-clamp-2">{exercise.description}</p>
+
+										{/* Exercise Stats */}
+										<div className="grid grid-cols-3 gap-3 mb-4">
+											<div className="bg-gray-700 rounded-lg p-2 text-center">
+												<div className="text-purple-400 font-semibold">{exercise.reps}</div>
+												<div className="text-xs text-gray-400">Reps</div>
+											</div>
+											<div className="bg-gray-700 rounded-lg p-2 text-center">
+												<div className="text-purple-400 font-semibold">{exercise.set}</div>
+												<div className="text-xs text-gray-400">Sets</div>
+											</div>
+											<div className="bg-gray-700 rounded-lg p-2 text-center">
+												<div className="text-purple-400 font-semibold">{exercise.hold}s</div>
+												<div className="text-xs text-gray-400">Hold</div>
+											</div>
+										</div>
+
+										{/* Category Tags */}
+										<div className="flex flex-wrap gap-2 mb-4">
+											<span className="bg-purple-900/50 text-purple-300 px-2 py-1 rounded-full text-xs">
+												{exercise.category}
+											</span>
+											<span className="bg-gray-700 text-gray-300 px-2 py-1 rounded-full text-xs">
+												{exercise.subCategory}
+											</span>
+										</div>
+
+										{/* Perform Frequency */}
+										<div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
+											<Clock size={14} />
+											{exercise.perform.count} time(s) per {exercise.perform.type}
+										</div>
+
+										{/* Action Button */}
+										<button
+											onClick={() => navigate(`/exercise/${exercise._id}`, {
+												state: {
+													consultedData: {
+														therapistName: selectedConsultation?.therapist || {},
+														isActive: selectedConsultation?.status || false
+													}
+												}
+											})}
+											className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition-colors font-medium"
+										>
+											View Exercise
+										</button>
+									</div>
 								</div>
-
-								{/* Exercise Details */}
-								<div className="p-6">
-									<div className="flex justify-between items-start mb-3">
-										<h3 className="text-lg font-semibold text-white">{exercise.title}</h3>
-										<div className="flex items-center gap-1 text-gray-400 text-sm">
-											<Eye size={14} />
-											{exercise.views}
-										</div>
-									</div>
-
-									<p className="text-gray-400 text-sm mb-4 line-clamp-2">{exercise.description}</p>
-
-									{/* Exercise Stats */}
-									<div className="grid grid-cols-3 gap-3 mb-4">
-										<div className="bg-gray-700 rounded-lg p-2 text-center">
-											<div className="text-purple-400 font-semibold">{exercise.reps}</div>
-											<div className="text-xs text-gray-400">Reps</div>
-										</div>
-										<div className="bg-gray-700 rounded-lg p-2 text-center">
-											<div className="text-purple-400 font-semibold">{exercise.set}</div>
-											<div className="text-xs text-gray-400">Sets</div>
-										</div>
-										<div className="bg-gray-700 rounded-lg p-2 text-center">
-											<div className="text-purple-400 font-semibold">{exercise.hold}s</div>
-											<div className="text-xs text-gray-400">Hold</div>
-										</div>
-									</div>
-
-									{/* Category Tags */}
-									<div className="flex flex-wrap gap-2 mb-4">
-										<span className="bg-purple-900/50 text-purple-300 px-2 py-1 rounded-full text-xs">
-											{exercise.category}
-										</span>
-										<span className="bg-gray-700 text-gray-300 px-2 py-1 rounded-full text-xs">
-											{exercise.subCategory}
-										</span>
-									</div>
-
-									{/* Perform Frequency */}
-									<div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-										<Clock size={14} />
-										{exercise.perform.count} time(s) per {exercise.perform.type}
-									</div>
-
-									{/* Action Button */}
-									<button
-										onClick={() => navigate(`/exercise/${exercise._id}`)}
-										className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition-colors font-medium"
-									>
-										View Exercise
-									</button>
-								</div>
-							</div>
-						))}
+							);
+						})}
 					</div>
 				</div>
 			</div>

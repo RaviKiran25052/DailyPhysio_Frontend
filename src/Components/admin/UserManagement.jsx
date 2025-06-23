@@ -157,10 +157,10 @@ const UserManagement = () => {
 
     if (!currentMembership || !currentMembership.paymentDate) return 'N/A';
 
-    const paymentDate = new Date(currentMembership.paymentDate);
+    const paymentDate = new Date(currentMembership.paymentDate);    
     const currentDate = new Date();
     const diffTime = Math.abs(currentDate - paymentDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
     if (currentMembership.type === 'monthly') {
       return Math.max(0, 30 - diffDays);
