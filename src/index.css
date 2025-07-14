@@ -29,3 +29,12 @@ body {
           background-color: rgba(124, 58, 237, 0.5);
           border-radius: 10px;
         }
+
+      /* Custom scrollbar hiding styles */
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
