@@ -1,65 +1,120 @@
-const express = require('express');
-const httpProxy = require('http-proxy');
-const morgan = require('morgan');
-const cors = require('cors');
 require('dotenv').config();
-
+const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+const morgan = require('morgan');
 const app = express();
-const proxy = httpProxy.createProxyServer({ changeOrigin: true });
+
+// Morgan for logging HTTP requests
+app.use(morgan('combined'));
 
 const userServer = process.env.USER_SERVER || 'http://localhost:4322';
 const therapistServer = process.env.THERAPIST_SERVER || 'http://localhost:4323';
 const adminServer = process.env.ADMIN_SERVER || 'http://localhost:4324';
 
-// Middlewares
-app.use(cors(["http://localhost:4321", "https://helodr-saisobila.vercel.app"])); // Allow cross-origin requests
-app.use(morgan('combined')); // Detailed request logging
+// Health check with service availability
+app.get('/health', async (req, res) => {
+	const checkService = async (url) => {
+		try {
+			const response = await fetch(`${url}/health`);
+			return response.ok;
+		} catch (error) {
+			return false;
+		}
+	};
 
-// Proxy error handler (global)
-proxy.on('error', (err, req, res) => {
-	console.error(`Proxy error for ${req.url}:`, err.message);
-	if (!res.headersSent) {
-		res.status(502).json({ error: 'Bad Gateway', message: err.message });
-	}
-});
+	const services = {
+		users: {
+			url: userServer,
+			status: await checkService(userServer) ? 'UP' : 'DOWN'
+		},
+		therapists: {
+			url: therapistServer,
+			status: await checkService(therapistServer) ? 'UP' : 'DOWN'
+		},
+		admin: {
+			url: adminServer,
+			status: await checkService(adminServer) ? 'UP' : 'DOWN'
+		}
+	};
 
-// Log proxy request details
-proxy.on('proxyReq', (proxyReq, req, res, options) => {
-	console.log(`Proxying to ${options.target}: ${req.method} ${req.url}`);
-});
-
-// Timeout middleware (optional)
-app.use((req, res, next) => {
-	res.setTimeout(150000, () => {
-		console.warn(`Request timed out: ${req.method} ${req.url}`);
-		res.status(504).json({ error: 'Gateway Timeout' });
+	res.json({
+		status: 'OK',
+		timestamp: new Date().toISOString(),
+		services
 	});
-	next();
 });
 
-// Routes
-app.use('/users', (req, res) => {
-	console.log(`Routing /users → ${userServer}`);
-	proxy.web(req, res, { target: userServer });
+// Proxy configuration with better error handling
+const proxyOptions = {
+	changeOrigin: true,
+	timeout: 10000,
+	proxyTimeout: 10000,
+	onError: (err, req, res) => {
+		console.error(`Proxy error for ${req.url}:`, err.message);
+		if (!res.headersSent) {
+			res.status(503).json({
+				error: 'Service temporarily unavailable',
+				service: req.url.split('/')[1],
+				timestamp: new Date().toISOString()
+			});
+		}
+	},
+	onProxyReq: (proxyReq, req, res) => {
+		console.log(`Proxying ${req.method} ${req.url} to ${proxyReq.path}`);
+	}
+};
+
+// Create proxy middlewares
+const userProxy = createProxyMiddleware({
+	target: userServer,
+	pathRewrite: { '^/users': '' },
+	...proxyOptions
 });
 
-app.use('/therapists', (req, res) => {
-	console.log(`Routing /therapists → ${therapistServer}`);
-	proxy.web(req, res, { target: therapistServer });
+const therapistProxy = createProxyMiddleware({
+	target: therapistServer,
+	pathRewrite: { '^/therapists': '' },
+	...proxyOptions
 });
 
-app.use('/admin', (req, res) => {
-	console.log(`Routing /admin → ${adminServer}`);
-	proxy.web(req, res, { target: adminServer });
+const adminProxy = createProxyMiddleware({
+	target: adminServer,
+	pathRewrite: { '^/admin': '' },
+	...proxyOptions
 });
 
-// Health check
-app.get('/health', (req, res) => {
-	res.status(200).json({ status: 'API Gateway is running' });
+// Apply proxy routes
+app.use('/users', userProxy);
+app.use('/therapists', therapistProxy);
+app.use('/admin', adminProxy);
+
+// Default route
+app.get('/', (req, res) => {
+	res.json({
+		message: 'Microservices Proxy Server',
+		endpoints: {
+			users: `http://localhost:${process.env.MAIN_SERVER_PORT || 4321}/users`,
+			therapists: `http://localhost:${process.env.MAIN_SERVER_PORT || 4321}/therapists`,
+			admin: `http://localhost:${process.env.MAIN_SERVER_PORT || 4321}/admin`,
+			health: `http://localhost:${process.env.MAIN_SERVER_PORT || 4321}/health`
+		}
+	});
 });
 
-// Start the server
-const PORT = process.env.MAIN_SERVER_PORT || 5000;
+// 404 handler
+app.use((req, res) => {
+	res.status(404).json({
+		error: 'Route not found',
+		availableRoutes: ['/users', '/therapists', '/admin', '/health']
+	});
+});
+
+const PORT = process.env.MAIN_SERVER_PORT || 4321;
+
 app.listen(PORT, () => {
-	console.log(`🚀 API Gateway listening on port ${PORT}`);
+	console.log(`🚀 Proxy server running on http://localhost:${PORT}`);
+	console.log(`📱 Users: http://localhost:${PORT}/users`);
+	console.log(`👨‍⚕️ Therapists: http://localhost:${PORT}/therapists`);
+	console.log(`👑 Admin: http://localhost:${PORT}/admin`);
+	console.log(`❤️  Health: http://localhost:${PORT}/health`);
 });
