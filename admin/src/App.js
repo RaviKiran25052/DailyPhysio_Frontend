@@ -2,10 +2,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Adminlogin from './components/Adminlogin'
-import AdminHome from './components/AdminHome'
-import AdminExerciseList from './components/AdminExerciseList'
-import UserManagement from './components/UserManagement'
-import TherapistManagement from './components/Therapist/TherapistManagement'
+import AdminHome from './pages/AdminHome'
+import AdminExerciseList from './pages/AdminExerciseList'
+import UserManagement from './pages/UserManagement'
+import TherapistManagement from './pages/TherapistManagement'
 
 const App = () => {
   return (

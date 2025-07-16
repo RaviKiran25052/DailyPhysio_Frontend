@@ -2,7 +2,7 @@ import { Crown } from 'lucide-react';
 import MediaCarousel from './MediaCarousel';
 
 const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm }) => {
-	
+
 	if (totalExercises === 0) {
 		return (
 			<div className="text-center py-12">

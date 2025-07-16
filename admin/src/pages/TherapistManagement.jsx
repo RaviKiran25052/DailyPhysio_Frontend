@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { FaBell, FaSearch, FaSpinner } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import TherapistCard from './TherapistCard';
-import TherapistManagementTable from './TherapistManagementTable';
+import TherapistCard from '../components/Therapist/TherapistCard';
+import TherapistManagementTable from '../components/Therapist/TherapistManagementTable';
 
 // API URL from environment or default
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';

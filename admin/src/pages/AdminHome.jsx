@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Components
-import Sidebar from './Sidebar';
-import Header from './Header';
+import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
 import UserManagement from './UserManagement';
-import TherapistManagement from './Therapist/TherapistManagement';
+import TherapistManagement from './TherapistManagement';
 import AdminExerciseList from './AdminExerciseList';
 import DashBoard from './DashBoard';
 

@@ -4,13 +4,13 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 
 // Import sub-components
-import SearchBar from './SearchBar';
-import ExerciseTabs from './ExerciseTabs';
-import ExerciseGrid from './ExerciseGrid';
+import SearchBar from '../components/Exercises/SearchBar';
+import ExerciseTabs from '../components/Exercises/ExerciseTabs';
+import ExerciseGrid from '../components/Exercises/ExerciseGrid';
 import ExerciseDetail from './ExerciseDetail';
-import Pagination from './Pagination';
+import Pagination from '../components/Pagination';
 import { FaPlus } from 'react-icons/fa';
-import HandleExercise from './HandleExercise';
+import HandleExercise from '../components/Exercises/HandleExercise';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
