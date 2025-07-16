@@ -322,13 +322,13 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
                 {isEditing ? (
                   <input
                     type="number"
-                    value={activeDays}
+                    value={Math.max(activeDays, 0)}
                     onChange={(e) => setActiveDays(parseInt(e.target.value))}
                     className="w-24 px-2 py-1 bg-gray-700 rounded border border-gray-600"
                     min="1"
                   />
                 ) : (
-                  <div className="font-medium">{activeDays} days</div>
+                  <div className="font-medium">{activeDays > 0 ? `${activeDays} days` : `deactivated ${Math.abs(activeDays)} days back`}</div>
                 )}
               </div>
             </div>
