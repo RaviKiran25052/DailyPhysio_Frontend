@@ -1,11 +1,17 @@
 import React from 'react';
 import { FaUserMd, FaEdit, FaEnvelope, FaHospital, FaUserFriends } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const TherapistCard = ({ therapist, onEdit }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-gray-900/80 backdrop-blur-sm border border-purple-500 rounded-2xl shadow-lg hover:shadow-purple-800/50 transition-all duration-300 overflow-hidden relative group p-6">
       {/* Header: Icon + Info */}
-      <div className="flex items-start mb-4 space-x-4">
+      <div
+        className="flex items-start mb-4 space-x-4 cursor-pointer"
+        onClick={() => navigate(`/therapists/${therapist._id}`)}
+      >
         {/* Icon */}
         <div className="bg-gradient-to-br from-purple-700 to-purple-900 p-4 rounded-full shadow-lg">
           <FaUserMd className="text-white text-2xl" />
