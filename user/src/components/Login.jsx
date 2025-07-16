@@ -17,6 +17,10 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
   // Add resetStep state to track password reset flow
   const [forgotPassword, setForgotPassword] = useState(false);
   const [resetStep, setResetStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
+  
+  // Add registrationStep state to track registration flow
+  const [registrationStep, setRegistrationStep] = useState(1); // 1: Form, 2: OTP Verification
+  
   const [passwordError, setPasswordError] = useState('');
   // Add state for password visibility
   const [showPassword, setShowPassword] = useState(false);
@@ -46,6 +50,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
     onChange(!isSignIn);
     setForgotPassword(false);
     setResetStep(1);
+    setRegistrationStep(1);
     setPasswordError('');
   };
 
@@ -60,12 +65,13 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
     onChange(isSignIn);
     setForgotPassword(false);
     setResetStep(1);
+    setRegistrationStep(1);
     setPasswordError('');
     onClose();
   };
 
   const validateForm = () => {
-    if (!isSignIn && !forgotPassword) {
+    if (!isSignIn && !forgotPassword && registrationStep === 1) {
       if (formData.password !== formData.confirmPassword) {
         setPasswordError('Passwords do not match');
         return false;
@@ -103,7 +109,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
       try {
         // Step 1: Send email for OTP
         if (resetStep === 1) {
-          const response = await axios.post(`${API_URL}/users/forgot-password`, {
+          const response = await axios.post(`${API_URL}/users/send-otp`, {
             email: formData.email,
           });
           
@@ -178,35 +184,55 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
           });
         }
       } else {
+        // Registration flow with OTP verification
         try {
-          const response = await axios.post(`${API_URL}/users/register`, {
-            fullName: formData.name,
-            email: formData.email,
-            password: formData.password,
-          });
-          console.log(response);
-          if (response.status === 201) {
-            // Save token and user data to localStorage
-            localStorage.setItem('token', JSON.stringify(response.data.token));
-
-            // Store fullName from backend response if available, otherwise use form input
-            if (response.data.user && response.data.fullName) {
-              localStorage.setItem('fullName', JSON.stringify(response.data.fullName));
-            } else if (response.data.fullName) {
-              localStorage.setItem('fullName', JSON.stringify(response.data.fullName));
-            } else {
-              // Fallback to the name entered in the form
-              localStorage.setItem('fullName', JSON.stringify(formData.name));
-            }
-
-            // Store email for profile display
-            localStorage.setItem('email', JSON.stringify(formData.email));
-
-            // Specify toast position as top-center
-            toast.success('Registration successful', {
-              position: "top-center"
+          // Step 1: Send OTP for email verification
+          if (registrationStep === 1) {
+            const response = await axios.post(`${API_URL}/users/send-otp`, {
+              email: formData.email,
             });
-            handleSuccess(response.data);
+            
+            if (response.status === 200) {
+              toast.success('OTP sent to your email for verification', {
+                position: "top-center"
+              });
+              setRegistrationStep(2);
+            }
+          }
+          // Step 2: Verify OTP and create user
+          else if (registrationStep === 2) {
+            const response = await axios.post(`${API_URL}/users/register`, {
+              fullName: formData.name,
+              email: formData.email,
+              password: formData.password,
+              otp: formData.otp,
+            });
+            
+            console.log(response);
+            if (response.status === 201) {
+              // Save token and user data to localStorage
+              localStorage.setItem('token', JSON.stringify(response.data.token));
+
+              // Store fullName from backend response if available, otherwise use form input
+              if (response.data.user && response.data.fullName) {
+                localStorage.setItem('fullName', JSON.stringify(response.data.fullName));
+              } else if (response.data.fullName) {
+                localStorage.setItem('fullName', JSON.stringify(response.data.fullName));
+              } else {
+                // Fallback to the name entered in the form
+                localStorage.setItem('fullName', JSON.stringify(formData.name));
+              }
+
+              // Store email for profile display
+              localStorage.setItem('email', JSON.stringify(formData.email));
+
+              // Specify toast position as top-center
+              toast.success('Registration successful', {
+                position: "top-center"
+              });
+              handleSuccess(response.data);
+              setRegistrationStep(1);
+            }
           }
         }
         catch (error) {
@@ -232,7 +258,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
     onAuthSuccess(userData);
     onClose();
     setFormData({
-      fullName: '',
+      name: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -246,6 +272,13 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
       setResetStep(resetStep - 1);
     } else {
       setForgotPassword(false);
+    }
+  };
+
+  // Back button for registration flow
+  const handleRegistrationBackStep = () => {
+    if (registrationStep > 1) {
+      setRegistrationStep(registrationStep - 1);
     }
   };
 
@@ -264,6 +297,9 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
       title = 'Create New Password';
       subtitle = 'Enter and confirm your new password';
     }
+  } else if (!isSignIn && registrationStep === 2) {
+    title = 'Verify Your Email';
+    subtitle = 'Enter the 4-digit code sent to your email';
   } else {
     title = isSignIn ? 'Welcome Back' : 'Create Account';
     subtitle = isSignIn 
@@ -290,8 +326,8 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
 
         <div className="p-5 overflow-y-auto flex-grow">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Registration field - only shown in sign up mode */}
-            {!isSignIn && !forgotPassword && (
+            {/* Registration field - only shown in sign up mode step 1 */}
+            {!isSignIn && !forgotPassword && registrationStep === 1 && (
               <div>
                 <label htmlFor="name" className="block text-gray-300 mb-1 text-sm font-medium">Full Name</label>
                 <input
@@ -308,8 +344,8 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               </div>
             )}
 
-            {/* Email field - shown in all modes */}
-            {(resetStep === 1 || !forgotPassword) && (
+            {/* Email field - shown in all modes except registration step 2 and forgot password step 2 & 3 */}
+            {(resetStep === 1 || (!forgotPassword && (isSignIn || registrationStep === 1))) && (
               <div>
                 <label htmlFor="email" className="block text-gray-300 mb-1 text-sm font-medium">Email</label>
                 <input
@@ -326,8 +362,8 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               </div>
             )}
 
-            {/* OTP field - only shown in forgot password step 2 */}
-            {forgotPassword && resetStep === 2 && (
+            {/* OTP field - shown in forgot password step 2 and registration step 2 */}
+            {(forgotPassword && resetStep === 2) || (!forgotPassword && !isSignIn && registrationStep === 2) && (
               <div>
                 <label htmlFor="otp" className="block text-gray-300 mb-1 text-sm font-medium">Verification Code</label>
                 <input
@@ -344,8 +380,8 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               </div>
             )}
 
-            {/* Password fields - shown in login, signup, and forgot password step 3 */}
-            {(!forgotPassword || resetStep === 3) && (
+            {/* Password fields - shown in login, signup step 1, and forgot password step 3 */}
+            {(isSignIn || (!forgotPassword && registrationStep === 1) || (forgotPassword && resetStep === 3)) && (
               <div>
                 <label htmlFor="password" className="block text-gray-300 mb-1 text-sm font-medium">
                   {forgotPassword ? 'New Password' : 'Password'}
@@ -374,8 +410,8 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               </div>
             )}
 
-            {/* Confirm password - shown in signup and forgot password step 3 */}
-            {(!isSignIn && !forgotPassword) || (forgotPassword && resetStep === 3) ? (
+            {/* Confirm password - shown in signup step 1 and forgot password step 3 */}
+            {((!isSignIn && !forgotPassword && registrationStep === 1) || (forgotPassword && resetStep === 3)) && (
               <div>
                 <label htmlFor="confirmPassword" className="block text-gray-300 mb-1 text-sm font-medium">Confirm Password</label>
                 <div className="relative">
@@ -403,7 +439,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
                   <p className="text-red-400 text-sm mt-1">{passwordError}</p>
                 )}
               </div>
-            ) : null}
+            )}
 
             {/* Submit button with context-aware label */}
             <button
@@ -414,7 +450,9 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
                 ? (resetStep === 1 ? 'Send Verification Code' : 
                    resetStep === 2 ? 'Verify Code' : 
                    'Reset Password')
-                : (isSignIn ? 'Sign In' : 'Sign Up')
+                : (isSignIn ? 'Sign In' : 
+                   registrationStep === 1 ? 'Send Verification Code' : 
+                   'Complete Registration')
               }
             </button>
           </form>
@@ -430,6 +468,16 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               </button>
             )}
 
+            {/* Back button for registration flow */}
+            {!isSignIn && !forgotPassword && registrationStep === 2 && (
+              <button
+                onClick={handleRegistrationBackStep}
+                className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+              >
+                Back to registration form
+              </button>
+            )}
+
             {/* Forgot password link - only in sign in mode */}
             {isSignIn && !forgotPassword && (
               <button
@@ -440,8 +488,8 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               </button>
             )}
 
-            {/* Toggle between sign in and sign up - not in forgot password flow */}
-            {!forgotPassword && (
+            {/* Toggle between sign in and sign up - not in forgot password flow or registration step 2 */}
+            {!forgotPassword && (isSignIn || registrationStep === 1) && (
               <div className="mt-2">
                 <button
                   onClick={toggleMode}
