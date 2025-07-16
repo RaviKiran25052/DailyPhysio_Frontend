@@ -5,7 +5,7 @@ import {
   RiArrowLeftLine, RiRunLine, RiInformationLine, RiCloseLine,
   RiDeleteBinLine
 } from 'react-icons/ri';
-import AddConsultation from './AddConsultation';
+import AddConsultation from '../components/AddConsultation';
 
 const API_URL = process.env.REACT_APP_API_URL;
 

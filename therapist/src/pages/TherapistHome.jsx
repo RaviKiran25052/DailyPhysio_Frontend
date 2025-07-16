@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import Sidebar from '../components/Sidebar';
 import Dashboard from './Dashboard';
 import Consultations from './Consultations'
 import ExerciseManagement from './ExerciseManagement';
 import UserManagement from './UserManagement';
-import Profile from './Profile';
+import Profile from '../components/Profile';
 import MembershipManagement from './MembershipManagement';
 
 const TherapistHome = () => {

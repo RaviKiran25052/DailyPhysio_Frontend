@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, ChevronRight, Heart, Activity, Save, UserPlus, X, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import MediaCarousel from '../components/MediaCarousel';
+import MediaCarousel from '../components/Exercises/MediaCarousel';
 const API_URL = process.env.REACT_APP_API_URL || '';
 
 const ExerciseDetailPage = () => {

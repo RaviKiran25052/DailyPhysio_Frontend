@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { RiSearchLine, RiAddLine, RiMailLine, RiUserLine, RiCalendarLine } from 'react-icons/ri';
 import { toast } from 'react-toastify';
-import UserCreationModal from './UserCreationModal';
+import UserCreationModal from '../components/Modals/UserCreationModal';
 
 const API_URL = process.env.REACT_APP_API_URL;
 

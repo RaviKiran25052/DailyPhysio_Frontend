@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import TherapistDashboard from './components/TherapistDashboard'
-import TherapistHome from './components/TherapistHome'
+import TherapistDashboard from './pages/TherapistDashboard'
+import TherapistHome from './pages/TherapistHome'
 import ExerciseDetailPage from './pages/ExerciseDetailPage'
 import CreatorExercisesPage from './pages/CreatorExercisesPage'
 

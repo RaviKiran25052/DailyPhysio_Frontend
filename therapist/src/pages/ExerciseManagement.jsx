@@ -6,8 +6,8 @@ import {
   RiDeleteBinLine
 } from 'react-icons/ri';
 import { toast } from 'react-toastify';
-import HandleExercise from './HandleExercise';
-import MediaCarousel from './MediaCarousel';
+import HandleExercise from '../components/Exercises/HandleExercise';
+import MediaCarousel from '../components/Exercises/MediaCarousel';
 import { SquareArrowOutUpRight } from 'lucide-react';
 
 const API_URL = process.env.REACT_APP_API_URL;

@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TherapistHeader from './TherapistHeader';
-import TherapistLogin from './TherapistLogin';
-import TherapistRegister from './TherapistRegister';
-import AccountNotActivatedModal from './AccountNotActivatedModal';
-import RegistrationSuccessModal from './RegistrationSuccessModal';
 import {
   FaClipboardList,
   FaDumbbell,
@@ -13,7 +8,12 @@ import {
   FaChartLine,
   FaCalendarAlt
 } from 'react-icons/fa';
-import AccountRejectedModal from './AccountRejectedModal';
+import TherapistHeader from '../components/TherapistHeader';
+import TherapistLogin from '../components/TherapistLogin';
+import TherapistRegister from '../components/TherapistRegister';
+import AccountNotActivatedModal from '../components/Modals/AccountNotActivatedModal';
+import RegistrationSuccessModal from '../components/Modals/RegistrationSuccessModal';
+import AccountRejectedModal from '../components/Modals/AccountRejectedModal';
 
 const TherapistDashboard = () => {
   const navigate = useNavigate();

@@ -15,9 +15,9 @@ import {
   RiBarChartLine,
   RiShieldUserLine
 } from 'react-icons/ri';
-import ProfileEditModal from './ProfileEditModal';
-import PasswordChangeModal from './PasswordChangeModal';
-import ImageUploadModal from './ImageUploadModal';
+import ProfileEditModal from './Modals/ProfileEditModal';
+import PasswordChangeModal from './Modals/PasswordChangeModal';
+import ImageUploadModal from './Modals/ImageUploadModal';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
