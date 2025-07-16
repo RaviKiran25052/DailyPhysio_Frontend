@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Eye, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
-import MediaCarousel from '../components/MediaCarousel';
+import MediaCarousel from '../components/Exercises/MediaCarousel';
 
 const ExerciseCarousel = ({ exercises = [], onExerciseClick }) => {
 	const [currentIndex, setCurrentIndex] = useState(0);

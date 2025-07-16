@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import MediaCarousel from '../MediaCarousel';
+import MediaCarousel from '../Exercises/MediaCarousel';
 import axios from 'axios';
 import { SquareArrowOutUpRight, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'react-toastify';

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { RiCheckLine, RiArrowRightLine, RiCoinLine, RiCalendarLine, RiTimeLine } from 'react-icons/ri';
-import MembershipUpdateModal from '../../components/MembershipUpdateModal';
+import MembershipUpdateModal from '../Modals/MembershipUpdateModal';
 
 const API_URL = process.env.REACT_APP_API_URL;
 

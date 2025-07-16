@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft, User, MapPin, Briefcase, Users, Calendar, Clock, Play, Image as ImageIcon, Star, Crown, Eye, Dumbbell } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import MediaCarousel from '../MediaCarousel';
+import MediaCarousel from '../Exercises/MediaCarousel';
 
 const API_URL = process.env.REACT_APP_API_URL || '';
 

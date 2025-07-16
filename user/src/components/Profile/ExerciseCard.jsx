@@ -2,7 +2,7 @@ import { Calendar, SquareArrowOutUpRight } from 'lucide-react';
 import React from 'react';
 import { Eye, Heart, Lock, Globe, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import MediaCarousel from '../MediaCarousel';
+import MediaCarousel from '../Exercises/MediaCarousel';
 
 const ExerciseCard = ({ exercise, onTypeChange, onDelete }) => {
 	const navigate = useNavigate();

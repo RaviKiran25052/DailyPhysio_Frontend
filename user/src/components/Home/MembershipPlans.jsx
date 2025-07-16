@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Login from '../Login';
-import MembershipUpdateModal from '../MembershipUpdateModal';
+import MembershipUpdateModal from '../Modals/MembershipUpdateModal';
 
 const MembershipPlans = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);

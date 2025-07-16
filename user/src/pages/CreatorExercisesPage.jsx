@@ -12,7 +12,7 @@ import {
   Tag
 } from 'lucide-react';
 import axios from 'axios';
-import MediaCarousel from '../components/MediaCarousel';
+import MediaCarousel from '../components/Exercises/MediaCarousel';
 import ExerciseCarousel from './ExerciseCarousel';
 
 const API_URL = process.env.REACT_APP_API_URL || '';

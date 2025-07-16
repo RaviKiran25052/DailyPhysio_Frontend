@@ -6,7 +6,7 @@ import MyFavorites from '../components/Profile/MyFavorites';
 import MyRoutines from '../components/Profile/MyRoutines';
 import Following from '../components/Profile/Following';
 import axios from 'axios';
-import HandleExercise from '../components/HandleExercise';
+import HandleExercise from '../components/Exercises/HandleExercise';
 import MembershipManagement from '../components/Profile/MembershipManagement';
 import { User, Dumbbell, Heart, Users, Crown, ChevronLeft, ChevronRight, BriefcaseMedical } from 'lucide-react';
 import ConsultedExercises from '../components/Profile/ConsultedExercises';

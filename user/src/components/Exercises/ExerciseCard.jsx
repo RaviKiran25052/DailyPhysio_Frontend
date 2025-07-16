@@ -1,6 +1,5 @@
-import React from 'react';
 import { Crown, SquareArrowOutUpRight } from 'lucide-react';
-import MediaCarousel from '../MediaCarousel';
+import MediaCarousel from './MediaCarousel';
 
 const ExerciseCard = ({
   exercise,
