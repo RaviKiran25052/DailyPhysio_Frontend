@@ -327,6 +327,10 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 			submitData.append('position', finalPosition);
 			submitData.append('isPremium', formData.isPremium);
 			submitData.append('custom[type]', formData.type);
+			existingImages.forEach(image => {
+				submitData.append('oldImages', image);
+			});
+			submitData.append('oldVideo', existingVideo);
 
 			// Add files
 			if (videoFile) {
@@ -341,7 +345,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 			let response;
 
 			if (isEdit) {
-				response = await axios.put(`${BASE_URL}/exercises/${exercise._id}`, submitData, {
+				response = await axios.put(`${BASE_URL}/therapist/exercises/${exercise._id}`, submitData, {
 					headers: {
 						'Content-Type': 'multipart/form-data',
 						Authorization: `Bearer ${token}`
@@ -351,7 +355,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 				onClose();
 				onSuccess();
 			} else {
-				response = await axios.post(`${BASE_URL}/exercises/`, submitData, {
+				response = await axios.post(`${BASE_URL}/therapist/exercises/`, submitData, {
 					headers: {
 						'Content-Type': 'multipart/form-data',
 						Authorization: `Bearer ${token}`
@@ -768,7 +772,10 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 								<video
 									controls
 									className="w-full rounded-lg max-h-64"
-									src={existingVideo.url || existingVideo}
+									src={existingVideo.startsWith("therapists")
+										? `${BASE_URL}/uploads/${existingVideo}`
+										: existingVideo
+									}
 								>
 									Your browser does not support the video tag.
 								</video>
@@ -845,7 +852,10 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 											<div key={index} className="relative group flex-shrink-0" style={{ width: '200px' }}>
 												<div className="h-40 w-full bg-gray-600 rounded-lg overflow-hidden">
 													<img
-														src={image.url || image}
+														src={image.startsWith("therapists")
+															? `${BASE_URL}/uploads/${image}`
+															: image
+														}
 														alt={`Exercise img ${index + 1}`}
 														className="w-full h-full object-cover"
 													/>

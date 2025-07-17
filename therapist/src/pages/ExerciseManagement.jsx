@@ -46,7 +46,7 @@ const ExerciseManagement = () => {
       const newType = currentType === 'public' ? 'private' : 'public';
 
       await axios.put(
-        `${API_URL}/exercises/${exerciseId}`,
+        `${API_URL}/therapists/exercises/${exerciseId}`,
         { custom: { type: newType } },
         {
           headers: { Authorization: `Bearer ${therapistInfo.token}` }
