@@ -207,7 +207,6 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 			setLoading(true);
 			try {
 				const { confirmPassword, profilePic, ...dataToSubmit } = formData;
-				console.log(formData);
 				
 				const response = await axios.post(
 					`${process.env.REACT_APP_API_URL}/therapist/register`,
