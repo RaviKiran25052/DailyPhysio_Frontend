@@ -53,7 +53,7 @@ const UserManagement = () => {
 
     try {
       const therapistInfo = JSON.parse(localStorage.getItem('therapistInfo'));
-      await axios.post(`${API_URL}/users/register`, {
+      await axios.post(`${API_URL}/therapist/users`, {
         fullName: formData.name,
         email: formData.email,
         password: formData.password,

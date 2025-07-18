@@ -208,7 +208,6 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               otp: formData.otp,
             });
             
-            console.log(response);
             if (response.status === 201) {
               // Save token and user data to localStorage
               localStorage.setItem('token', JSON.stringify(response.data.token));
