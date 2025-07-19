@@ -28,6 +28,7 @@ import {
 	BarChart3,
 } from 'lucide-react';
 import axios from 'axios';
+import ConsultationCards from '../components/Therapist/ConsultationCards';
 
 const TherapistDetail = () => {
 	const { id } = useParams();
@@ -303,57 +304,7 @@ const TherapistDetail = () => {
 	const renderConsultations = () => (
 		<div className="space-y-6">
 			{consultations && consultations.length > 0 ? (
-				<div className="grid gap-6">
-					{consultations.map((consultation) => (
-						<div key={consultation._id} className="group bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 hover:border-purple-500/30 transition-all duration-300">
-							<div className="flex items-start justify-between mb-4">
-								<div className="flex items-center space-x-4">
-									<div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-										<User className="w-6 h-6 text-white" />
-									</div>
-									<div>
-										<h3 className="font-semibold text-gray-100 text-lg">
-											{consultation.patient_id?.fullName || 'Unknown Patient'}
-										</h3>
-										<p className="text-sm text-gray-400">{consultation.patient_id?.email}</p>
-										<div className="flex items-center space-x-2 mt-1">
-											<Calendar className="w-4 h-4 text-gray-500" />
-											<span className="text-sm text-gray-500">
-												{new Date(consultation.createdAt).toLocaleDateString()}
-											</span>
-										</div>
-									</div>
-								</div>
-								<div className="flex flex-col items-end space-y-2">
-									<span className={`px-3 py-1 text-sm rounded-full border ${consultation.request?.status === 'active'
-										? 'bg-green-500/20 text-green-300 border-green-500/30'
-										: 'bg-red-500/20 text-red-300 border-red-500/30'
-										}`}>
-										{consultation.request?.status || 'Unknown'}
-									</span>
-									<button className="text-gray-400 hover:text-purple-400 transition-colors">
-										<MoreHorizontal className="w-5 h-5" />
-									</button>
-								</div>
-							</div>
-							{consultation.recommendedExercises?.length > 0 && (
-								<div className="mt-4 pt-4 border-t border-gray-700/50">
-									<p className="text-sm text-gray-400 mb-3 flex items-center">
-										<BookOpen className="w-4 h-4 mr-2" />
-										Recommended Exercises ({consultation.recommendedExercises.length})
-									</p>
-									<div className="flex flex-wrap gap-2">
-										{consultation.recommendedExercises.map((exercise) => (
-											<span key={exercise._id} className="bg-purple-500/20 text-purple-200 px-3 py-1 rounded-full text-sm border border-purple-500/30">
-												{exercise.title}
-											</span>
-										))}
-									</div>
-								</div>
-							)}
-						</div>
-					))}
-				</div>
+				<ConsultationCards consultations={consultations} />
 			) : (
 				<EmptyState
 					icon={Calendar}

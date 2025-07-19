@@ -503,7 +503,7 @@ const Consultations = () => {
             <div className="p-6">
 
               {/* Patient Info */}
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-start mb-4">
                 <div className='flex items-center space-x-4'>
                   <img
                     src={consultation.patient_id.profileImage}
@@ -516,7 +516,7 @@ const Consultations = () => {
                   </div>
                 </div>
                 {/* Status Badge */}
-                <span className={`px-3 py-1 rounded-full text-sm ${consultation.request.status === 'active'
+                <span className={`px-2 rounded-full text-sm ${consultation.request.status === 'active'
                   ? 'bg-green-500 bg-opacity-20 text-green-500'
                   : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
                   }`}>
