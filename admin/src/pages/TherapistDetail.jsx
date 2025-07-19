@@ -121,6 +121,7 @@ const TherapistDetail = () => {
 	}
 
 	const { therapist, consultations, exercises, users, stats, storageInfo } = therapistData || {};
+	console.log(storageInfo);
 	
 	const StatCard = ({ icon: Icon, title, value, color = 'purple' }) => (
 		<div className="group relative overflow-hidden">
@@ -448,6 +449,9 @@ const TherapistDetail = () => {
 						<span className='text-yellow-400'>
 							{storageInfo?.remainingStorage} / {storageInfo?.storageLimit}
 						</span>
+						<div className="text-sm">
+							current usage: <span className="text-sky-400">{storageInfo.currentUsage}</span>
+						</div>
 					</div>
 				</div>
 

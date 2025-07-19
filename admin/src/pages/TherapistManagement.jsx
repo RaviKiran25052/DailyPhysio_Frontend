@@ -42,7 +42,6 @@ const TherapistManagement = () => {
       };
 
       const response = await axios.get(`${API_URL}/admin/therapists`, config);
-      console.log(response.data.therapists);
       
       const fetchedTherapists = response.data.therapists || [];
       const fetchedPendingTherapists = response.data.pendingTherapists || [];
