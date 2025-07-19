@@ -11,7 +11,6 @@ import {
 	Phone,
 	MapPin,
 	Clock,
-	CheckCircle,
 	XCircle,
 	Eye,
 	Lock,
@@ -22,10 +21,9 @@ import {
 	CreditCard,
 	Star,
 	FileText,
-	Plus,
-	MoreHorizontal,
 	AlertTriangle,
 	BarChart3,
+	Database
 } from 'lucide-react';
 import axios from 'axios';
 import ConsultationCards from '../components/Therapist/ConsultationCards';
@@ -122,8 +120,8 @@ const TherapistDetail = () => {
 		);
 	}
 
-	const { therapist, consultations, exercises, users, stats } = therapistData || {};
-
+	const { therapist, consultations, exercises, users, stats, storageInfo } = therapistData || {};
+	
 	const StatCard = ({ icon: Icon, title, value, color = 'purple' }) => (
 		<div className="group relative overflow-hidden">
 			<div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
@@ -417,28 +415,39 @@ const TherapistDetail = () => {
 					<Stethoscope className="w-6 h-6 mr-3 text-purple-400" />
 					Therapist Information
 				</h2>
-				<div className="flex items-center space-x-6 my-6">
-					<div className="relative">
-						<div className="w-20 h-20 rounded-full overflow-hidden bg-purple-600 p-1">
-							{therapist.profilePic ? (
-								<img
-									src={therapist.profilePic}
-									alt={therapist.name}
-									className="w-full h-full object-cover rounded-full"
-								/>
-							) : (
-								<div className="w-full h-full bg-gray-700 rounded-full flex items-center justify-center">
-									<User className="w-10 h-10 text-white" />
-								</div>
-							)}
+				<div className="flex justify-between items-center">
+					<div className="flex items-center space-x-6 my-6">
+						<div className="relative">
+							<div className="w-20 h-20 rounded-full overflow-hidden bg-purple-600 p-1">
+								{therapist.profilePic ? (
+									<img
+										src={therapist.profilePic}
+										alt={therapist.name}
+										className="w-full h-full object-cover rounded-full"
+									/>
+								) : (
+									<div className="w-full h-full bg-gray-700 rounded-full flex items-center justify-center">
+										<User className="w-10 h-10 text-white" />
+									</div>
+								)}
+							</div>
+							<div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full border-2 border-gray-800 flex items-center justify-center">
+								<div className="w-2 h-2 bg-white rounded-full"></div>
+							</div>
 						</div>
-						<div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full border-2 border-gray-800 flex items-center justify-center">
-							<div className="w-2 h-2 bg-white rounded-full"></div>
+						<div>
+							<h1 className="text-xl font-bold text-gray-100 mb-1">{therapist.name}</h1>
+							<p className="text-purple-300 text-sm">{therapist.email}</p>
 						</div>
 					</div>
-					<div>
-						<h1 className="text-xl font-bold text-gray-100 mb-1">{therapist.name}</h1>
-						<p className="text-purple-300 text-sm">{therapist.email}</p>
+					<div className='flex flex-col items-end'>
+						<div className="flex items-center text-sm gap-2">
+							<Database size={18} />
+							Data consumed:
+						</div>
+						<span className='text-yellow-400'>
+							{storageInfo?.remainingStorage} / {storageInfo?.storageLimit}
+						</span>
 					</div>
 				</div>
 
