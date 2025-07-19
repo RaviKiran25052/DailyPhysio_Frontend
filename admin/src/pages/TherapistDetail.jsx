@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import axios from 'axios';
 import ConsultationCards from '../components/Therapist/ConsultationCards';
+import ExerciseGrid from '../components/Exercises/ExerciseGrid';
 
 const TherapistDetail = () => {
 	const { id } = useParams();
@@ -73,6 +74,10 @@ const TherapistDetail = () => {
 	const handleBackClick = () => {
 		navigate(-1);
 	};
+
+	const handleView = (exercise) => {
+		navigate(`/exercise/${exercise._id}`)
+	}
 
 	if (loading) {
 		return (
@@ -315,128 +320,51 @@ const TherapistDetail = () => {
 		</div>
 	);
 
-	const renderExercises = () => (
-		<div className="space-y-6">
-			{exercises && exercises.length > 0 ? (
-				<div className="grid gap-6">
-					{exercises.map((exercise) => (
-						<div key={exercise._id} className="group bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 hover:border-purple-500/30 transition-all duration-300">
-							<div className="flex items-start justify-between mb-4">
-								<div className="flex-1">
-									<div className="flex items-center space-x-3 mb-3">
-										<div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full flex items-center justify-center">
-											<BookOpen className="w-5 h-5 text-white" />
-										</div>
-										<div>
-											<h3 className="font-semibold text-gray-100 text-lg">{exercise.title}</h3>
-											<p className="text-gray-400 text-sm">{exercise.description}</p>
-										</div>
-									</div>
-									<div className="flex flex-wrap gap-2 mb-3">
-										<span className="bg-gray-700/50 text-gray-300 px-3 py-1 rounded-full text-sm border border-gray-600/30">
-											{exercise.category}
-										</span>
-										{exercise.subCategory && (
-											<span className="bg-gray-700/50 text-gray-300 px-3 py-1 rounded-full text-sm border border-gray-600/30">
-												{exercise.subCategory}
-											</span>
-										)}
-									</div>
-								</div>
-								<div className="flex flex-col items-end space-y-2">
-									<div className="flex items-center space-x-2">
-										{exercise.custom?.type === 'public' ? (
-											<div className="flex items-center space-x-1 text-green-400">
-												<Eye className="w-4 h-4" />
-												<span className="text-xs">Public</span>
-											</div>
-										) : (
-											<div className="flex items-center space-x-1 text-yellow-400">
-												<Lock className="w-4 h-4" />
-												<span className="text-xs">Private</span>
-											</div>
-										)}
-										{exercise.isPremium && (
-											<div className="flex items-center space-x-1 text-purple-400">
-												<Crown className="w-4 h-4" />
-												<span className="text-xs">Premium</span>
-											</div>
-										)}
-									</div>
-									<span className="text-sm text-gray-400 flex items-center">
-										<Clock className="w-4 h-4 mr-1" />
-										{new Date(exercise.createdAt).toLocaleDateString()}
-									</span>
-									<button className="text-gray-400 hover:text-purple-400 transition-colors">
-										<MoreHorizontal className="w-5 h-5" />
-									</button>
-								</div>
-							</div>
-						</div>
-					))}
-				</div>
-			) : (
-				<EmptyState
-					icon={BookOpen}
-					title="No Exercises Created"
-					description="This therapist hasn't created any exercises yet. Exercise library will appear here once they start creating content for patients."
-				/>
-			)}
-		</div>
-	);
+	const formatDate = (dateString) => {
+		const date = new Date(dateString);
+		return date.toLocaleDateString('en-US', {
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric'
+		});
+	};
 
 	const renderUsers = () => (
 		<div className="space-y-6">
 			{users && users.length > 0 ? (
-				<div className="grid gap-6">
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{users.map((user) => (
 						<div key={user._id} className="group bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 hover:border-purple-500/30 transition-all duration-300">
 							<div className="flex items-center justify-between">
 								<div className="flex items-center space-x-4">
 									<div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-										<User className="w-6 h-6 text-white" />
+										{user.profilePic ?
+											<img
+												src={user.profilePic}
+												alt="profile"
+											/>
+											:
+											<User className="w-6 h-6 text-white" />
+										}
 									</div>
 									<div>
 										<h3 className="font-semibold text-gray-100 text-lg">{user.fullName}</h3>
 										<p className="text-sm text-gray-400">{user.email}</p>
-										<div className="flex items-center space-x-2 mt-1">
-											<span className="bg-gray-700/50 text-gray-300 px-2 py-1 rounded text-xs border border-gray-600/30">
-												{user.role}
-											</span>
-											<span className="text-xs text-gray-500 flex items-center">
-												<Clock className="w-3 h-3 mr-1" />
-												{new Date(user.createdAt).toLocaleDateString()}
-											</span>
-										</div>
+										<span className="text-xs text-gray-500 flex items-center mt-2">
+											<Clock className="w-3 h-3 mr-1" />
+											{formatDate(user.createdAt)}
+										</span>
 									</div>
 								</div>
-								<div className="flex flex-col items-end space-y-2">
-									<div className="flex items-center space-x-2">
-										{user.membership?.some(m => m.status === 'active') ? (
-											<div className="flex items-center space-x-1 text-green-400">
-												<CheckCircle className="w-4 h-4" />
-												<span className="text-sm">Active</span>
-											</div>
-										) : (
-											<div className="flex items-center space-x-1 text-red-400">
-												<XCircle className="w-4 h-4" />
-												<span className="text-sm">Inactive</span>
-											</div>
-										)}
+								{user.membership?.length > 0 && (
+									<div className="flex flex-wrap gap-1 justify-end">
+										{user.membership.map((membership, index) => (
+											<span key={index} className={`px-2 py-1 text-xs rounded-full border ${getMembershipColor(membership.type)}`}>
+												{membership.type}
+											</span>
+										))}
 									</div>
-									{user.membership?.length > 0 && (
-										<div className="flex flex-wrap gap-1 justify-end">
-											{user.membership.map((membership, index) => (
-												<span key={index} className={`px-2 py-1 text-xs rounded-full border ${getMembershipColor(membership.type)}`}>
-													{membership.type}
-												</span>
-											))}
-										</div>
-									)}
-									<button className="text-gray-400 hover:text-purple-400 transition-colors">
-										<MoreHorizontal className="w-5 h-5" />
-									</button>
-								</div>
+								)}
 							</div>
 						</div>
 					))}
@@ -679,7 +607,13 @@ const TherapistDetail = () => {
 			<div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-8 shadow-2xl">
 				{activeTab === 'overview' && renderOverview()}
 				{activeTab === 'consultations' && renderConsultations()}
-				{activeTab === 'exercises' && renderExercises()}
+				{activeTab === 'exercises' && (
+					<ExerciseGrid
+						exercises={exercises}
+						totalExercises={exercises.length}
+						onViewExercise={handleView}
+					/>
+				)}
 				{activeTab === 'users' && renderUsers()}
 			</div>
 		</div>

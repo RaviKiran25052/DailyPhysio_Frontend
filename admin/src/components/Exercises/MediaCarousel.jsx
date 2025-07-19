@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, Image, Play, Pause, Maximize, Minimize, X } from 'lucide-react';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const MediaCarousel = ({ images = [], video = null }) => {
 	// Create media items with video first if available
 	const mediaItems = video
@@ -102,7 +104,10 @@ const MediaCarousel = ({ images = [], video = null }) => {
 						<div className="relative w-full h-full">
 							<video
 								ref={el => videoRefs.current[idx] = el}
-								src={item.url || '/api/placeholder/400/300'}
+								src={item.url.startsWith("therapists")
+									? `${API_URL}/uploads/${item.url}`
+									: item.url
+								}
 								className="w-full h-full object-cover"
 								loop
 								controls={maximized}
@@ -127,7 +132,10 @@ const MediaCarousel = ({ images = [], video = null }) => {
 						</div>
 					) : (
 						<img
-							src={item.url || '/api/placeholder/400/300'}
+							src={item.url.startsWith("therapists")
+								? `${API_URL}/uploads/${item.url}`
+								: item.url
+							}
 							alt={`Media item ${idx + 1}`}
 							className="w-full h-full object-cover"
 						/>

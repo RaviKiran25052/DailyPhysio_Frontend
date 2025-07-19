@@ -93,13 +93,13 @@ const UserManagement = () => {
     );
   }
   const formatDate = (dateString) => {
-		const date = new Date(dateString);
-		return date.toLocaleDateString('en-US', {
-			year: 'numeric',
-			month: 'short',
-			day: 'numeric'
-		});
-	};
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
 
   return (
     <div className="p-6">
@@ -137,7 +137,15 @@ const UserManagement = () => {
             <div className="p-6">
               <div className="flex items-center space-x-4 mb-4">
                 <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
-                  <RiUserLine className="text-2xl text-white" />
+                  {user.profilePic ?
+                    <img
+                      src={user.profilePic}
+                      alt="profile"
+                      className='rounded-full'
+                    />
+                    :
+                    <RiUserLine size={24} />
+                  }
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-white">{user.fullName}</h3>

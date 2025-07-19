@@ -30,7 +30,7 @@ const ExerciseGrid = ({ exercises, totalExercises, onViewExercise, searchTerm })
 					</div>
 					<div className="p-6 flex-grow">
 						<h3 className="text-lg font-semibold text-purple-400 cursor-pointer"
-							onClick={() => onViewExercise(exercise)}>{exercise.title}</h3>
+							onClick={() => onViewExercise?.(exercise)}>{exercise.title}</h3>
 						<p className="mt-2 text-white line-clamp-2 text-sm">{exercise.description}</p>
 						<div className="flex flex-wrap gap-2 mt-4">
 							{exercise.category && (
