@@ -149,7 +149,7 @@ const ProfileInfo = () => {
   return (
     <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
       {/* Header/Banner */}
-      <div className="h-32 bg-gradient-to-r from-purple-900 to-indigo-900 relative" />
+      <div className="h-32 bg-gradient-to-r from-primary-700 to-primary-900 relative" />
 
       {/* Profile Section */}
       <div className="px-6 pt-0 pb-6 relative">
@@ -166,7 +166,7 @@ const ProfileInfo = () => {
             <div className="mt-2 md:mt-0 flex items-center space-x-2">
               <button
                 onClick={() => setShowProfileEditModal(true)}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
               >
                 Edit Profile
               </button>
@@ -201,10 +201,10 @@ const ProfileInfo = () => {
             <MembershipInformation user={userData} formatDate={formatDate} />
 
             {/* Payment History */}
-            <div className="bg-gray-700 p-4 rounded-lg">
-              <h3 className="text-purple-400 font-medium mb-2">Recent Payments</h3>
-              <div className="bg-gray-600 rounded-md p-3 text-center">
-                <p className="text-gray-400 text-sm">No payment receipts available</p>
+            <div className="bg-primary-800 p-4 rounded-lg">
+              <h3 className="text-primary-400 font-medium mb-2">Recent Payments</h3>
+              <div className="bg-primary-700 rounded-md p-3 text-center">
+                <p className="text-gray-300 text-sm">No payment receipts available</p>
                 {userData.membership?.type === 'free' && (
                   <p className="text-gray-400 text-xs mt-1">Upgrade to Pro to see your payment history</p>
                 )}

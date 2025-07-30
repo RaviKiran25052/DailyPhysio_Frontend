@@ -24,7 +24,7 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit, loading }) => {
 	return (
 
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-			<div className="relative bg-gray-800 rounded-xl shadow-xl max-w-md w-full p-6">
+			<div className="relative bg-primary-800 rounded-xl shadow-xl max-w-md w-full p-6">
 				<button
 					onClick={onClose}
 					className="absolute top-3 right-3 text-gray-400 hover:text-white"
@@ -43,7 +43,7 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit, loading }) => {
 							name="new"
 							value={passwordData.new}
 							onChange={handlePasswordChange}
-							className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+							className="w-full bg-primary-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
 							required
 							disabled={loading}
 						/>
@@ -56,7 +56,7 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit, loading }) => {
 							name="confirm"
 							value={passwordData.confirm}
 							onChange={handlePasswordChange}
-							className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+							className="w-full bg-primary-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
 							required
 							disabled={loading}
 						/>
@@ -72,7 +72,7 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit, loading }) => {
 						</button>
 						<button
 							type="submit"
-							className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-500 transition flex items-center justify-center"
+							className="px-4 py-2 bg-primary-600 text-white rounded hover:bg-primary-500 transition flex items-center justify-center"
 							disabled={loading}
 						>
 							{loading ? (

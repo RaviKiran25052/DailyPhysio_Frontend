@@ -11,7 +11,7 @@ const ProfileAvatar = ({ user, imagePreview, openImageUploadModal }) => {
 				/>
 			) : (
 				<div className="w-full h-full bg-gray-700 flex items-center justify-center">
-					<span className="text-3xl text-purple-400 font-bold">
+					<span className="text-3xl text-primary-400 font-bold">
 						{user.fullName?.split(' ').map(name => name[0]).join('').toUpperCase()}
 					</span>
 				</div>

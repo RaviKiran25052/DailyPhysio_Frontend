@@ -93,11 +93,11 @@ const UserProfilePage = () => {
     };
 
     return (
-      <div className="bg-gray-800 rounded-lg mb-4 relative">
+      <div className="rounded-lg mb-4 bg-primary-800 relative">
         {/* Left arrow button */}
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-700 text-gray-300 p-1 rounded-r-md z-10 hover:bg-gray-600"
+          className="absolute left-0 top-1/2 -translate-y-1/2 bg-primary-700 text-gray-300 p-1 rounded-r-md z-10 hover:bg-primary-600"
           aria-label="Scroll left"
         >
           <ChevronLeft size={20} />
@@ -113,7 +113,7 @@ const UserProfilePage = () => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex flex-col items-center py-3 px-4 flex-shrink-0 ${activeTab === tab.id
-                  ? 'text-purple-500 border-b-2 border-purple-500'
+                  ? 'text-primary-500 border-b-2 border-primary-500'
                   : 'text-gray-400 hover:text-gray-300'
                 }`}
             >
@@ -126,7 +126,7 @@ const UserProfilePage = () => {
         {/* Right arrow button */}
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-700 text-gray-300 p-1 rounded-l-md z-10 hover:bg-gray-600"
+          className="absolute right-0 top-1/2 -translate-y-1/2 bg-primary-700 text-gray-300 p-1 rounded-l-md z-10 hover:bg-primary-600"
           aria-label="Scroll right"
         >
           <ChevronRight size={20} />
@@ -136,7 +136,7 @@ const UserProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Mobile Tabs - Show only on mobile */}
