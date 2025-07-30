@@ -34,29 +34,29 @@ const CourseCard = ({ course }) => {
   const desp = course?.description || ""
 
   return (
-    <div className="bg-gradient-to-br from-indigo-900/70 via-indigo-1000/120 to-purple-900/2 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-purple-500/10 transition flex-shrink-0 flex flex-col justify-between w-[calc(100%-8px)] md:w-[calc(25%-18px)] snap-start">
+    <div className="bg-primary-700/50 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-primary-500/10 transition flex-shrink-0 flex flex-col justify-between w-[calc(100%-8px)] md:w-[calc(25%-18px)] snap-start">
       <div className="relative w-full h-48">
         <img src={image} alt={course.title} className="w-full h-full object-cover" />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black to-transparent"></div>
       </div>
       <div className="p-3">
         <h3 className="text-lg font-medium my-1 text-white text-ellipsis line-clamp-1">{title}</h3>
-        <div className="h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent"></div>
-        <div className="flex gap-2 items-center mb-3 mt-2 text-xs text-purple-400 font-medium">
-          <span className="bg-purple-400 text-purple-950 rounded-full p-1 px-2">{category}</span>
+        <div className="h-px bg-gradient-to-r from-transparent via-primary-600 to-transparent"></div>
+        <div className="flex gap-2 items-center mb-3 mt-2 text-xs text-primary-800 font-medium">
+          <span className="bg-primary-600 text-white rounded-full p-1 px-2">{category}</span>
           <span className='text-xl text-white font-thin'>/</span>
           <span className="">{subCategory}</span>
         </div>
-        <p className='text-purple-300 text-sm text-ellipsis line-clamp-2'>{desp}</p>
+        <p className='bg-primary-600/50 p-2 rounded-md text-white text-sm text-ellipsis line-clamp-2'>{desp}</p>
       </div>
       <div className="p-3 mt-2 flex justify-between items-center">
         <p className='text-xs'>
           <span className='text-white'>Position: </span>
-          <span className="text-purple-400">{position}</span>
+          <span className="text-primary-700">{position}</span>
         </p>
         <button
           onClick={() => handleViewExercise(course)}
-          className="bg-purple-600 hover:bg-purple-700 transition text-white text-sm py-1 px-3 rounded"
+          className="bg-primary-600 hover:bg-primary-700 transition text-white text-sm py-1 px-3 rounded"
         >
           View
         </button>
@@ -175,7 +175,7 @@ const FeaturedCourses = () => {
             <button
               onClick={() => scroll('left')}
               disabled={!canScrollLeft}
-              className={`p-3 rounded-full ${canScrollLeft ? 'bg-purple-600 hover:bg-purple-700' : 'bg-gray-700 cursor-not-allowed'} transition`}
+              className={`p-3 rounded-full ${canScrollLeft ? 'bg-primary-600 hover:bg-primary-700' : 'bg-gray-700 cursor-not-allowed'} transition`}
               aria-label="Scroll left"
             >
               <ChevronLeft size={24} className="text-white" />
@@ -183,7 +183,7 @@ const FeaturedCourses = () => {
             <button
               onClick={() => scroll('right')}
               disabled={!canScrollRight}
-              className={`p-3 rounded-full ${canScrollRight ? 'bg-purple-600 hover:bg-purple-700' : 'bg-gray-700 cursor-not-allowed'} transition`}
+              className={`p-3 rounded-full ${canScrollRight ? 'bg-primary-600 hover:bg-primary-700' : 'bg-gray-700 cursor-not-allowed'} transition`}
               aria-label="Scroll right"
             >
               <ChevronRight size={24} className="text-white" />
@@ -194,7 +194,7 @@ const FeaturedCourses = () => {
         <div className="mt-10 text-center md:hidden">
           <button
             onClick={handleViewAllExercises}
-            className="px-6 py-3 bg-purple-600 rounded-md hover:bg-purple-700 transition text-white font-medium"
+            className="px-6 py-3 bg-primary-600 rounded-md hover:bg-primary-700 transition text-white font-medium"
           >
             {isLoading ? 'Loading...' : 'View All Exercises'}
           </button>
