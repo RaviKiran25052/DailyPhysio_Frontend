@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Eye, Heart, Calendar, Clock, Layers, Repeat } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import MediaCarousel from '../Exercises/MediaCarousel';
 
 const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 	const navigate = useNavigate();
@@ -122,13 +123,13 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 	};
 
 	return (
-		<div className="relative z-10 mx-6 md:mx-20 overflow-hidden mb-10">
+		<div className="relative z-10 mx-6 md:mx-20 overflow-hidden my-10">
 			<div className="flex items-center justify-between mb-10">
 				<h2 className="text-3xl sm:text-4xl font-bold text-white text-center relative">
-					<span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-gray-500">
+					<span className="bg-clip-text text-primary-600">
 						Trending Exercises
 					</span>
-					<div className="h-1 w-24 bg-gradient-to-r from-purple-600 to-gray-500 mt-2"></div>
+					<div className="h-1 w-24 bg-primary-600 mt-2"></div>
 				</h2>
 
 				{!loading && exercises.length > visibleCards && (
@@ -136,8 +137,8 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 						<button
 							onClick={prevExercises}
 							disabled={startIdx === 0 || isAnimating}
-							className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx === 0 ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
-								'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+							className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx === 0 ? 'bg-primary-100 text-primary-300 cursor-not-allowed' :
+								'bg-primary-200 text-gray-500 hover:bg-primary-400 hover:text-white'
 								} transition-all duration-300`}
 							aria-label="Previous exercises"
 						>
@@ -146,8 +147,8 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 						<button
 							onClick={nextExercises}
 							disabled={startIdx >= exercises.length - visibleCards || isAnimating}
-							className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx >= exercises.length - visibleCards ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
-								'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+							className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx >= exercises.length - visibleCards ? 'bg-primary-100 text-primary-300 cursor-not-allowed' :
+								'bg-primary-200 text-gray-500 hover:bg-primary-400 hover:text-white'
 								} transition-all duration-300`}
 							aria-label="Next exercises"
 						>
@@ -180,131 +181,77 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 								onMouseEnter={() => setHoveredCard(index)}
 								onMouseLeave={() => setHoveredCard(null)}
 							>
-								<div className={`bg-gray-800/80 rounded-xl overflow-hidden shadow-xl border border-gray-700/60 h-full relative group backdrop-blur-sm transition-all duration-500 
-									${hoveredCard === index ? 'shadow-purple-500/30 border-purple-500/40' : 'hover:shadow-purple-500/20'}`}
+								<div className={`rounded-xl overflow-hidden shadow-xl border-2 border-primary-500 h-full relative group backdrop-blur-sm transition-all duration-500 
+									${hoveredCard === index ? 'shadow-primary-500/30' : 'hover:shadow-primary-500'}`}
 								>
-									<div className="relative">
-										{/* Image carousel */}
-										{exercise.image && exercise.image.length > 0 && (
-											<>
-												<div className="w-full h-64 relative overflow-hidden">
-													{exercise.image.map((img, imgIndex) => (
-														<img
-															key={imgIndex}
-															src={img || '/api/placeholder/400/300'}
-															alt={`${exercise.title} - image ${imgIndex + 1}`}
-															className={`absolute top-0 left-0 w-full h-full object-cover transition-all duration-500 ${imgIndex === cardImageIndices[exercise._id] ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
-																}`}
-														/>
-													))}
-												</div>
-
-												{/* Image carousel controls */}
-												{exercise.image.length > 1 && (
-													<>
-														<button
-															onClick={() => prevImage(exercise._id, exercise.image.length)}
-															className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity"
-															aria-label="Previous image"
-														>
-															<ChevronLeft size={16} />
-														</button>
-														<button
-															onClick={() => nextImage(exercise._id, exercise.image.length)}
-															className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white z-10 opacity-0 group-hover:opacity-100 transition-opacity"
-															aria-label="Next image"
-														>
-															<ChevronRight size={16} />
-														</button>
-													</>
-												)}
-
-												{/* Image carousel pagination */}
-												{exercise.image.length > 1 && (
-													<div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-10">
-														{exercise.image.map((_, imgIndex) => (
-															<button
-																key={imgIndex}
-																onClick={() => setCardImageIndices(prev => ({
-																	...prev,
-																	[exercise._id]: imgIndex
-																}))}
-																className={`w-2 h-2 rounded-full transition-all ${imgIndex === cardImageIndices[exercise._id]
-																	? 'bg-purple-500 w-4'
-																	: 'bg-gray-400 hover:bg-purple-400'
-																	}`}
-																aria-label={`Go to image ${imgIndex + 1}`}
-															/>
-														))}
-													</div>
-												)}
-											</>
-										)}
-
-										<div className="absolute top-4 right-4 bg-purple-600 text-white px-3 py-1 rounded-lg flex items-center shadow-md">
+									<div className="relative h-52">
+										<div className="absolute top-4 right-4 z-20 bg-primary-600 text-white px-3 py-1 rounded-lg flex items-center shadow-md">
 											{exercise.category}
 										</div>
+
+										{/* Image carousel */}
+										<MediaCarousel images={exercise.image || []}/>
 									</div>
 
 									<div className="p-6">
 										<div className="flex justify-between mb-3">
 											<div className='flex gap-2 items-center'>
-												<span className="bg-purple-900/40 text-purple-200 text-xs px-3 py-1 rounded-full border border-purple-800/50">
+												<span className="bg-primary-600 text-white text-xs px-3 py-1 rounded-full">
 													{exercise.subCategory}
 												</span>
-												<span className="bg-purple-900/40 text-purple-200 text-xs px-3 py-1 rounded-full border border-purple-800/50">
+												<span className="bg-primary-600 text-white text-xs px-3 py-1 rounded-full">
 													{exercise.position}
 												</span>
 											</div>
-											<div className='flex gap-2 text-white'>
+											<div className='flex gap-2 text-gray-600 text-sm'>
 												<div className="flex items-center">
-													<Eye size={16} className="mr-1 text-purple-400/70" />
+													<Eye size={16} className="mr-1 text-primary-600" />
 													<span>{exercise.views?.toLocaleString() || "0"}</span>
 												</div>
 												<div className="flex items-center">
-													<Heart size={16} className="mr-1 text-purple-400/70" />
+													<Heart size={16} className="mr-1 text-primary-600" />
 													<span>{exercise.favorites?.toLocaleString() || "0"}</span>
 												</div>
 											</div>
 										</div>
 
-										<h3 className="text-xl font-semibold text-white mb-3 group-hover:text-purple-200 transition-colors">
+										<h3 className="text-xl font-semibold text-gray-600 mb-3 group-hover:text-primary-500 transition-colors">
 											{exercise.title}
 										</h3>
 
-										<p className="text-gray-300 mb-4 line-clamp-2">
+										<p className="text-gray-500 text-sm mb-4 line-clamp-2">
 											{exercise.description}
 										</p>
 
 										{/* Stats card - similar to TherapistCarousel but using exercise data */}
-										<div className="bg-gray-900/60 rounded-xl p-4 grid grid-cols-4 gap-1 border border-gray-700/40 group-hover:border-purple-500/20 transition-all duration-300 mb-4">
+										<div className="bg-primary-500/50 rounded-xl p-4 grid grid-cols-4 gap-1 border border-gray-700/40 group-hover:border-purple-500/20 transition-all duration-300 mb-4">
 											<div className="flex flex-col items-center text-center">
-												<Repeat size={18} className="text-purple-400 mb-1" />
-												<span className="text-white font-medium">{exercise.reps}</span>
-												<span className="text-xs text-gray-400">Reps</span>
+												<Repeat size={18} className="text-primary-600 mb-1" />
+												<span className="text-white font-medium text-sm">{exercise.reps}</span>
+												<span className="text-xs text-gray-600">Reps</span>
 											</div>
 
 											<div className="flex flex-col items-center text-center border-x border-gray-700/30">
-												<Clock size={18} className="text-purple-400 mb-1" />
-												<span className="text-white font-medium">{exercise.hold}</span>
-												<span className="text-xs text-gray-400">Hold</span>
+												<Clock size={18} className="text-primary-600 mb-1" />
+												<span className="text-white font-medium text-sm">{exercise.hold}</span>
+												<span className="text-xs text-gray-600">Hold</span>
 											</div>
 
 											<div className="flex flex-col items-center text-center border-r border-gray-700/30">
-												<Layers size={18} className="text-purple-400 mb-1" />
-												<span className="text-white font-medium">{exercise.set}</span>
-												<span className="text-xs text-gray-400">Sets</span>
+												<Layers size={18} className="text-primary-600 mb-1" />
+												<span className="text-white font-medium text-sm">{exercise.set}</span>
+												<span className="text-xs text-gray-600">Sets</span>
 											</div>
 
 											<div className="flex flex-col items-center text-center">
-												<Calendar size={18} className="text-purple-400 mb-1" />
-												<span className="text-white font-medium">{exercise.perform.count}/{exercise.perform.type}</span>
-												<span className="text-xs text-gray-400">Perform</span>
+												<Calendar size={18} className="text-primary-600 mb-1" />
+												<span className="text-white font-medium text-sm">{exercise.perform.count} / {exercise.perform.type}</span>
+												<span className="text-xs text-gray-600">Perform</span>
 											</div>
 										</div>
 										<button
 											onClick={() => navigate(`/exercise/${exercise._id}`)}
-											className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white px-3 py-1 rounded-lg text-sm transition-all duration-300 shadow-lg hover:shadow-purple-500/25"
+											className="bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-500 hover:to-primary-600 text-white px-3 py-1 rounded-lg text-sm transition-all duration-300 shadow-lg hover:shadow-primary-500/25"
 										>
 											View Exercise
 										</button>
@@ -348,8 +295,8 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 									key={i}
 									onClick={() => goToSlide(i)}
 									className={`w-2 h-2 rounded-full transition-all duration-300 ${i === Math.floor(startIdx / 1) ?
-										'bg-gradient-to-r from-purple-500 to-pink-500 w-6' :
-										'bg-gray-600 hover:bg-purple-400'
+										'bg-gradient-to-r from-primary-500 to-primary-200 w-6' :
+										'bg-gray-600 hover:bg-primary-400'
 										}`}
 									aria-label={`Go to slide ${i + 1}`}
 								/>

@@ -140,15 +140,15 @@ const FeaturedCourses = () => {
   };
 
   return (
-    <div className="bg-gray-900 py-16">
+    <div className="py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-white text-center mb-10">Featured Exercise Programs</h2>
+        <h2 className="text-3xl font-bold text-center mb-10">Featured Exercise Programs</h2>
 
         <div className="relative mb-8 px-4 md:px-14">
           {isLoading ? (
             // Loading state
             <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
             </div>
           ) : featuredExercises.length === 0 ? (
             // Empty state
