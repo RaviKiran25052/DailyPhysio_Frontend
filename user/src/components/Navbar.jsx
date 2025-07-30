@@ -170,7 +170,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className={`fixed top-0 left-0 bg-gray-900 w-full h-16 z-50 transition-all duration-300 ${isScrolled ? 'shadow-lg border-b border-gray-800' : 'border-b border-gray-800/50'}`}>
+    <header className="fixed top-0 left-0 bg-primary-500 w-full h-16 z-50 transition-all duration-300">
       <div className="mx-auto px-4 md:px-20">
         <div className="flex items-center justify-between py-4">
           <Link
@@ -178,7 +178,7 @@ const Navbar = () => {
             className="text-2xl font-bold"
             onClick={() => setActiveNavItem('home')}
           >
-            <span className="text-purple-500">Daily</span>
+            <span className="text-primary-700">Daily</span>
             <span className="text-white">Physio</span>
           </Link>
 
@@ -188,19 +188,19 @@ const Navbar = () => {
               <>
                 <Link
                   to="/"
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === 'home' ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`font-semibold transition-colors border-b-2 pb-1 ${activeNavItem === 'home' ? 'border-primary-700 text-white' : 'text-primary-100 border-transparent hover:border-gray-700'}`}
                 >
                   Home
                 </Link>
                 <Link
                   to="/exercises"
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === 'exercises' ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`font-semibold transition-colors border-b-2 pb-1 ${activeNavItem === 'exercises' ? 'border-primary-700 text-white' : 'text-primary-100 border-transparent hover:border-gray-700'}`}
                 >
                   Exercises
                 </Link>
                 <Link
                   to="/profile"
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === 'mystuff' ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`font-semibold transition-colors border-b-2 pb-1 ${activeNavItem === 'mystuff' ? 'border-primary-700 text-white' : 'text-primary-100 border-transparent hover:border-gray-700'}`}
                 >
                   My Stuff
                 </Link>
@@ -210,31 +210,31 @@ const Navbar = () => {
               <>
                 <button
                   onClick={() => handleNavClick(HOME_SECTIONS.ABOUT, `/#${HOME_SECTIONS.ABOUT}`)}
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.ABOUT ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.ABOUT ? 'border-primary-500 text-primary-400' : 'border-transparent hover:border-gray-700'}`}
                 >
                   About
                 </button>
                 <button
                   onClick={() => handleNavClick(HOME_SECTIONS.PROGRAMS, `/#${HOME_SECTIONS.PROGRAMS}`)}
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.PROGRAMS ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.PROGRAMS ? 'border-primary-500 text-primary-400' : 'border-transparent hover:border-gray-700'}`}
                 >
                   Programs
                 </button>
                 <button
                   onClick={() => handleNavClick(HOME_SECTIONS.EXERCISES, `/#${HOME_SECTIONS.EXERCISES}`)}
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.EXERCISES ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.EXERCISES ? 'border-primary-500 text-primary-400' : 'border-transparent hover:border-gray-700'}`}
                 >
                   Exercises
                 </button>
                 <button
                   onClick={() => handleNavClick(HOME_SECTIONS.PLANS, `/#${HOME_SECTIONS.PLANS}`)}
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.PLANS ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.PLANS ? 'border-primary-500 text-primary-400' : 'border-transparent hover:border-gray-700'}`}
                 >
                   Plans
                 </button>
                 <button
                   onClick={() => handleNavClick(HOME_SECTIONS.CONTACT, `/#${HOME_SECTIONS.CONTACT}`)}
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.CONTACT ? 'border-purple-500 text-purple-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.CONTACT ? 'border-primary-500 text-primary-400' : 'border-transparent hover:border-gray-700'}`}
                 >
                   Contact
                 </button>
@@ -247,7 +247,7 @@ const Navbar = () => {
               <div className="relative group">
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-md text-white hover:text-purple-300 transition-colors border border-gray-700 hover:border-purple-500"
+                  className="flex items-center space-x-2 px-4 py-2 rounded-md hover:text-white text-primary-50 transition-colors border hover:border-white border-primary-100 shadow-sm hover:shadow-white"
                 >
                   <User size={18} />
                   <span className="font-medium">{userData.fullName || 'Profile'}</span>
@@ -278,13 +278,13 @@ const Navbar = () => {
               <>
                 <button
                   onClick={() => handleSignIn(true)}
-                  className="px-4 py-2 rounded-md text-white hover:text-purple-300 transition-colors border border-gray-700 hover:border-purple-500"
+                  className="px-4 py-2 rounded-md text-white transition-colors hover:bg-primary-600 border border-white"
                 >
                   Sign In
                 </button>
                 <button
                   onClick={() => handleSignIn(false)}
-                  className="px-4 py-2 bg-purple-600 rounded-md hover:bg-purple-700 text-white transition-colors"
+                  className="px-4 py-2 bg-white hover:bg-primary-50 rounded-md text-primary-500 transition-colors"
                 >
                   Sign Up
                 </button>
@@ -303,7 +303,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-gray-900 border-t border-gray-800">
+        <div className="md:hidden bg-white text-black">
           <div className="container mx-auto px-4 py-3">
             <nav className="flex flex-col space-y-4 py-4">
               {isLoggedIn ? (
@@ -312,21 +312,21 @@ const Navbar = () => {
                   <Link
                     to="/"
                     onClick={() => setIsMenuOpen(false)}
-                    className={`text-white py-2 transition-colors ${activeNavItem === 'home' ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+                    className={`py-2 transition-colors ${activeNavItem === 'home' ? 'bg-primary-100 text-primary-900 px-3 rounded' : 'hover:bg-primary-50 px-3 rounded'}`}
                   >
                     Home
                   </Link>
                   <Link
                     to="/exercises"
                     onClick={() => setIsMenuOpen(false)}
-                    className={`text-white py-2 transition-colors ${activeNavItem === 'exercises' ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+                    className={`py-2 transition-colors ${activeNavItem === 'exercises' ? 'bg-primary-100 text-primary-900 px-3 rounded' : 'hover:bg-primary-50 px-3 rounded'}`}
                   >
                     Exercises
                   </Link>
                   <Link
                     to="/profile"
                     onClick={() => setIsMenuOpen(false)}
-                    className={`text-white py-2 transition-colors ${activeNavItem === 'mystuff' ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+                    className={`py-2 transition-colors ${activeNavItem === 'mystuff' ? 'bg-primary-100 text-primary-900 px-3 rounded' : 'hover:bg-primary-50 px-3 rounded'}`}
                   >
                     My Stuff
                   </Link>
@@ -334,14 +334,14 @@ const Navbar = () => {
                     <Link
                       to="/profile"
                       onClick={() => setIsMenuOpen(false)}
-                      className="flex items-center px-3 py-2 text-white hover:bg-gray-800 rounded"
+                      className="flex items-center px-3 py-2 hover:bg-primary-50 rounded"
                     >
                       <User className="mr-2" size={16} />
                       Profile
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center w-full px-3 py-2 text-white hover:bg-gray-800 rounded mt-2 text-left"
+                      className="flex items-center w-full px-3 py-2 hover:bg-primary-50 rounded mt-2 text-left"
                     >
                       <LogOut className="mr-2" size={16} />
                       Logout
@@ -353,44 +353,44 @@ const Navbar = () => {
                 <>
                   <button
                     onClick={() => handleNavClick(HOME_SECTIONS.ABOUT, `/#${HOME_SECTIONS.ABOUT}`)}
-                    className={`text-white py-2 transition-colors ${activeNavItem === HOME_SECTIONS.ABOUT ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+                    className={`py-2 transition-colors ${activeNavItem === HOME_SECTIONS.ABOUT ? 'bg-primary-900/30 text-primary-400 px-3 rounded' : 'hover:bg-primary-100 px-3 rounded'}`}
                   >
                     About
                   </button>
                   <button
                     onClick={() => handleNavClick(HOME_SECTIONS.PROGRAMS, `/#${HOME_SECTIONS.PROGRAMS}`)}
-                    className={`text-white py-2 transition-colors ${activeNavItem === HOME_SECTIONS.PROGRAMS ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+                    className={`py-2 transition-colors ${activeNavItem === HOME_SECTIONS.PROGRAMS ? 'bg-primary-900/30 text-primary-400 px-3 rounded' : 'hover:bg-primary-100 px-3 rounded'}`}
                   >
                     Programs
                   </button>
                   <button
                     onClick={() => handleNavClick('exercises', '/exercises')}
-                    className={`text-white py-2 transition-colors ${activeNavItem === 'exercises' ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+                    className={`py-2 transition-colors ${activeNavItem === 'exercises' ? 'bg-primary-900/30 text-primary-400 px-3 rounded' : 'hover:bg-primary-100 px-3 rounded'}`}
                   >
                     Exercises
                   </button>
                   <button
                     onClick={() => handleNavClick(HOME_SECTIONS.PLANS, `/#${HOME_SECTIONS.PLANS}`)}
-                    className={`text-white py-2 transition-colors ${activeNavItem === HOME_SECTIONS.PLANS ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+                    className={`py-2 transition-colors ${activeNavItem === HOME_SECTIONS.PLANS ? 'bg-primary-900/30 text-primary-400 px-3 rounded' : 'hover:bg-primary-100 px-3 rounded'}`}
                   >
                     Plans
                   </button>
                   <button
                     onClick={() => handleNavClick(HOME_SECTIONS.CONTACT, `/#${HOME_SECTIONS.CONTACT}`)}
-                    className={`text-white py-2 transition-colors ${activeNavItem === HOME_SECTIONS.CONTACT ? 'bg-purple-900/30 text-purple-400 px-3 rounded' : 'hover:bg-gray-800 px-3 rounded'}`}
+                    className={`py-2 transition-colors ${activeNavItem === HOME_SECTIONS.CONTACT ? 'bg-primary-900/30 text-primary-400 px-3 rounded' : 'hover:bg-primary-100 px-3 rounded'}`}
                   >
                     Contact
                   </button>
                   <div className="flex space-x-4 pt-4 border-t border-gray-800">
                     <button
                       onClick={() => handleSignIn(true)}
-                      className="flex-1 px-4 py-2 rounded-md text-white hover:text-purple-300 transition-colors border border-gray-700 hover:border-purple-500"
+                      className="flex-1 px-4 py-2 text-primary-700 rounded-md transition-colors border border-primary-700 hover:border-primary-500"
                     >
                       Sign In
                     </button>
                     <button
                       onClick={() => handleSignIn(false)}
-                      className="flex-1 px-4 py-2 bg-purple-600 rounded-md hover:bg-purple-700 text-white transition-colors"
+                      className="flex-1 px-4 py-2 text-white bg-primary-600 rounded-md hover:bg-primary-700 transition-colors"
                     >
                       Sign Up
                     </button>

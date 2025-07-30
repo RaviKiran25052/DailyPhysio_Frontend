@@ -3,12 +3,12 @@ import { Thermometer, Activity, Heart, Rocket, ChevronRight, Database, MonitorSm
 
 const FeatureCard = ({ icon: Icon, title, description }) => {
   return (
-    <div className="p-5 hover:bg-gray-800 rounded-lg transition">
-      <div className="bg-purple-600/20 p-3 rounded-lg inline-block mb-3">
-        <Icon className="h-6 w-6 text-purple-500" />
+    <div className="p-5 bg-primary-100 hover:bg-primary-200 rounded-lg transition">
+      <div className="bg-primary-600/20 p-3 rounded-lg inline-block mb-3">
+        <Icon className="h-6 w-6 text-primary-500" />
       </div>
-      <h3 className="text-lg font-medium mb-2 text-white">{title}</h3>
-      <p className="text-gray-400 mb-2">{description}</p>
+      <h3 className="text-lg font-medium mb-2 text-primary-700">{title}</h3>
+      <p className="text-primary-500 mb-2">{description}</p>
     </div>
   );
 };
@@ -48,9 +48,9 @@ const PopularClasses = () => {
   ];
 
   return (
-    <div className="bg-gray-900 py-16">
+    <div className="bg-white py-16">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-12 text-white">Our Popular Programs</h2>
+        <h2 className="text-3xl font-bold mb-12 text-black">Our Popular Programs</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (

@@ -3,20 +3,15 @@ import React from 'react';
 const Hero = () => {
 
   return (
-    <div className="bg-gray-900 relative overflow-hidden">
-      {/* Purple gradient focused at top center */}
-      <div className="absolute w-full h-full inset-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-purple-600/30 rounded-full blur-[120px] opacity-70"></div>
-      </div>
-      
+    <div className="bg-white relative overflow-hidden">      
       <div className="container mx-auto py-16 md:py-24 px-4 md:px-20 flex flex-col md:flex-row items-center relative z-10">
         {/* Left Content */}
         <div className="w-full md:w-1/2 mb-10 md:mb-0">
-          <p className="text-purple-400 uppercase tracking-wider mb-3 font-medium">DailyPhysio PRO is Coming!</p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Unlock Your Full <span className="text-purple-500">Physical</span> Potential with DailyPhysio
+          <p className="text-primary-500 uppercase tracking-wider mb-3 font-semibold">DailyPhysio PRO is Coming!</p>
+          <h1 className="text-3xl md:text-5xl font-semibold mb-6 text-gray-700">
+            Unlock Your Full <span className="text-primary-500">Physical</span> Potential with DailyPhysio
           </h1>
-          <p className="text-lg text-gray-300 mb-8">
+          <p className="text-base md:text-lg text-gray-500 mb-8">
             Access professional exercise programs designed by orthopedic experts.
             Recover better, move better, feel better.
           </p>

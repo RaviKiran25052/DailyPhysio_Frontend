@@ -52,7 +52,7 @@ const HomePage = () => {
 	}, []);
 
 	return (
-		<div className="bg-gray-900 min-h-screen">
+		<div className="min-h-screen">
 			<div ref={aboutRef} id="about">
 				<Hero />
 			</div>

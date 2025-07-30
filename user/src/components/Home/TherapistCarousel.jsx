@@ -174,13 +174,13 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 	}, [displayTherapists]);
 
 	return (
-		<div className="relative z-10 mx-4 md:mx-20 overflow-hidden mb-10">
+		<div className="relative z-10 mx-4 md:mx-20 overflow-hidden my-10">
 			<div className="flex items-center justify-between mb-10">
 				<h2 className="text-3xl sm:text-4xl font-bold text-white text-center relative">
-					<span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-gray-500">
+					<span className="bg-clip-text text-primary-600">
 						Top Therapists
 					</span>
-					<div className="h-1 w-24 bg-gradient-to-r from-purple-600 to-gray-500 mt-2"></div>
+					<div className="h-1 w-24 bg-primary-600 mt-2"></div>
 				</h2>
 
 				{!loading && displayTherapists.length > visibleCards && (
@@ -188,8 +188,8 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 						<button
 							onClick={prevTherapists}
 							disabled={startIdx === 0 || isAnimating}
-							className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx === 0 ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
-								'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+							className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx === 0 ? 'bg-primary-100 text-primary-300 cursor-not-allowed' :
+								'bg-primary-200 text-gray-500 hover:bg-primary-400 hover:text-white'
 								} transition-all duration-300`}
 							aria-label="Previous therapists"
 						>
@@ -198,8 +198,8 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 						<button
 							onClick={nextTherapists}
 							disabled={startIdx >= displayTherapists.length - visibleCards || isAnimating}
-							className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx >= displayTherapists.length - visibleCards ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
-								'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+							className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx >= displayTherapists.length - visibleCards ? 'bg-primary-100 text-primary-300 cursor-not-allowed' :
+								'bg-primary-200 text-gray-500 hover:bg-primary-400 hover:text-white'
 								} transition-all duration-300`}
 							aria-label="Next therapists"
 						>
@@ -232,20 +232,15 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 								onMouseEnter={() => setHoveredCard(index)}
 								onMouseLeave={() => setHoveredCard(null)}
 							>
-								<div className={`bg-gray-800/80 rounded-xl overflow-hidden shadow-xl border border-gray-700/60 h-full relative group backdrop-blur-sm transition-all duration-500 
-                    ${hoveredCard === index ? 'shadow-purple-500/30 border-purple-500/40' : 'hover:shadow-purple-500/20'}`}
+								<div className={`bg-primary-700 rounded-xl overflow-hidden shadow-xl border border-gray-700/60 h-full relative group backdrop-blur-sm transition-all duration-500 
+                    ${hoveredCard === index ? 'shadow-primary-500/30 border-primary-500/40' : 'hover:shadow-primary-500/20'}`}
 								>
-
-									{/* Purple radial gradient on hover */}
-									<div className={`absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none
-                      ${hoveredCard === index ? 'opacity-100' : ''}`}></div>
-
 									<div className="p-6 flex flex-col h-full justify-between">
 										{/* Profile picture and name section */}
 										<div className="flex items-center mb-5">
 											<div
 												className={`w-16 h-16 rounded-full overflow-hidden mr-4 flex-shrink-0 ${hoveredCard === index
-													? 'ring-2 ring-purple-500 ring-offset-2 ring-offset-gray-800'
+													? 'ring-2 ring-primary-500 ring-offset-2 ring-offset-gray-800'
 													: ''
 													} transition-all duration-300`}
 											>
@@ -256,26 +251,26 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 														className="w-full h-full object-cover"
 													/>
 												) : (
-													<div className="w-full h-full bg-gradient-to-br from-purple-700 to-purple-900 p-4 flex items-center justify-center">
+													<div className="w-full h-full bg-gradient-to-br from-primary-700 to-primary-900 p-4 flex items-center justify-center">
 														<FaUserMd className="text-white text-3xl" />
 													</div>
 												)}
 											</div>
 											<div>
-												<h3 className="text-xl font-bold text-white group-hover:text-purple-200 transition-colors duration-300">
+												<h3 className="text-xl font-bold text-white transition-colors duration-300">
 													{therapist.name}
 												</h3>
 												<div className="flex flex-wrap gap-2 mt-2">
 													{therapist.specializations?.slice(0, 2).map((spec, idx) => (
 														<span
 															key={idx}
-															className="bg-purple-900/30 text-purple-200 text-xs px-2 py-0.5 rounded-full border border-purple-800/40"
+															className="bg-primary-900/30 text-primary-200 text-xs px-2 py-0.5 rounded-full border border-primary-800/40"
 														>
 															{spec}
 														</span>
 													))}
 													{therapist.specializations?.length > 2 && (
-														<span className="bg-purple-900/30 text-purple-200 text-xs px-2 py-0.5 rounded-full border border-purple-800/40">
+														<span className="bg-primary-900/30 text-primary-200 text-xs px-2 py-0.5 rounded-full border border-primary-800/40">
 															+{therapist.specializations.length - 2}
 														</span>
 													)}
@@ -288,26 +283,26 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 
 										{/* Info section - grows to fill space */}
 										<div className="flex-1 space-y-3 text-sm text-gray-300 mb-4 pl-1">
-											<div className="flex items-center group-hover:text-purple-200 transition-colors duration-300">
-												<Briefcase size={16} className="mr-2 text-purple-400" />
+											<div className="flex items-center transition-colors duration-300">
+												<Briefcase size={16} className="mr-2 text-primary-400" />
 												<span>{therapist.workingAt}</span>
 											</div>
-											<div className="flex items-center group-hover:text-purple-200 transition-colors duration-300">
-												<MapPin size={16} className="mr-2 text-purple-400 flex-shrink-0" />
+											<div className="flex items-center transition-colors duration-300">
+												<MapPin size={16} className="mr-2 text-primary-400 flex-shrink-0" />
 												<span className='line-clamp-2'>{therapist.address || 'Address not available'}</span>
 											</div>
 										</div>
 
 										{/* Stats card */}
-										<div className="bg-gray-900/60 rounded-xl p-4 grid grid-cols-3 gap-1 border border-gray-700/40 group-hover:border-purple-500/20 transition-all duration-300 mb-4">
+										<div className="bg-primary-800 rounded-xl p-4 grid grid-cols-3 gap-1 mb-4">
 											<div className="flex flex-col items-center text-center">
-												<Clock size={18} className="text-purple-400 mb-1" />
+												<Clock size={18} className="text-primary-400 mb-1" />
 												<span className="text-white font-medium">{therapist.experience}</span>
 												<span className="text-xs text-gray-400">Experience</span>
 											</div>
 
 											<div className="flex flex-col items-center text-center border-x border-gray-700/30">
-												<Briefcase size={18} className="text-purple-400 mb-1" />
+												<Briefcase size={18} className="text-primary-400 mb-1" />
 												<span className="text-white font-medium">
 													{therapist.consultationCount}
 												</span>
@@ -315,14 +310,14 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 											</div>
 
 											<div className="flex flex-col items-center text-center">
-												<Dumbbell size={18} className="text-purple-400 mb-1" />
+												<Dumbbell size={18} className="text-primary-400 mb-1" />
 												<span className="text-white font-medium">{therapist.exerciseCount}</span>
 												<span className="text-xs text-gray-400">Exercises</span>
 											</div>
 										</div>
 
 										{/* Button pinned at bottom */}
-										<button onClick={() => navigate(`/creator/exercise/${therapist._id}`)} className="flex justify-center items-center bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white px-4 py-1.5 rounded-lg transition-all duration-300 shadow-lg hover:shadow-purple-500/25">
+										<button onClick={() => navigate(`/creator/exercise/${therapist._id}`)} className="flex justify-center items-center bg-primary-500 hover:bg-primary-600 text-white px-4 py-1.5 rounded-lg transition-all duration-300">
 											<Dumbbell size={14} className="mr-1.5" />
 											View Exercises
 										</button>
@@ -338,8 +333,8 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 							<button
 								onClick={prevTherapists}
 								disabled={startIdx === 0 || isAnimating}
-								className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx === 0 ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
-									'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+								className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx === 0 ? 'bg-primary-100 text-primary-300 cursor-not-allowed' :
+									'bg-primary-200 text-gray-500 hover:bg-primary-400 hover:text-white'
 									} transition-all duration-300`}
 								aria-label="Previous therapists"
 							>
@@ -348,8 +343,8 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 							<button
 								onClick={nextTherapists}
 								disabled={startIdx >= displayTherapists.length - visibleCards || isAnimating}
-								className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx >= displayTherapists.length - visibleCards ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
-									'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+								className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx >= displayTherapists.length - visibleCards ? 'bg-primary-100 text-primary-300 cursor-not-allowed' :
+									'bg-primary-200 text-gray-500 hover:bg-primary-400 hover:text-white'
 									} transition-all duration-300`}
 								aria-label="Next therapists"
 							>
@@ -366,8 +361,8 @@ const TherapistCarousel = ({ therapists = [], loading = false }) => {
 									key={i}
 									onClick={() => goToSlide(i)}
 									className={`w-2 h-2 rounded-full transition-all duration-300 ${i === Math.floor(startIdx / 1) ?
-										'bg-gradient-to-r from-purple-500 to-pink-500 w-6' :
-										'bg-gray-600 hover:bg-purple-400'
+										'bg-gradient-to-r from-primary-500 to-primary-300 w-6' :
+										'bg-gray-600 hover:bg-primary-400'
 										}`}
 									aria-label={`Go to slide ${i + 1}`}
 								/>
