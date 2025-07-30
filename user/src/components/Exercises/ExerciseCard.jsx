@@ -37,8 +37,8 @@ const ExerciseCard = ({
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-700">
-      <div className={`relative ${getLayout()} overflow-hidden bg-gray-700`}>
+    <div className="bg-primary-800 rounded-xl overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-700">
+      <div className={`relative ${getLayout()}`}>
         <MediaCarousel images={exercise.image} video={exercise.video} />
         {exercise.isPremium &&
           <div className='absolute top-2 left-2 bg-yellow-500 rounded-md z-10 p-1'>
@@ -48,19 +48,19 @@ const ExerciseCard = ({
       </div>
 
       <div className="p-3 flex flex-col">
-        <h3 onClick={handleViewDetails} className="flex gap-2 text-lg font-semibold mb-2 text-white hover:text-purple-300 line-clamp-1 cursor-pointer">
+        <h3 onClick={handleViewDetails} className="flex gap-2 text-lg font-semibold mb-2 text-white hover:text-primary-300 line-clamp-1 cursor-pointer">
           {exercise.title || exercise.name || "Unnamed Exercise"}<SquareArrowOutUpRight size={14} />
         </h3>
 
         {/* Make categories and positions visible on all screens */}
         <div className="mb-2 flex flex-wrap gap-1">
           {exercise.category && (
-            <span className="text-xs bg-purple-900/60 text-purple-300 px-2 py-0.5 rounded-full truncate max-w-[120px]">
+            <span className="text-xs bg-primary-500 text-black px-2 py-0.5 rounded-full truncate max-w-[120px]">
               {exercise.category}
             </span>
           )}
           {exercise.position && (
-            <span className="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded-full truncate max-w-[120px]">
+            <span className="text-xs bg-primary-700 text-gray-300 px-2 py-0.5 rounded-full truncate max-w-[120px]">
               {exercise.position || "Any Position"}
             </span>
           )}

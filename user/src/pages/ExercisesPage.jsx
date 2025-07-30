@@ -204,16 +204,16 @@ const ExercisesPage = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+    <div className="min-h-screen flex flex-col text-gray-200">
       <div className="container mx-auto px-4 py-8 flex-grow">
         {/* Mobile Filter Toggle Button */}
         <div className="md:hidden mb-4">
           <button
             onClick={toggleSidebar}
-            className="w-full py-2 px-4 bg-gray-800 rounded-lg flex justify-between items-center"
+            className="w-full py-2 px-4 bg-primary-800 rounded-lg flex justify-between items-center"
           >
             <span className="font-medium flex items-center">
-              <Filter size={16} className="mr-2 text-purple-400" />
+              <Filter size={16} className="mr-2 text-primary-400" />
               Filters & Categories
             </span>
             <svg
@@ -230,16 +230,16 @@ const ExercisesPage = () => {
         <div className="flex flex-col md:flex-row gap-6">
           {/* Mobile Filter Panel with Dropdowns */}
           <div className={`md:hidden ${showFilters ? 'block' : 'hidden'} mb-4`}>
-            <div className="bg-gray-800 rounded-lg p-4 shadow-lg">
+            <div className="bg-primary-800 rounded-lg p-4 shadow-lg">
               {/* Current Selection Display */}
-              <div className="flex flex-wrap items-center gap-2 mb-4 px-2 py-2 bg-gray-700/50 rounded-lg">
-                <span className="text-xs font-medium text-gray-400">Viewing:</span>
+              <div className="flex flex-wrap items-center gap-2 mb-4 px-2 py-2 bg-primary-700 rounded-lg">
+                <span className="text-xs font-medium">Viewing:</span>
                 <div className="flex-1 flex items-center">
-                  <span className="text-sm font-medium text-purple-300">{selectedCategory}</span>
+                  <span className="text-sm font-medium text-primary-300">{selectedCategory}</span>
                   <ChevronDown size={14} className="mx-1 text-gray-500" />
                   {selectedSubCategory && (
                     <>
-                      <span className="text-sm font-medium text-purple-300">{selectedSubCategory}</span>
+                      <span className="text-sm font-medium text-primary-300">{selectedSubCategory}</span>
                       <ChevronDown size={14} className="mx-1 text-gray-500" />
                     </>
                   )}
@@ -252,19 +252,19 @@ const ExercisesPage = () => {
                 <label className="block text-white font-medium mb-2">Category</label>
                 <button
                   onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                  className="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-md text-white flex justify-between items-center"
+                  className="w-full p-2.5 bg-primary-700 border border-primary-600 rounded-md text-white flex justify-between items-center"
                 >
                   <span>{selectedCategory}</span>
                   <ChevronDown size={16} className={`transition-transform ${showCategoryDropdown ? 'transform rotate-180' : ''}`} />
                 </button>
 
                 {showCategoryDropdown && (
-                  <div className="absolute z-20 w-full mt-1 bg-gray-700 border border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                  <div className="absolute z-20 w-full mt-1 bg-primary-700 border border-primary-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
                     {Object.keys(allCategories).map(category => (
                       <button
                         key={category}
                         onClick={() => handleCategorySelect(category)}
-                        className={`w-full p-2.5 text-left hover:bg-gray-600 transition-colors ${selectedCategory === category ? 'bg-purple-600 text-white' : ''}`}
+                        className={`w-full p-2.5 text-left hover:bg-primary-600 transition-colors ${selectedCategory === category ? 'bg-primary-600 text-white' : ''}`}
                       >
                         {category}
                       </button>
@@ -278,19 +278,19 @@ const ExercisesPage = () => {
                 <label className="block text-white font-medium mb-2">Position</label>
                 <button
                   onClick={() => setShowPositionDropdown(!showPositionDropdown)}
-                  className="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-md text-white flex justify-between items-center"
+                  className="w-full p-2.5 bg-primary-700 border border-primary-600 rounded-md text-white flex justify-between items-center"
                 >
                   <span>{selectedPosition}</span>
                   <ChevronDown size={16} className={`transition-transform ${showPositionDropdown ? 'transform rotate-180' : ''}`} />
                 </button>
 
                 {showPositionDropdown && (
-                  <div className="absolute z-20 w-full mt-1 bg-gray-700 border border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                  <div className="absolute z-20 w-full mt-1 bg-primary-700 border border-primary-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
                     {allPositions.map(position => (
                       <button
                         key={position}
                         onClick={() => handlePositionSelect(position)}
-                        className={`w-full p-2.5 text-left hover:bg-gray-600 transition-colors ${selectedPosition === position ? 'bg-purple-600 text-white' : ''}`}
+                        className={`w-full p-2.5 text-left hover:bg-primary-600 transition-colors ${selectedPosition === position ? 'bg-primary-600 text-white' : ''}`}
                       >
                         {position}
                       </button>
@@ -330,13 +330,10 @@ const ExercisesPage = () => {
 
             {/* Featured navigation notification */}
             {showFeaturedNotification && (
-              <div className="bg-indigo-900/80 border-l-4 border-purple-500 p-3 mb-4 text-sm flex items-center justify-between">
-                <div className="flex items-center">
-                  <span className="text-purple-300 mr-2">💫</span>
-                  <span className="text-gray-200">
-                    Showing exercises in the <span className="font-semibold text-purple-300">{selectedCategory}</span> category
-                  </span>
-                </div>
+              <div className="bg-primary-900/80 border-l-4 border-primary-500 p-3 mb-4 text-sm flex items-center justify-between">
+                <span className="text-gray-200">
+                  Showing exercises in the <span className="font-semibold text-primary-300">{selectedCategory}</span> category
+                </span>
                 <button
                   onClick={() => setShowFeaturedNotification(false)}
                   className="text-gray-400 hover:text-white"
@@ -349,7 +346,7 @@ const ExercisesPage = () => {
             {/* Loading indicator */}
             {isLoading && (
               <div className="flex justify-center items-center py-10">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
               </div>
             )}
 
@@ -395,7 +392,7 @@ const ExercisesPage = () => {
                 <div className="flex justify-center mt-4">
                   <div className="flex space-x-2">
                     {filteredExercises.length > 0 && (
-                      <span className="text-sm text-gray-400">
+                      <span className="text-sm text-primary-700">
                         Swipe to see more ({filteredExercises.length} exercises)
                       </span>
                     )}
@@ -411,7 +408,7 @@ const ExercisesPage = () => {
                   <button
                     key={exercise.id || exercise._id}
                     onClick={() => viewExerciseDetails(exercise)}
-                    className="w-full text-left transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500 rounded-lg"
+                    className="w-full text-left transition-transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg"
                   >
                     <ExerciseCard
                       exercise={exercise}
@@ -461,7 +458,7 @@ const ExercisesPage = () => {
                           key={pageNumber}
                           onClick={() => paginate(pageNumber)}
                           className={`w-10 h-10 flex items-center justify-center rounded-md ${currentPage === pageNumber
-                            ? 'bg-purple-600 text-white'
+                            ? 'bg-primary-600 text-white'
                             : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                             }`}
                         >

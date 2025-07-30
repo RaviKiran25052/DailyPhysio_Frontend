@@ -14,7 +14,6 @@ const HOME_SECTIONS = {
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [activeNavItem, setActiveNavItem] = useState('');
   const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
   const [isSignIn, setIsSignIn] = useState(true);
@@ -53,8 +52,6 @@ const Navbar = () => {
   // Track scroll position to add background when scrolled
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-
       // If on homepage, update active section based on scroll position
       if (location.pathname === '/') {
         const sectionsToCheck = [
@@ -170,15 +167,15 @@ const Navbar = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 bg-primary-500 w-full h-16 z-50 transition-all duration-300">
+    <header className="fixed top-0 left-0 bg-primary-700 w-full z-50 transition-all duration-300">
       <div className="mx-auto px-4 md:px-20">
-        <div className="flex items-center justify-between py-4">
+        <div className="flex items-center justify-between py-3">
           <Link
             to="/"
             className="text-2xl font-bold"
             onClick={() => setActiveNavItem('home')}
           >
-            <span className="text-primary-700">Daily</span>
+            <span className="text-primary-400">Daily</span>
             <span className="text-white">Physio</span>
           </Link>
 
@@ -188,19 +185,19 @@ const Navbar = () => {
               <>
                 <Link
                   to="/"
-                  className={`font-semibold transition-colors border-b-2 pb-1 ${activeNavItem === 'home' ? 'border-primary-700 text-white' : 'text-primary-100 border-transparent hover:border-gray-700'}`}
+                  className={`font-semibold transition-colors border-b-2 pb-1 ${activeNavItem === 'home' ? 'border-primary-400 text-white' : 'text-primary-100 border-transparent hover:border-primary-200'}`}
                 >
                   Home
                 </Link>
                 <Link
                   to="/exercises"
-                  className={`font-semibold transition-colors border-b-2 pb-1 ${activeNavItem === 'exercises' ? 'border-primary-700 text-white' : 'text-primary-100 border-transparent hover:border-gray-700'}`}
+                  className={`font-semibold transition-colors border-b-2 pb-1 ${activeNavItem === 'exercises' ? 'border-primary-400 text-white' : 'text-primary-100 border-transparent hover:border-primary-200'}`}
                 >
                   Exercises
                 </Link>
                 <Link
                   to="/profile"
-                  className={`font-semibold transition-colors border-b-2 pb-1 ${activeNavItem === 'mystuff' ? 'border-primary-700 text-white' : 'text-primary-100 border-transparent hover:border-gray-700'}`}
+                  className={`font-semibold transition-colors border-b-2 pb-1 ${activeNavItem === 'mystuff' ? 'border-primary-400 text-white' : 'text-primary-100 border-transparent hover:border-primary-200'}`}
                 >
                   My Stuff
                 </Link>
@@ -253,19 +250,19 @@ const Navbar = () => {
                   <span className="font-medium">{userData.fullName || 'Profile'}</span>
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-gray-900 ring-1 ring-black ring-opacity-5">
+                  <div className="absolute right-0 mt-4 w-48 rounded-md shadow-lg bg-primary-700 ring-1 ring-black ring-opacity-5">
                     <div className="py-1">
                       <Link
                         to="/profile"
                         onClick={() => setDropdownOpen(false)}
-                        className="w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-800 flex items-center"
+                        className="w-full text-left px-4 py-2 text-sm text-white hover:bg-primary-800 flex items-center"
                       >
                         <User className="mr-2" size={16} />
                         Profile
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-800 flex items-center"
+                        className="w-full text-left px-4 py-2 text-sm text-white hover:bg-primary-800 flex items-center"
                       >
                         <LogOut className="mr-2" size={16} />
                         Logout
