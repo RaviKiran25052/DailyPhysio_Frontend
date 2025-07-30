@@ -1,6 +1,6 @@
 import { Crown } from 'lucide-react';
-import React, { useState } from 'react';
-import { FaArrowLeft, FaArrowRight, FaArrowCircleLeft, FaArrowCircleRight, FaCalendarAlt, FaEye, FaStar, FaClock, FaDumbbell } from 'react-icons/fa';
+import { useState } from 'react';
+import { FaArrowLeft, FaArrowCircleLeft, FaArrowCircleRight, FaCalendarAlt, FaEye, FaStar, FaClock, FaDumbbell } from 'react-icons/fa';
 
 const ExerciseDetail = ({ exercise, onEdit, onDelete, onBack }) => {
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
