@@ -55,7 +55,7 @@ const ConsultedExercises = () => {
 		return (
 			<div className="min-h-screen bg-gray-900 flex items-center justify-center">
 				<div className="text-center">
-					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto mb-4"></div>
+					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
 					<p className="text-gray-300">Loading your consultations...</p>
 				</div>
 			</div>
@@ -64,13 +64,13 @@ const ConsultedExercises = () => {
 
 	if (viewMode === 'exercises' && selectedConsultation) {
 		return (
-			<div className="min-h-screen bg-gray-900 text-white">
+			<div className="min-h-screen bg-primary-800 text-white px-3 md:px-4 py-4 rounded-xl">
 				<div className="container mx-auto px-2">
 					{/* Header with back button */}
 					<div className="flex flex-col md:flex-row justify-between gap-4 md:items-center items-start mb-8">
 						<button
 							onClick={handleBackToTherapists}
-							className="flex items-center gap-2 text-sm md:text-base bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition-colors mr-4"
+							className="flex items-center gap-2 text-sm md:text-base bg-primary-600 hover:bg-primary-700 px-4 py-2 rounded-lg transition-colors mr-4"
 						>
 							<ArrowLeft size={20} />
 							Back
@@ -83,21 +83,21 @@ const ConsultedExercises = () => {
 
 					{/* Consultation Notes */}
 					{selectedConsultation.notes && (
-						<div className="bg-gray-800 rounded-xl p-4 mb-8 border border-purple-500/30">
-							<h3 className="text-lg font-semibold text-purple-300">Therapist Notes</h3>
+						<div className="bg-gray-800 rounded-xl p-4 mb-8 border border-primary-500/30">
+							<h3 className="text-lg font-semibold text-primary-300">Therapist Notes</h3>
 							<p className="text-gray-300 leading-relaxed">{selectedConsultation.notes}</p>
 						</div>
 					)}
 
 					{/* Exercises Grid */}
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						{selectedConsultation.recommendedExercises.map((exercise) => {
 							console.log(selectedConsultation)
 
 							return (
-								<div key={exercise._id} className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105">
+								<div key={exercise._id} className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 hover:border-primary-500/50 transition-all duration-300 hover:scale-105">
 									{/* Exercise Image/Video */}
-									<div className="relative h-48 bg-gradient-to-br from-purple-900/50 to-gray-900">
+									<div className="relative h-48 bg-gradient-to-br from-primary-900/50 to-gray-900">
 										{exercise?.video || exercise.image?.length > 0 ? (
 											<MediaCarousel video={exercise?.video || null} images={exercise.image || []} />
 										) : (
@@ -113,7 +113,7 @@ const ConsultedExercises = () => {
 										)}
 										{exercise.video && (
 											<div className="absolute inset-0 flex items-center justify-center">
-												<div className="bg-purple-600 hover:bg-purple-700 rounded-full p-3 cursor-pointer transition-colors">
+												<div className="bg-primary-600 hover:bg-primary-700 rounded-full p-3 cursor-pointer transition-colors">
 													<Play size={24} fill="white" />
 												</div>
 											</div>
@@ -135,22 +135,22 @@ const ConsultedExercises = () => {
 										{/* Exercise Stats */}
 										<div className="grid grid-cols-3 gap-3 mb-4">
 											<div className="bg-gray-700 rounded-lg p-2 text-center">
-												<div className="text-purple-400 font-semibold">{exercise.reps}</div>
+												<div className="text-primary-400 font-semibold">{exercise.reps}</div>
 												<div className="text-xs text-gray-400">Reps</div>
 											</div>
 											<div className="bg-gray-700 rounded-lg p-2 text-center">
-												<div className="text-purple-400 font-semibold">{exercise.set}</div>
+												<div className="text-primary-400 font-semibold">{exercise.set}</div>
 												<div className="text-xs text-gray-400">Sets</div>
 											</div>
 											<div className="bg-gray-700 rounded-lg p-2 text-center">
-												<div className="text-purple-400 font-semibold">{exercise.hold}s</div>
+												<div className="text-primary-400 font-semibold">{exercise.hold}s</div>
 												<div className="text-xs text-gray-400">Hold</div>
 											</div>
 										</div>
 
 										{/* Category Tags */}
 										<div className="flex flex-wrap gap-2 mb-4">
-											<span className="bg-purple-900/50 text-purple-300 px-2 py-1 rounded-full text-xs">
+											<span className="bg-primary-900/50 text-primary-300 px-2 py-1 rounded-full text-xs">
 												{exercise.category}
 											</span>
 											<span className="bg-gray-700 text-gray-300 px-2 py-1 rounded-full text-xs">
@@ -174,7 +174,7 @@ const ConsultedExercises = () => {
 													}
 												}
 											})}
-											className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition-colors font-medium"
+											className="w-full bg-primary-600 hover:bg-primary-700 text-white py-2 rounded-lg transition-colors font-medium"
 										>
 											View Exercise
 										</button>
@@ -189,7 +189,7 @@ const ConsultedExercises = () => {
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-900 text-white">
+		<div className="min-h-screen bg-primary-800 text-white px-3 md:px-4 py-4 rounded-xl">
 			<div className="container mx-auto px-2">
 				{/* Header */}
 				<div className="mb-8">
@@ -206,16 +206,16 @@ const ConsultedExercises = () => {
 						</div>
 					</div>
 				) : (
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 						{consultedData.map((consultation) => (
-							<div key={consultation.consultationId} className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:scale-105">
+							<div key={consultation.consultationId} className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-primary-500/50 transition-all duration-300 hover:scale-105">
 								{/* Therapist Avatar */}
 								<div className="flex items-center mb-6">
 									<div className="relative flex-shrink-0">
 										<img
 											src={consultation.therapist.profilePic}
 											alt={consultation.therapist.name}
-											className="w-16 h-16 rounded-full object-cover border-2 border-purple-500"
+											className="w-16 h-16 rounded-full object-cover border-2 border-primary-500"
 										/>
 										<div className="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-2 border-gray-800"></div>
 									</div>
@@ -225,13 +225,13 @@ const ConsultedExercises = () => {
 											{consultation.therapist.specializations?.slice(0, 2).map((spec, idx) => (
 												<span
 													key={idx}
-													className="bg-purple-900/30 text-purple-200 text-xs px-2 py-0.5 rounded-full border border-purple-800/40"
+													className="bg-primary-900/30 text-primary-200 text-xs px-2 py-0.5 rounded-full border border-primary-800/40"
 												>
 													{spec}
 												</span>
 											))}
 											{consultation.therapist.specializations?.length > 2 && (
-												<span className="bg-purple-900/30 text-purple-200 text-xs px-2 py-0.5 rounded-full border border-purple-800/40">
+												<span className="bg-primary-900/30 text-primary-200 text-xs px-2 py-0.5 rounded-full border border-primary-800/40">
 													+{consultation.therapist.specializations.length - 2}
 												</span>
 											)}
@@ -242,27 +242,27 @@ const ConsultedExercises = () => {
 								{/* Therapist Info */}
 								<div className="space-y-2 mb-6">
 									<div className="flex items-center gap-2 text-gray-300">
-										<Briefcase size={16} className="text-purple-400" />
+										<Briefcase size={16} className="text-primary-400 flex-shrink-0" />
 										<span className="text-sm">{consultation.therapist.workingAt}</span>
 									</div>
 									<div className="flex items-center gap-2 text-gray-300">
-										<MapPin size={16} className="text-purple-400" />
+										<MapPin size={16} className="text-primary-400 flex-shrink-0" />
 										<span className="text-sm">{consultation.therapist.address}</span>
 									</div>
 									<div className="flex items-center gap-2 text-gray-300">
-										<Users size={16} className="text-purple-400" />
+										<Users size={16} className="text-primary-400 flex-shrink-0" />
 										<span className="text-sm">{consultation.therapist.followers} followers</span>
 									</div>
 								</div>
 
 								{/* Consultation Date */}
-								<div className="flex items-center gap-2 text-purple-400 text-sm mb-2">
+								<div className="flex items-center gap-2 text-primary-400 text-sm mb-2">
 									<Calendar size={14} />
 									Consulted on <span className='text-white'>{formatDate(consultation.consultationDate)}</span>
 								</div>
 
 								{/* Exercise Count */}
-								<div className="flex items-center gap-2 text-purple-400 text-sm mb-6">
+								<div className="flex items-center gap-2 text-primary-400 text-sm mb-6">
 									<Dumbbell size={14} />
 									Recommended: <span className='text-white'>{consultation.recommendedExercises.length} Exercises</span>
 								</div>
@@ -270,7 +270,7 @@ const ConsultedExercises = () => {
 								{/* Action Button */}
 								<button
 									onClick={() => handleViewExercises(consultation)}
-									className="w-full text-sm bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
+									className="w-full text-sm bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-lg transition-colors font-medium flex items-center justify-center gap-2"
 								>
 									<Eye size={18} />
 									View Exercises

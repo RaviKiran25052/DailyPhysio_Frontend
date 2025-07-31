@@ -38,7 +38,7 @@ const MembershipManagement = () => {
 	if (loading) {
 		return (
 			<div className="p-6 flex items-center justify-center min-h-screen">
-				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
 			</div>
 		);
 	}
@@ -93,7 +93,7 @@ const MembershipManagement = () => {
 	];
 
 	return (
-		<div className="p-6">
+		<div className="p-6 bg-primary-800 rounded-xl text-white">
 			<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
 				<h2 className="text-2xl font-bold">Membership Management</h2>
 			</div>
@@ -105,7 +105,7 @@ const MembershipManagement = () => {
 						<h3 className="text-xl font-semibold mb-2">Your Current Plan</h3>
 						<div className="flex items-center mb-4">
 							<span className={`text-2xl font-bold ${membershipType === 'free' ? 'text-blue-400' :
-									membershipType === 'monthly' ? 'text-yellow-400' : 'text-purple-400'
+									membershipType === 'monthly' ? 'text-yellow-400' : 'text-primary-400'
 								}`}>
 								{membershipType === 'free' ? 'Free Plan' :
 									membershipType === 'monthly' ? 'Monthly Plan' : 'Yearly Plan'}
@@ -115,19 +115,19 @@ const MembershipManagement = () => {
 						<div className="space-y-2 text-gray-300">
 							{expiryDate && (
 								<div className="flex items-center">
-									<RiCalendarLine className="mr-2 text-purple-400" />
+									<RiCalendarLine className="mr-2 text-primary-400" />
 									<span>Expires: {expiryDate.toLocaleDateString()}</span>
 								</div>
 							)}
 							<div className="flex items-center">
-								<RiCoinLine className="mr-2 text-purple-400" />
+								<RiCoinLine className="mr-2 text-primary-400" />
 								<span>
 									{membershipType === 'free' ? 'Free' :
 										membershipType === 'monthly' ? '$19.99/month' : '$199.99/year'}
 								</span>
 							</div>
 							<div className="flex items-center">
-								<RiTimeLine className="mr-2 text-purple-400" />
+								<RiTimeLine className="mr-2 text-primary-400" />
 								<span>
 									{membershipType === 'free' ? 'Never expires' :
 										membershipType === 'monthly' ? 'Renews monthly' : 'Renews yearly'}
@@ -139,7 +139,7 @@ const MembershipManagement = () => {
 					<div className="mt-6 md:mt-0">
 						<button
 							onClick={() => setShowUpdateModal(true)}
-							className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+							className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
 						>
 							Update Plan
 						</button>
@@ -153,11 +153,11 @@ const MembershipManagement = () => {
 				{plans.map((plan) => (
 					<div
 						key={plan.type}
-						className={`relative bg-gray-800 rounded-xl border ${plan.current ? 'border-purple-500' : 'border-gray-700'
+						className={`relative bg-gray-800 rounded-xl border ${plan.current ? 'border-primary-500' : 'border-gray-700'
 							} p-6 flex flex-col ${plan.popular ? 'transform md:-translate-y-2' : ''}`}
 					>
 						{plan.popular && (
-							<div className="absolute top-0 right-0 bg-purple-600 text-white text-xs px-3 py-1 rounded-bl-lg rounded-tr-lg">
+							<div className="absolute top-0 right-0 bg-primary-600 text-white text-xs px-3 py-1 rounded-bl-lg rounded-tr-lg">
 								Popular
 							</div>
 						)}
@@ -180,7 +180,7 @@ const MembershipManagement = () => {
 						</ul>
 
 						{plan.current ? (
-							<div className="px-4 py-2 bg-purple-600 bg-opacity-50 text-white text-center rounded-lg">
+							<div className="px-4 py-2 bg-primary-600 bg-opacity-50 text-white text-center rounded-lg">
 								Current Plan
 							</div>
 						) : (

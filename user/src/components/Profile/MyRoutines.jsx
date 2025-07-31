@@ -317,7 +317,7 @@ const MyRoutines = ({ user }) => {
   if (loading) {
     return (
       <div className="bg-gray-800 shadow-lg overflow-hidden p-10 flex justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
       </div>
     );
   }
@@ -333,7 +333,7 @@ const MyRoutines = ({ user }) => {
         <button
           onClick={prevPage}
           disabled={currentPage === 1}
-          className={`p-2 rounded-full ${currentPage === 1 ? 'text-gray-600 cursor-not-allowed' : 'text-purple-500 hover:bg-gray-700'}`}
+          className={`p-2 rounded-full ${currentPage === 1 ? 'text-gray-600 cursor-not-allowed' : 'text-primary-500 hover:bg-gray-700'}`}
         >
           <ChevronLeft size={20} />
         </button>
@@ -345,7 +345,7 @@ const MyRoutines = ({ user }) => {
         <button
           onClick={nextPage}
           disabled={currentPage === pageCount}
-          className={`p-2 rounded-full ${currentPage === pageCount ? 'text-gray-600 cursor-not-allowed' : 'text-purple-500 hover:bg-gray-700'}`}
+          className={`p-2 rounded-full ${currentPage === pageCount ? 'text-gray-600 cursor-not-allowed' : 'text-primary-500 hover:bg-gray-700'}`}
         >
           <ChevronRight size={20} />
         </button>
@@ -354,10 +354,10 @@ const MyRoutines = ({ user }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl bg-primary-700 rounded-xl p-3 md:p-4 mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center">
-          <Activity className="mr-2 text-purple-500" size={24} />
+          <Activity className="mr-2 text-primary-500" size={24} />
           Workout Routines
         </h2>
         {user.membership.find(m => m.status === 'active' && m.type !== 'free') && (
@@ -370,7 +370,7 @@ const MyRoutines = ({ user }) => {
       </div>
 
       {/* Search, Sort, and Filter Controls */}
-      <div className="bg-gray-800 rounded-xl p-4 mb-6 border border-gray-700">
+      <div className="bg-gray-800 rounded-xl p-4 mb-6 border border-primary-700">
         {/* Search Bar */}
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -379,7 +379,7 @@ const MyRoutines = ({ user }) => {
             placeholder="Search routines by name, exercise, category, or position..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 bg-primary-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           />
         </div>
 
@@ -391,7 +391,7 @@ const MyRoutines = ({ user }) => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="px-3 py-1 bg-primary-700 border border-gray-600 rounded text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="name">Name</option>
               <option value="category">Category</option>
@@ -403,7 +403,7 @@ const MyRoutines = ({ user }) => {
             </select>
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="p-1 text-purple-400 hover:text-purple-300"
+              className="p-1 text-primary-400 hover:text-primary-300"
               title={`Sort ${sortOrder === 'asc' ? 'Descending' : 'Ascending'}`}
             >
               {sortOrder === 'asc' ? <SortAsc size={16} /> : <SortDesc size={16} />}
@@ -413,7 +413,7 @@ const MyRoutines = ({ user }) => {
           {/* Filter Toggle */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-3 py-1 bg-purple-600 hover:bg-purple-700 rounded text-white text-sm transition-colors"
+            className="flex items-center gap-2 px-3 py-1 bg-primary-600 hover:bg-primary-700 rounded text-white text-sm transition-colors"
           >
             <Filter size={16} />
             Filters
@@ -438,7 +438,7 @@ const MyRoutines = ({ user }) => {
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="all">All Categories</option>
                 {getUniqueCategories().map(category => (
@@ -452,7 +452,7 @@ const MyRoutines = ({ user }) => {
               <select
                 value={filterPosition}
                 onChange={(e) => setFilterPosition(e.target.value)}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="all">All Positions</option>
                 {getUniquePositions().map(position => (
@@ -483,16 +483,16 @@ const MyRoutines = ({ user }) => {
           {currentRoutines.map((routine, index) => (
             <div
               key={routine.routineId}
-              className="bg-gray-800 rounded-xl overflow-hidden border border-gray-700 shadow-lg hover:shadow-purple-900/20 transition-all duration-300"
+              className="bg-gray-800 rounded-xl overflow-hidden border border-primary-700 shadow-lg hover:shadow-primary-500/20 transition-all duration-300"
             >
               <div className="p-4 sm:p-5">
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
                   <div className="mb-3 sm:mb-0">
-                    <h3 className="font-semibold text-lg sm:text-xl text-white group-hover:text-purple-400 transition-colors">
+                    <h3 className="font-semibold text-lg sm:text-xl text-white group-hover:text-primary-400 transition-colors">
                       {routine.name}
                     </h3>
                     <p className="text-sm text-gray-400 flex items-center mt-1">
-                      <span className="inline-block w-2 h-2 rounded-full bg-purple-500 mr-2"></span>
+                      <span className="inline-block w-2 h-2 rounded-full bg-primary-500 mr-2"></span>
                       {routine.exercise?.category}
                       <span className="mx-2">•</span>
                       {routine.exercise?.position}
@@ -511,7 +511,7 @@ const MyRoutines = ({ user }) => {
                       )}
                       <button
                         onClick={() => handleViewRoutine(routine)}
-                        className="p-2 text-sm bg-purple-600 hover:bg-purple-500 rounded-lg text-white flex items-center transition-colors duration-200"
+                        className="p-2 text-sm bg-primary-600 hover:bg-primary-500 rounded-lg text-white flex items-center transition-colors duration-200"
                         aria-label="View routine"
                       >
                         <Eye size={16} className="mr-1" />
@@ -519,7 +519,7 @@ const MyRoutines = ({ user }) => {
                       </button>
                       <button
                         onClick={() => handleEditClick(routine)}
-                        className="p-2 text-sm border-2 border-purple-600 hover:bg-purple-500 rounded-lg text-purple-600 hover:text-white transition-colors duration-200"
+                        className="p-2 text-sm border-2 border-primary-600 hover:bg-primary-500 rounded-lg text-primary-600 hover:text-white transition-colors duration-200"
                         aria-label="Edit routine"
                       >
                         <Edit size={16} />
@@ -544,14 +544,14 @@ const MyRoutines = ({ user }) => {
                       )}
                       <button
                         onClick={() => handleViewRoutine(routine)}
-                        className="p-2 bg-purple-600 hover:bg-purple-500 rounded-full text-white"
+                        className="p-2 bg-primary-600 hover:bg-primary-500 rounded-full text-white"
                         aria-label="View routine"
                       >
                         <Eye size={16} />
                       </button>
                       <button
                         onClick={() => handleEditClick(routine)}
-                        className="p-2 border border-purple-600 hover:bg-purple-600 rounded-full text-purple-600 hover:text-white"
+                        className="p-2 border border-primary-600 hover:bg-primary-600 rounded-full text-primary-600 hover:text-white"
                         aria-label="Edit routine"
                       >
                         <Edit size={16} />
@@ -568,15 +568,15 @@ const MyRoutines = ({ user }) => {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mt-4">
-                  <div className="bg-gray-900 rounded-lg p-2 sm:p-3 border-l-4 border-purple-500">
+                  <div className="bg-primary-800 rounded-lg p-2 sm:p-3 border-l-4 border-primary-500">
                     <span className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Reps</span>
                     <span className="font-semibold text-base sm:text-lg text-white flex items-center">
-                      <Repeat size={14} className="text-purple-400 mr-1" />
+                      <Repeat size={14} className="text-primary-400 mr-1" />
                       {routine.reps}
                     </span>
                   </div>
 
-                  <div className="bg-gray-900 rounded-lg p-2 sm:p-3 border-l-4 border-blue-500">
+                  <div className="bg-primary-800 rounded-lg p-2 sm:p-3 border-l-4 border-blue-500">
                     <span className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Hold</span>
                     <span className="font-semibold text-base sm:text-lg text-white flex items-center">
                       <Clock size={14} className="text-blue-400 mr-1" />
@@ -584,7 +584,7 @@ const MyRoutines = ({ user }) => {
                     </span>
                   </div>
 
-                  <div className="bg-gray-900 rounded-lg p-2 sm:p-3 border-l-4 border-green-500">
+                  <div className="bg-primary-800 rounded-lg p-2 sm:p-3 border-l-4 border-green-500">
                     <span className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Complete</span>
                     <span className="font-semibold text-base sm:text-lg text-white flex items-center">
                       <Activity size={14} className="text-green-400 mr-1" />
@@ -592,7 +592,7 @@ const MyRoutines = ({ user }) => {
                     </span>
                   </div>
 
-                  <div className="bg-gray-900 rounded-lg p-2 sm:p-3 border-l-4 border-amber-500">
+                  <div className="bg-primary-800 rounded-lg p-2 sm:p-3 border-l-4 border-amber-500">
                     <span className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Perform</span>
                     <span className="font-semibold text-base sm:text-lg text-white flex items-center">
                       {routine.perform.count}/{routine.perform.type}
@@ -615,10 +615,10 @@ const MyRoutines = ({ user }) => {
         </div>
       ) : (
         <div className="text-center py-16 bg-gray-800 rounded-xl border border-dashed border-gray-700">
-          <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-purple-900/30">
-            <Activity size={32} className="text-purple-400" />
+          <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center rounded-full bg-primary-900/30">
+            <Activity size={32} className="text-primary-400" />
           </div>
-          <p className="text-purple-400 text-lg mb-2">
+          <p className="text-primary-400 text-lg mb-2">
             {routines.length === 0 ? 'No routines found' : 'No routines match your filters'}
           </p>
           <p className="text-gray-500 text-sm max-w-sm mx-auto">
@@ -630,7 +630,7 @@ const MyRoutines = ({ user }) => {
           {routines.length > 0 && (
             <button
               onClick={clearAllFilters}
-              className="mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-white text-sm transition-colors"
+              className="mt-4 px-4 py-2 bg-primary-600 hover:bg-primary-700 rounded-lg text-white text-sm transition-colors"
             >
               Clear All Filters
             </button>
@@ -661,7 +661,7 @@ const MyRoutines = ({ user }) => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                   required
                 />
               </div>
@@ -675,7 +675,7 @@ const MyRoutines = ({ user }) => {
                     name="reps"
                     value={formData.reps}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     {[...Array(20)].map((_, i) => (
                       <option key={`reps-${i + 1}`} value={i + 1}>{i + 1}</option>
@@ -691,7 +691,7 @@ const MyRoutines = ({ user }) => {
                     name="hold"
                     value={formData.hold}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     {[...Array(30)].map((_, i) => (
                       <option key={`hold-${i + 1}`} value={i + 1}>{i + 1}</option>
@@ -707,7 +707,7 @@ const MyRoutines = ({ user }) => {
                     name="complete"
                     value={formData.complete}
                     onChange={handleChange}
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     {[...Array(10)].map((_, i) => (
                       <option key={`complete-${i + 1}`} value={i + 1}>{i + 1}</option>
@@ -724,7 +724,7 @@ const MyRoutines = ({ user }) => {
                       name="performCount"
                       value={formData.perform.count}
                       onChange={handleChange}
-                      className="w-1/2 px-2 py-2 bg-gray-700 border border-gray-600 rounded-l text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-1/2 px-2 py-2 bg-gray-700 border border-gray-600 rounded-l text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     >
                       {[...Array(10)].map((_, i) => (
                         <option key={`count-${i + 1}`} value={i + 1}>{i + 1}</option>
@@ -734,7 +734,7 @@ const MyRoutines = ({ user }) => {
                       name="performType"
                       value={formData.perform.type}
                       onChange={handleChange}
-                      className="w-1/2 px-2 py-2 bg-gray-700 border-l-0 border border-gray-600 rounded-r text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-1/2 px-2 py-2 bg-gray-700 border-l-0 border border-gray-600 rounded-r text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                     >
                       <option value="hour">hour</option>
                       <option value="day">day</option>
@@ -746,7 +746,7 @@ const MyRoutines = ({ user }) => {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-medium transition-colors"
+                className="w-full py-3 bg-primary-600 hover:bg-primary-700 rounded-lg text-white font-medium transition-colors"
               >
                 Update Routine
               </button>

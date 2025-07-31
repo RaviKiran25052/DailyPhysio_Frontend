@@ -32,7 +32,7 @@ const PrintButton = ({ routines, icon, text }) => {
       
       .page-title {
         text-align: center;
-        color: #a78bfa;
+        color: #007b78;
         font-size: 32px;
         font-weight: 700;
         margin-bottom: 40px;
@@ -81,7 +81,7 @@ const PrintButton = ({ routines, icon, text }) => {
         padding: 16px;
         background-color: #111827;
         border-radius: 10px;
-        border-left: 4px solid #8b5cf6;
+        border-left: 4px solid #007b78;
         transition: transform 0.2s;
       }
       
@@ -106,7 +106,7 @@ const PrintButton = ({ routines, icon, text }) => {
       h3 {
         font-size: 20px;
         margin-bottom: 16px;
-        color: #a78bfa;
+        color: #007b78;
         border-bottom: 1px solid #4b5563;
         padding-bottom: 8px;
       }
@@ -135,10 +135,10 @@ const PrintButton = ({ routines, icon, text }) => {
       .video-link {
         display: inline-block;
         margin-top: 8px;
-        color: #8b5cf6;
+        color: #007b78;
         text-decoration: none;
         padding: 8px 16px;
-        border: 1px solid #8b5cf6;
+        border: 1px solid #007b78;
         border-radius: 6px;
         font-weight: 500;
       }
@@ -307,7 +307,7 @@ const PrintButton = ({ routines, icon, text }) => {
         padding: 16px;
         background-color: #111827;
         border-radius: 10px;
-        border-left: 4px solid #8b5cf6;
+        border-left: 4px solid #007b78;
         transition: transform 0.2s;
       }
       
@@ -332,7 +332,7 @@ const PrintButton = ({ routines, icon, text }) => {
       h3 {
         font-size: 20px;
         margin-bottom: 16px;
-        color: #a78bfa;
+        color: #007b78;
         border-bottom: 1px solid #4b5563;
         padding-bottom: 8px;
       }
@@ -361,10 +361,10 @@ const PrintButton = ({ routines, icon, text }) => {
       .video-link {
         display: inline-block;
         margin-top: 8px;
-        color: #8b5cf6;
+        color: #007b78;
         text-decoration: none;
         padding: 8px 16px;
-        border: 1px solid #8b5cf6;
+        border: 1px solid #007b78;
         border-radius: 6px;
         font-weight: 500;
       }
@@ -407,7 +407,7 @@ const PrintButton = ({ routines, icon, text }) => {
         </div>
         <div class="detail-box">
           <div class="detail-label">Performance</div>
-          <div class="detail-value">${routine.perform.count}/${routine.perform.type}</div>
+          <div class="detail-value">${routine.perform?.count}/${routine.perform?.type}</div>
         </div>
       </div>
       
@@ -466,7 +466,7 @@ const PrintButton = ({ routines, icon, text }) => {
   return (
     <button
       onClick={routines.length > 1 ? () => { handlePrintAll(routines) } : () => { handlePrintSingle([routines]) }}
-      className="p-2 text-sm bg-purple-600 hover:bg-purple-500 rounded-lg text-white flex items-center transition-colors duration-200"
+      className="p-2 text-sm bg-primary-500 hover:bg-primary-600 rounded-lg text-white flex items-center transition-colors duration-200"
     >
       {icon}
       <span className="ml-1">{text}</span>

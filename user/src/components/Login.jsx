@@ -313,12 +313,12 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
         className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
         onClick={handleClose}
       ></div>
-      <div className="bg-gray-800 relative w-full max-w-md rounded-2xl shadow-2xl transform transition-all duration-300 scale-100 overflow-hidden">
-        <div className="bg-gradient-to-r from-purple-600 to-purple-800 py-3 px-5 flex-shrink-0">
+      <div className="bg-white relative w-full max-w-md rounded-2xl shadow-2xl transform transition-all duration-300 scale-100 overflow-hidden">
+        <div className="bg-gradient-to-r from-primary-600 to-primary-800 py-3 px-5 flex-shrink-0">
           <h2 className="text-lg font-bold text-white mt-2">
             {title}
           </h2>
-          <p className="text-purple-200 mt-1 text-sm">
+          <p className="text-primary-200 mt-1 text-sm">
             {subtitle}
           </p>
         </div>
@@ -328,14 +328,14 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {/* Registration field - only shown in sign up mode step 1 */}
             {!isSignIn && !forgotPassword && registrationStep === 1 && (
               <div>
-                <label htmlFor="name" className="block text-gray-300 mb-1 text-sm font-medium">Full Name</label>
+                <label htmlFor="name" className="block text-gray-700 mb-1 text-sm font-medium">Full Name</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary-500"
                   placeholder="Enter your name"
                   required
                   autoComplete="username"
@@ -346,14 +346,14 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {/* Email field - shown in all modes except registration step 2 and forgot password step 2 & 3 */}
             {(resetStep === 1 || (!forgotPassword && (isSignIn || registrationStep === 1))) && (
               <div>
-                <label htmlFor="email" className="block text-gray-300 mb-1 text-sm font-medium">Email</label>
+                <label htmlFor="email" className="block text-gray-700 mb-1 text-sm font-medium">Email</label>
                 <input
                   type="email"
                   id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary-500"
                   placeholder="Enter your email"
                   required
                   autoComplete="username"
@@ -364,14 +364,14 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {/* OTP field - shown in forgot password step 2 and registration step 2 */}
             {(forgotPassword && resetStep === 2) || (!forgotPassword && !isSignIn && registrationStep === 2) && (
               <div>
-                <label htmlFor="otp" className="block text-gray-300 mb-1 text-sm font-medium">Verification Code</label>
+                <label htmlFor="otp" className="block text-gray-700 mb-1 text-sm font-medium">Verification Code</label>
                 <input
                   type="text"
                   id="otp"
                   name="otp"
                   value={formData.otp}
                   onChange={handleChange}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 tracking-widest text-center text-lg"
+                  className="w-full border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary-500 tracking-widest text-center text-lg"
                   placeholder="Enter 4-digit code"
                   maxLength="4"
                   required
@@ -382,7 +382,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {/* Password fields - shown in login, signup step 1, and forgot password step 3 */}
             {(isSignIn || (!forgotPassword && registrationStep === 1) || (forgotPassword && resetStep === 3)) && (
               <div>
-                <label htmlFor="password" className="block text-gray-300 mb-1 text-sm font-medium">
+                <label htmlFor="password" className="block text-gray-700 mb-1 text-sm font-medium">
                   {forgotPassword ? 'New Password' : 'Password'}
                 </label>
                 <div className="relative">
@@ -393,7 +393,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
                     value={formData.password}
                     autoComplete="current-password"
                     onChange={handleChange}
-                    className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary-500"
                     placeholder={forgotPassword ? "Create new password" : isSignIn ? "Enter your password" : "Create a password"}
                     required
                   />
@@ -412,7 +412,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {/* Confirm password - shown in signup step 1 and forgot password step 3 */}
             {((!isSignIn && !forgotPassword && registrationStep === 1) || (forgotPassword && resetStep === 3)) && (
               <div>
-                <label htmlFor="confirmPassword" className="block text-gray-300 mb-1 text-sm font-medium">Confirm Password</label>
+                <label htmlFor="confirmPassword" className="block text-gray-700 mb-1 text-sm font-medium">Confirm Password</label>
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
@@ -420,7 +420,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary-500"
                     placeholder="Confirm your password"
                     autoComplete="new-password"
                     required
@@ -443,7 +443,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {/* Submit button with context-aware label */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-purple-600 to-purple-800 text-white py-2 px-4 rounded-md font-medium hover:from-purple-700 hover:to-purple-900 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+              className="w-full text-white bg-gradient-to-r from-primary-600 to-primary-800 py-2 px-4 rounded-md font-medium hover:from-primary-700 hover:to-primary-900 transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-gray-800"
             >
               {forgotPassword
                 ? (resetStep === 1 ? 'Send Verification Code' : 
@@ -461,7 +461,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {forgotPassword && (
               <button
                 onClick={handleBackStep}
-                className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+                className="text-primary-600 hover:text-primary-700 text-sm font-medium"
               >
                 {resetStep > 1 ? 'Back to previous step' : 'Back to Sign In'}
               </button>
@@ -471,7 +471,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {!isSignIn && !forgotPassword && registrationStep === 2 && (
               <button
                 onClick={handleRegistrationBackStep}
-                className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+                className="text-primary-600 hover:text-primary-700 text-sm font-medium"
               >
                 Back to registration form
               </button>
@@ -481,7 +481,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {isSignIn && !forgotPassword && (
               <button
                 onClick={handleForgotPassword}
-                className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+                className="text-primary-600 hover:underline text-sm font-medium"
               >
                 Forgot your password?
               </button>
@@ -492,11 +492,11 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               <div className="mt-2">
                 <button
                   onClick={toggleMode}
-                  className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+                  className="text-black text-sm font-medium"
                 >
                   {isSignIn
-                    ? "Don't have an account? Sign up"
-                    : "Already have an account? Sign in"
+                    ? <span>Don't have an account? <span className='text-primary-600 hover:underline'>Sign up</span></span>
+                    : <span>Already have an account? <span className='text-primary-600 hover:underline'>Sign in</span></span>
                   }
                 </button>
               </div>

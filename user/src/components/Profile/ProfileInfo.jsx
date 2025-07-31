@@ -149,7 +149,7 @@ const ProfileInfo = () => {
   return (
     <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
       {/* Header/Banner */}
-      <div className="h-32 bg-gradient-to-r from-primary-700 to-primary-900 relative" />
+      <div className="h-20 md:h-28 bg-gradient-to-r from-primary-700 to-primary-900 relative" />
 
       {/* Profile Section */}
       <div className="px-6 pt-0 pb-6 relative">
@@ -166,7 +166,7 @@ const ProfileInfo = () => {
             <div className="mt-2 md:mt-0 flex items-center space-x-2">
               <button
                 onClick={() => setShowProfileEditModal(true)}
-                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+                className="px-3 py-1 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
               >
                 Edit Profile
               </button>

@@ -93,7 +93,7 @@ const UserProfilePage = () => {
     };
 
     return (
-      <div className="rounded-lg mb-4 bg-primary-800 relative">
+      <div className="rounded-lg bg-primary-800 relative">
         {/* Left arrow button */}
         <button
           onClick={() => scroll('left')}
@@ -137,8 +137,8 @@ const UserProfilePage = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="container mx-auto p-4 md:py-8">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Mobile Tabs - Show only on mobile */}
           {isMobile && <MobileTabBar />}
 
