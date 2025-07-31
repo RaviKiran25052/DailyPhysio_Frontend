@@ -207,31 +207,31 @@ const Navbar = () => {
               <>
                 <button
                   onClick={() => handleNavClick(HOME_SECTIONS.ABOUT, `/#${HOME_SECTIONS.ABOUT}`)}
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.ABOUT ? 'border-primary-500 text-primary-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.ABOUT ? 'border-primary-200 text-primary-400' : 'border-transparent hover:border-primary-400'}`}
                 >
                   About
                 </button>
                 <button
                   onClick={() => handleNavClick(HOME_SECTIONS.PROGRAMS, `/#${HOME_SECTIONS.PROGRAMS}`)}
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.PROGRAMS ? 'border-primary-500 text-primary-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.PROGRAMS ? 'border-primary-200 text-primary-400' : 'border-transparent hover:border-primary-400'}`}
                 >
                   Programs
                 </button>
                 <button
                   onClick={() => handleNavClick(HOME_SECTIONS.EXERCISES, `/#${HOME_SECTIONS.EXERCISES}`)}
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.EXERCISES ? 'border-primary-500 text-primary-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.EXERCISES ? 'border-primary-200 text-primary-400' : 'border-transparent hover:border-primary-400'}`}
                 >
                   Exercises
                 </button>
                 <button
                   onClick={() => handleNavClick(HOME_SECTIONS.PLANS, `/#${HOME_SECTIONS.PLANS}`)}
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.PLANS ? 'border-primary-500 text-primary-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.PLANS ? 'border-primary-200 text-primary-400' : 'border-transparent hover:border-primary-400'}`}
                 >
                   Plans
                 </button>
                 <button
                   onClick={() => handleNavClick(HOME_SECTIONS.CONTACT, `/#${HOME_SECTIONS.CONTACT}`)}
-                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.CONTACT ? 'border-primary-500 text-primary-400' : 'border-transparent hover:border-gray-700'}`}
+                  className={`text-white transition-colors border-b-2 pb-1 ${activeNavItem === HOME_SECTIONS.CONTACT ? 'border-primary-200 text-primary-400' : 'border-transparent hover:border-primary-400'}`}
                 >
                   Contact
                 </button>
