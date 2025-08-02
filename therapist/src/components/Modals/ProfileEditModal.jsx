@@ -165,8 +165,8 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 overflow-y-auto">
-      <div className="bg-gray-800 rounded-lg w-full max-w-2xl mx-4" onClick={(e) => e.stopPropagation()}>
-        <div className="p-6 border-b border-gray-700 flex justify-between items-center">
+      <div className="bg-white rounded-lg w-full max-w-2xl mx-4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+        <div className="p-6 border-b border-gray-700 bg-primary-700 flex justify-between items-center">
           <h2 className="text-2xl font-bold text-white">
             Edit Profile
           </h2>
@@ -183,7 +183,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
             <div className="space-y-6">
               {/* Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-primary-700 mb-1">
                   Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -191,8 +191,8 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 bg-gray-700 border ${errors.name ? 'border-red-500' : 'border-gray-600'
-                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                  className={`w-full px-3 py-2 bg-primary-600 border ${errors.name ? 'border-red-500' : 'border-gray-600'
+                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
                   placeholder="Dr. John Smith"
                 />
                 {errors.name && (
@@ -202,7 +202,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-primary-700 mb-1">
                   Email <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -210,8 +210,8 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 bg-gray-700 border ${errors.email ? 'border-red-500' : 'border-gray-600'
-                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                  className={`w-full px-3 py-2 bg-primary-600 border ${errors.email ? 'border-red-500' : 'border-gray-600'
+                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
                   placeholder="doctor@example.com"
                 />
                 {errors.email && (
@@ -220,7 +220,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-primary-700 mb-1">
                   Bio <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -228,8 +228,8 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                   value={formData.bio}
                   onChange={handleChange}
                   placeholder='Add information about your professional background'
-                  className={`w-full px-3 py-2 bg-gray-700 border ${errors.bio ? 'border-red-500' : 'border-gray-600'
-                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                  className={`w-full px-3 py-2 bg-primary-600 border ${errors.bio ? 'border-red-500' : 'border-gray-600'
+                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
                 />
                 {errors.bio && (
                   <p className="mt-1 text-sm text-red-500">{errors.bio}</p>
@@ -238,7 +238,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
 
               {/* Specializations */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-primary-700 mb-1">
                   Specializations <span className="text-red-500">*</span>
                 </label>
 
@@ -246,7 +246,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                   {formData.specializations.map((spec, index) => (
                     <span
                       key={index}
-                      className="bg-purple-600 text-white text-sm px-3 py-1 rounded-full flex items-center"
+                      className="bg-primary-600 text-white text-sm px-3 py-1 rounded-full flex items-center"
                     >
                       {spec}
                       <button
@@ -264,7 +264,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                   <select
                     value={selectedSpecialization}
                     onChange={handleSpecializationSelect}
-                    className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="flex-1 px-3 py-2 bg-primary-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     <option value="">Select a specialization</option>
                     {specializationOptions.map(option => (
@@ -274,7 +274,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                   <button
                     type="button"
                     onClick={addSpecialization}
-                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                    className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                   >
                     Add
                   </button>
@@ -287,7 +287,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                       value={otherSpecialization}
                       onChange={handleOtherSpecializationChange}
                       placeholder="Enter specialization"
-                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
                   </div>
                 )}
@@ -299,7 +299,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
 
               {/* Experience */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-primary-700 mb-1">
                   Experience <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -307,8 +307,8 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                   name="experience"
                   value={formData.experience}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 bg-gray-700 border ${errors.experience ? 'border-red-500' : 'border-gray-600'
-                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                  className={`w-full px-3 py-2 bg-primary-600 border ${errors.experience ? 'border-red-500' : 'border-gray-600'
+                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
                   placeholder="5 years"
                 />
                 {errors.experience && (
@@ -318,7 +318,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
 
               {/* Gender */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-primary-700 mb-1">
                   Gender <span className="text-red-500">*</span>
                 </label>
                 <div className="flex space-x-4">
@@ -330,7 +330,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                       value="male"
                       checked={formData.gender === 'male'}
                       onChange={handleChange}
-                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-600"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-600"
                     />
                     <label htmlFor="male" className="ml-2 text-sm text-gray-300">
                       Male
@@ -344,7 +344,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                       value="female"
                       checked={formData.gender === 'female'}
                       onChange={handleChange}
-                      className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-600"
+                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-600"
                     />
                     <label htmlFor="female" className="ml-2 text-sm text-gray-300">
                       Female
@@ -355,7 +355,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
 
               {/* Hospital/Clinic */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-primary-700 mb-1">
                   Hospital/Clinic Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -363,8 +363,8 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                   name="workingAt"
                   value={formData.workingAt}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 bg-gray-700 border ${errors.workingAt ? 'border-red-500' : 'border-gray-600'
-                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                  className={`w-full px-3 py-2 bg-primary-600 border ${errors.workingAt ? 'border-red-500' : 'border-gray-600'
+                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
                   placeholder="City General Hospital"
                 />
                 {errors.workingAt && (
@@ -374,7 +374,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
 
               {/* Address */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-primary-700 mb-1">
                   Address <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -382,8 +382,8 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                   value={formData.address}
                   onChange={handleChange}
                   rows="3"
-                  className={`w-full px-3 py-2 bg-gray-700 border ${errors.address ? 'border-red-500' : 'border-gray-600'
-                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                  className={`w-full px-3 py-2 bg-primary-600 border ${errors.address ? 'border-red-500' : 'border-gray-600'
+                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
                   placeholder="123 Medical Center Blvd, New York, NY"
                 ></textarea>
                 {errors.address && (
@@ -393,7 +393,7 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
 
               {/* Phone Number */}
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1">
+                <label className="block text-sm font-medium text-primary-700 mb-1">
                   Phone Number <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -401,8 +401,8 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                   name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  className={`w-full px-3 py-2 bg-gray-700 border ${errors.phoneNumber ? 'border-red-500' : 'border-gray-600'
-                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                  className={`w-full px-3 py-2 bg-primary-600 border ${errors.phoneNumber ? 'border-red-500' : 'border-gray-600'
+                    } rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
                   placeholder="+1 (555) 123-4567"
                 />
                 {errors.phoneNumber && (
@@ -422,8 +422,8 @@ const ProfileEditModal = ({ isOpen, onClose, therapist, onUpdate }) => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-purple-700'
-                    } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
+                  className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-primary-700'
+                    } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}
                 >
                   {loading ? 'Updating...' : 'Update Profile'}
                 </button>

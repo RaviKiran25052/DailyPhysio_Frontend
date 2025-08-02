@@ -43,7 +43,7 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit, loading }) => {
 							name="new"
 							value={passwordData.new}
 							onChange={handlePasswordChange}
-							className="w-full bg-primary-700/60 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
+							className="w-full bg-primary-700/80 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
 							required
 							disabled={loading}
 						/>
@@ -56,7 +56,7 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit, loading }) => {
 							name="confirm"
 							value={passwordData.confirm}
 							onChange={handlePasswordChange}
-							className="w-full bg-primary-700/60 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
+							className="w-full bg-primary-700/80 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
 							required
 							disabled={loading}
 						/>

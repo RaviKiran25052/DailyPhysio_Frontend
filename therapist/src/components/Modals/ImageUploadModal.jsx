@@ -109,19 +109,19 @@ const ImageUploadModal = ({
 			onClick={onClose}
 		>
 			<div
-				className="relative bg-gray-800 rounded-xl shadow-xl max-w-md w-full p-6"
+				className="relative bg-white rounded-xl shadow-xl max-w-md w-full p-6"
 				onClick={(e) => e.stopPropagation()}
 			>
 				{/* Close Button */}
 				<button
 					onClick={onClose}
-					className="absolute top-3 right-3 text-gray-400 hover:text-white focus:outline-none"
+					className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 focus:outline-none"
 					aria-label="Close"
 				>
 					<FaTimes className="h-6 w-6" />
 				</button>
 
-				<h2 className="text-xl font-bold text-white mb-4">Update Profile Picture</h2>
+				<h2 className="text-xl font-bold text-gray-600 mb-4">Update Profile Picture</h2>
 
 				{/* Error Message */}
 				{error && (
@@ -132,7 +132,7 @@ const ImageUploadModal = ({
 
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<div
-						className="flex flex-col items-center justify-center border-2 border-dashed border-gray-600 rounded-lg p-6 bg-gray-700 cursor-pointer hover:border-purple-500 transition"
+						className="flex flex-col items-center justify-center border-2 border-dashed border-gray-600 rounded-lg p-6 bg-primary-700 cursor-pointer hover:border-primary-500 transition"
 						onDragOver={handleDragOver}
 						onDrop={handleDrop}
 						onClick={triggerFileInput}
@@ -155,7 +155,7 @@ const ImageUploadModal = ({
 								<img
 									src={imagePreview}
 									alt="Preview"
-									className="w-full h-full object-cover rounded-full border-2 border-purple-600"
+									className="w-full h-full object-cover rounded-full border-2 border-primary-600"
 								/>
 								<button
 									type="button"
@@ -172,7 +172,7 @@ const ImageUploadModal = ({
 								<p className="text-gray-300 mb-2 text-center">
 									Drag and drop your image here
 									<br />or
-									<span className="text-purple-400 ml-1 hover:underline">
+									<span className="text-primary-400 ml-1 hover:underline">
 										click to browse
 									</span>
 								</p>
@@ -194,7 +194,7 @@ const ImageUploadModal = ({
 							type="submit"
 							disabled={!imagePreview}
 							className={`px-4 py-2 rounded flex items-center transition focus:outline-none focus:ring-2 focus:ring-offset-2 ${imagePreview
-								? 'bg-purple-600 text-white hover:bg-purple-500 focus:ring-purple-500'
+								? 'bg-primary-600 text-white hover:bg-primary-500 focus:ring-primary-500'
 								: 'bg-gray-600 text-gray-400 cursor-not-allowed'
 								}`}
 						>

@@ -165,7 +165,7 @@ const Profile = () => {
             <span className="px-3 py-1 bg-white/20 rounded-full text-white text-sm">
               {therapist.experience} Experience
             </span>
-            <span className={`px-3 py-1 ${getMembershipBadgeColor(therapist.membership?.type)} text-white rounded-full text-sm capitalize`}>
+            <span className={`px-3 py-1 bg-yellow-600 text-white rounded-full text-sm capitalize`}>
               {therapist.membership?.type || 'Free'} Member
             </span>
           </div>
@@ -281,7 +281,7 @@ const Profile = () => {
           <div>
             <p className="text-gray-400 text-sm mb-2">Current Plan</p>
             <div className="flex items-center">
-              <span className={`px-4 py-2 ${getMembershipBadgeColor(therapist.membership?.type)} text-white rounded-lg text-lg font-medium capitalize`}>
+              <span className={`px-4 py-2 bg-yellow-600 text-white rounded-lg text-lg font-medium capitalize`}>
                 {therapist.membership?.type || 'Free'} Plan
               </span>
             </div>

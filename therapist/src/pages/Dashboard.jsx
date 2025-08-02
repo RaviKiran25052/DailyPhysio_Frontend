@@ -83,8 +83,8 @@ const Dashboard = () => {
 			{
 				label: 'Monthly Consultations',
 				data: analyticsData.monthlyConsultations,
-				backgroundColor: 'rgba(147, 51, 234, 0.5)',
-				borderColor: 'rgb(147, 51, 234)',
+				backgroundColor: 'rgba(0, 148, 144, 0.5)',
+				borderColor: 'rgb(0, 148, 144)',
 				borderWidth: 1,
 			},
 		],
@@ -97,22 +97,22 @@ const Dashboard = () => {
 			{
 				data: Object.values(analyticsData.exerciseCategories || {}),
 				backgroundColor: [
-					'rgba(147, 51, 234, 0.7)',
-					'rgba(178, 85, 247, 0.7)',
-					'rgba(192, 132, 252, 0.7)',
-					'rgba(216, 180, 254, 0.7)',
-					'rgba(233, 213, 255, 0.7)',
+					'rgba(0, 148, 144, 0.9)',
+					'rgba(0, 148, 144, 0.7)',
+					'rgba(0, 148, 144, 0.55)',
+					'rgba(0, 148, 144, 0.4)',
+					'rgba(0, 148, 144, 0.25)',
 				],
 				borderColor: [
-					'rgb(147, 51, 234)',
-					'rgb(168, 85, 247)',
-					'rgb(192, 132, 252)',
-					'rgb(216, 180, 254)',
-					'rgb(233, 213, 255)',
+					'rgb(0, 148, 144)',
+					'rgb(0, 148, 144)',
+					'rgb(0, 148, 144)',
+					'rgb(0, 148, 144)',
+					'rgb(0, 148, 144)',
 				],
 				borderWidth: 1,
 			},
-		],
+		]
 	};
 
 	const chartOptions = {
@@ -174,7 +174,7 @@ const Dashboard = () => {
 		<div className="p-6">
 			{/* Analytics Cards */}
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 text-white">
-				<div className="bg-primary-600 hover:bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
+				<div className="bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
 					<div className="flex items-center justify-between mb-4">
 						<div className="font-semibold">Total Consultations</div>
 						<RiFileListLine className="text-primary-300" size={24} />
@@ -183,7 +183,7 @@ const Dashboard = () => {
 					<div className="text-sm text-primary-100 mt-2">Lifetime consultations</div>
 				</div>
 
-				<div className="bg-primary-600 hover:bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
+				<div className="bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
 					<div className="flex items-center justify-between mb-4">
 						<div className="font-semibold">Followers</div>
 						<RiUserFollowLine className="text-primary-300" size={24} />
@@ -192,7 +192,7 @@ const Dashboard = () => {
 					<div className="text-sm text-primary-100 mt-2">Total followers</div>
 				</div>
 
-				<div className="bg-primary-600 hover:bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
+				<div className="bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
 					<div className="flex items-center justify-between mb-4">
 						<div className="font-semibold">Created Users</div>
 						<RiUserLine className="text-primary-300" size={24} />
@@ -201,7 +201,7 @@ const Dashboard = () => {
 					<div className="text-sm text-primary-100 mt-2">Users created by you</div>
 				</div>
 
-				<div className="bg-primary-600 hover:bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
+				<div className="bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
 					<div className="flex items-center justify-between mb-4">
 						<div className="font-semibold">Created Exercises</div>
 						<RiRunLine className="text-primary-300" size={24} />
@@ -213,12 +213,12 @@ const Dashboard = () => {
 
 			{/* Charts */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-white">
-				<div className="bg-primary-600 p-6 rounded-xl border border-gray-700">
+				<div className="bg-primary-700 p-6 rounded-xl border border-gray-700">
 					<h3 className="text-xl font-semibold mb-4">Consultation Trends</h3>
 					<Bar data={barData} options={chartOptions} />
 				</div>
 
-				<div className="bg-primary-600 p-6 rounded-xl border border-gray-700">
+				<div className="bg-primary-700 p-6 rounded-xl border border-gray-700">
 					<h3 className="text-xl font-semibold mb-4">Exercise Categories</h3>
 					<div className="h-[300px] flex items-center justify-center">
 						{analyticsData.createdExercises > 0
@@ -226,7 +226,7 @@ const Dashboard = () => {
 							<Doughnut data={doughnutData} options={doughnutOptions} />
 							:
 							<div className='flex flex-col items-center text-xl'>
-								<TriangleAlert size={60} className='text-primary-600 mb-6'/>
+								<TriangleAlert size={60} className='text-primary-700 mb-6' />
 								<p>No Exercises Created</p>
 							</div>
 						}
