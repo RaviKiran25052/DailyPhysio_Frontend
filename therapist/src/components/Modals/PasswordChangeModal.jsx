@@ -24,39 +24,39 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit, loading }) => {
 	return (
 
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-			<div className="relative bg-gray-800 rounded-xl shadow-xl max-w-md w-full p-6">
+			<div className="relative bg-white rounded-xl shadow-xl max-w-md w-full p-6">
 				<button
 					onClick={onClose}
-					className="absolute top-3 right-3 text-gray-400 hover:text-white"
+					className="absolute top-3 right-3 text-gray-400 hover:text-black"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
 					</svg>
 				</button>
-				<h2 className="text-xl font-bold text-white mb-4">Change Password</h2>
+				<h2 className="text-xl font-bold mb-4">Change Password</h2>
 				<form onSubmit={handleSubmit} className="space-y-4">
 					<div>
-						<label htmlFor="new" className="block text-sm text-gray-300 mb-1">New Password</label>
+						<label htmlFor="new" className="block text-sm mb-1">New Password</label>
 						<input
 							type="password"
 							id="new"
 							name="new"
 							value={passwordData.new}
 							onChange={handlePasswordChange}
-							className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+							className="w-full bg-primary-700/60 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
 							required
 							disabled={loading}
 						/>
 					</div>
 					<div>
-						<label htmlFor="confirm" className="block text-sm text-gray-300 mb-1">Confirm New Password</label>
+						<label htmlFor="confirm" className="block text-sm mb-1">Confirm New Password</label>
 						<input
 							type="password"
 							id="confirm"
 							name="confirm"
 							value={passwordData.confirm}
 							onChange={handlePasswordChange}
-							className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+							className="w-full bg-primary-700/60 border border-gray-600 rounded px-3 py-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-primary-500"
 							required
 							disabled={loading}
 						/>
@@ -65,14 +65,14 @@ const PasswordChangeModal = ({ isOpen, onClose, onSubmit, loading }) => {
 						<button
 							type="button"
 							onClick={onClose}
-							className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition"
+							className="px-4 py-2 text-primary-700 border-2 border-primary-700 rounded hover:bg-primary-600 hover:text-white transition"
 							disabled={loading}
 						>
 							Cancel
 						</button>
 						<button
 							type="submit"
-							className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-500 transition flex items-center justify-center"
+							className="px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 transition flex items-center justify-center"
 							disabled={loading}
 						>
 							{loading ? (

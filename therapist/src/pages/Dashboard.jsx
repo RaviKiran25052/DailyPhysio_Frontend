@@ -155,7 +155,7 @@ const Dashboard = () => {
 	if (loading) {
 		return (
 			<div className="p-6 flex items-center justify-center min-h-screen">
-				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+				<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
 			</div>
 		);
 	}
@@ -173,52 +173,52 @@ const Dashboard = () => {
 	return (
 		<div className="p-6">
 			{/* Analytics Cards */}
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-				<div className="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-purple-500 transition-colors">
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 text-white">
+				<div className="bg-primary-600 hover:bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
 					<div className="flex items-center justify-between mb-4">
-						<div className="text-gray-400">Total Consultations</div>
-						<RiFileListLine className="text-purple-500" size={24} />
+						<div className="font-semibold">Total Consultations</div>
+						<RiFileListLine className="text-primary-300" size={24} />
 					</div>
 					<div className="text-3xl font-bold">{analyticsData.consultations}</div>
-					<div className="text-sm text-gray-400 mt-2">Lifetime consultations</div>
+					<div className="text-sm text-primary-100 mt-2">Lifetime consultations</div>
 				</div>
 
-				<div className="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-purple-500 transition-colors">
+				<div className="bg-primary-600 hover:bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
 					<div className="flex items-center justify-between mb-4">
-						<div className="text-gray-400">Followers</div>
-						<RiUserFollowLine className="text-purple-500" size={24} />
+						<div className="font-semibold">Followers</div>
+						<RiUserFollowLine className="text-primary-300" size={24} />
 					</div>
 					<div className="text-3xl font-bold">{analyticsData.followers}</div>
-					<div className="text-sm text-gray-400 mt-2">Total followers</div>
+					<div className="text-sm text-primary-100 mt-2">Total followers</div>
 				</div>
 
-				<div className="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-purple-500 transition-colors">
+				<div className="bg-primary-600 hover:bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
 					<div className="flex items-center justify-between mb-4">
-						<div className="text-gray-400">Created Users</div>
-						<RiUserLine className="text-purple-500" size={24} />
+						<div className="font-semibold">Created Users</div>
+						<RiUserLine className="text-primary-300" size={24} />
 					</div>
 					<div className="text-3xl font-bold">{analyticsData.createdUsers}</div>
-					<div className="text-sm text-gray-400 mt-2">Users created by you</div>
+					<div className="text-sm text-primary-100 mt-2">Users created by you</div>
 				</div>
 
-				<div className="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-purple-500 transition-colors">
+				<div className="bg-primary-600 hover:bg-primary-700 p-6 rounded-xl border border-gray-700 hover:border-primary-500 transition-colors">
 					<div className="flex items-center justify-between mb-4">
-						<div className="text-gray-400">Created Exercises</div>
-						<RiRunLine className="text-purple-500" size={24} />
+						<div className="font-semibold">Created Exercises</div>
+						<RiRunLine className="text-primary-300" size={24} />
 					</div>
 					<div className="text-3xl font-bold">{analyticsData.createdExercises}</div>
-					<div className="text-sm text-gray-400 mt-2">Total exercises created</div>
+					<div className="text-sm text-primary-100 mt-2">Total exercises created</div>
 				</div>
 			</div>
 
 			{/* Charts */}
-			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-				<div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 text-white">
+				<div className="bg-primary-600 p-6 rounded-xl border border-gray-700">
 					<h3 className="text-xl font-semibold mb-4">Consultation Trends</h3>
 					<Bar data={barData} options={chartOptions} />
 				</div>
 
-				<div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
+				<div className="bg-primary-600 p-6 rounded-xl border border-gray-700">
 					<h3 className="text-xl font-semibold mb-4">Exercise Categories</h3>
 					<div className="h-[300px] flex items-center justify-center">
 						{analyticsData.createdExercises > 0
@@ -226,7 +226,7 @@ const Dashboard = () => {
 							<Doughnut data={doughnutData} options={doughnutOptions} />
 							:
 							<div className='flex flex-col items-center text-xl'>
-								<TriangleAlert size={60} className='text-purple-600 mb-6'/>
+								<TriangleAlert size={60} className='text-primary-600 mb-6'/>
 								<p>No Exercises Created</p>
 							</div>
 						}

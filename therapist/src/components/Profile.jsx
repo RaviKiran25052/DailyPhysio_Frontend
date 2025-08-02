@@ -112,7 +112,7 @@ const Profile = () => {
 
   const getMembershipBadgeColor = (type) => {
     switch (type) {
-      case 'monthly': return 'bg-purple-600';
+      case 'monthly': return 'bg-primary-600';
       case 'yearly': return 'bg-indigo-600';
       default: return 'bg-gray-600';
     }
@@ -121,7 +121,7 @@ const Profile = () => {
   if (loading) {
     return (
       <div className="p-6 flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
       </div>
     );
   }
@@ -132,7 +132,7 @@ const Profile = () => {
         <div className="text-xl text-red-500">Failed to load profile data</div>
         <button
           onClick={fetchTherapistDetails}
-          className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+          className="mt-4 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
         >
           Retry
         </button>
@@ -142,7 +142,7 @@ const Profile = () => {
 
   // Section for profile header
   const ProfileHeader = () => (
-    <div className="bg-gradient-to-r from-purple-700 to-indigo-800 p-8 rounded-xl mb-6">
+    <div className="bg-gradient-to-r from-primary-700 to-primary-800 p-8 rounded-xl mb-6">
       <div className="flex flex-col md:flex-row items-center md:items-start">
         <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
           {therapist.profilePic ? (
@@ -160,7 +160,7 @@ const Profile = () => {
         </div>
         <div className="flex-grow text-center md:text-left">
           <h2 className="text-3xl font-bold text-white mb-1">{therapist.name}</h2>
-          <p className="text-purple-200 text-lg mb-3">{therapist.specializations.join(', ')}</p>
+          <p className="text-primary-200 text-lg mb-3">{therapist.specializations.join(', ')}</p>
           <div className="flex flex-wrap gap-2 justify-center md:justify-start">
             <span className="px-3 py-1 bg-white/20 rounded-full text-white text-sm">
               {therapist.experience} Experience
@@ -185,9 +185,9 @@ const Profile = () => {
 
   // Section component for consistent styling
   const Section = ({ title, icon, children }) => (
-    <div className="bg-gray-800 rounded-xl border border-gray-700 p-6 mb-6">
+    <div className="bg-primary-700 text-white rounded-xl p-6 mb-6">
       <div className="flex items-center mb-6 pb-4 border-b border-gray-700">
-        {icon && <span className="text-purple-500 mr-3">{icon}</span>}
+        {icon && <span className="text-primary-500 mr-3">{icon}</span>}
         <h3 className="text-xl font-semibold">{title}</h3>
       </div>
       {children}
@@ -206,35 +206,35 @@ const Profile = () => {
           <div className="space-y-2">
             <p className="text-gray-400 text-sm">Email</p>
             <div className="flex items-center">
-              <RiMailLine className="text-purple-500 mr-2" />
+              <RiMailLine className="text-primary-500 mr-2" />
               <span>{therapist.email}</span>
             </div>
           </div>
           <div className="space-y-2">
             <p className="text-gray-400 text-sm">Phone</p>
             <div className="flex items-center">
-              <RiPhoneLine className="text-purple-500 mr-2" />
+              <RiPhoneLine className="text-primary-500 mr-2" />
               <span>{therapist.phoneNumber}</span>
             </div>
           </div>
           <div className="space-y-2">
             <p className="text-gray-400 text-sm">Gender</p>
             <div className="flex items-center">
-              <RiUserSettingsLine className="text-purple-500 mr-2" />
+              <RiUserSettingsLine className="text-primary-500 mr-2" />
               <span className="capitalize">{therapist.gender}</span>
             </div>
           </div>
           <div className="space-y-2">
             <p className="text-gray-400 text-sm">Workplace</p>
             <div className="flex items-center">
-              <RiHospitalLine className="text-purple-500 mr-2" />
+              <RiHospitalLine className="text-primary-500 mr-2" />
               <span>{therapist.workingAt}</span>
             </div>
           </div>
           <div className="space-y-2 md:col-span-2">
             <p className="text-gray-400 text-sm">Address</p>
             <div className="flex items-start">
-              <RiMapPinLine className="text-purple-500 mr-2 mt-1" />
+              <RiMapPinLine className="text-primary-500 mr-2 mt-1" />
               <span>{therapist.address}</span>
             </div>
           </div>
@@ -290,7 +290,7 @@ const Profile = () => {
             <div>
               <p className="text-gray-400 text-sm mb-2">Last Payment</p>
               <div className="flex items-center">
-                <RiCalendarLine className="text-purple-500 mr-2" />
+                <RiCalendarLine className="text-primary-500 mr-2" />
                 <span>{formatDate(therapist.membership.paymentDate)}</span>
               </div>
             </div>
@@ -299,7 +299,7 @@ const Profile = () => {
             <div>
               <p className="text-gray-400 text-sm mb-2">Next Billing Date</p>
               <div className="flex items-center">
-                <RiCalendarLine className="text-purple-500 mr-2" />
+                <RiCalendarLine className="text-primary-500 mr-2" />
                 <span>{formatDate(therapist.membership.nextBillingDate)}</span>
               </div>
             </div>
@@ -318,7 +318,7 @@ const Profile = () => {
           </div>
           <button
             onClick={() => setShowPasswordModal(true)}
-            className="mt-4 md:mt-0 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="mt-4 md:mt-0 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
           >
             Change Password
           </button>

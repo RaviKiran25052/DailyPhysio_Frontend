@@ -52,14 +52,14 @@ const TherapistHome = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white">
+    <div className="flex h-screen">
       {/* Sidebar */}
       <Sidebar tab={activeTab} setTab={setTab => setActiveTab(setTab)} />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-gray-800 border-b border-gray-700">
+        <header className="bg-primary-800 border-b border-gray-700">
           <div className="flex items-center justify-end px-6 py-4">
             <div className="flex items-center space-x-4">
               <span className="text-gray-300">
@@ -67,7 +67,7 @@ const TherapistHome = () => {
               </span>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
               >
                 Logout
               </button>
@@ -76,7 +76,7 @@ const TherapistHome = () => {
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto bg-gray-900">
+        <main className="flex-1 overflow-y-auto">
           {renderTab(activeTab)}
         </main>
       </div>
