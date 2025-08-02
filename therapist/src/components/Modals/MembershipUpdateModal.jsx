@@ -115,8 +115,8 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 overflow-y-auto py-4">
-      <div className="bg-gray-800 rounded-lg w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
-        <div className="p-4 border-b border-gray-700 flex justify-between items-center flex-shrink-0">
+      <div className="bg-white text-black rounded-lg overflow-hidden w-full max-w-2xl mx-4 max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+        <div className="p-4 bg-primary-800 border-b border-primary-700 flex justify-between items-center flex-shrink-0">
           <h2 className="text-xl font-bold text-white">
             Update Membership Plan
           </h2>
@@ -132,7 +132,7 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Plan Selection */}
             <div>
-              <label className="block text-base font-medium text-white mb-2">
+              <label className="block text-base font-medium mb-2">
                 Select Plan
               </label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -141,24 +141,24 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
                     key={plan.type}
                     className={`border rounded-lg p-3 cursor-pointer transition-all ${
                       selectedPlan === plan.type
-                        ? 'border-purple-500 bg-purple-900/20'
-                        : 'border-gray-700 hover:border-gray-500'
+                        ? 'border-primary-500 bg-primary-800/50'
+                        : 'border-primary-700 hover:border-gray-500 hover:bg-primary-800/20'
                     }`}
                     onClick={() => setSelectedPlan(plan.type)}
                   >
                     <div className="flex justify-between items-center mb-1">
                       <h4 className="font-medium text-sm">{plan.name}</h4>
                       {selectedPlan === plan.type && (
-                        <div className="w-4 h-4 bg-purple-500 rounded-full flex items-center justify-center">
+                        <div className="w-4 h-4 bg-primary-500 rounded-full flex items-center justify-center">
                           <RiCheckLine className="text-white" size={12} />
                         </div>
                       )}
                     </div>
                     <div className="flex items-baseline mb-1">
                       <span className="text-lg font-bold">{plan.price}</span>
-                      {plan.period && <span className="text-gray-400 ml-1 text-xs">{plan.period}</span>}
+                      {plan.period && <span className="text-primary-700 ml-1 text-xs">{plan.period}</span>}
                     </div>
-                    <p className="text-gray-400 text-xs">{plan.description}</p>
+                    <p className="text-gray-700 text-xs">{plan.description}</p>
                   </div>
                 ))}
               </div>
@@ -175,15 +175,15 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
                     <div
                       className={`border rounded-lg p-3 cursor-pointer transition-all ${
                         paymentMethod === 'card'
-                          ? 'border-purple-500 bg-purple-900/20'
-                          : 'border-gray-700 hover:border-gray-500'
+                          ? 'border-primary-500 bg-primary-900/20'
+                          : 'border-primary-700 hover:border-gray-500'
                       }`}
                       onClick={() => setPaymentMethod('card')}
                     >
                       <div className="flex justify-between items-center">
                         <h4 className="font-medium text-sm">Credit/Debit Card</h4>
                         {paymentMethod === 'card' && (
-                          <div className="w-4 h-4 bg-purple-500 rounded-full flex items-center justify-center">
+                          <div className="w-4 h-4 bg-primary-500 rounded-full flex items-center justify-center">
                             <RiCheckLine className="text-white" size={12} />
                           </div>
                         )}
@@ -192,15 +192,15 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
                     <div
                       className={`border rounded-lg p-3 cursor-pointer transition-all ${
                         paymentMethod === 'paypal'
-                          ? 'border-purple-500 bg-purple-900/20'
-                          : 'border-gray-700 hover:border-gray-500'
+                          ? 'border-primary-500 bg-primary-900/20'
+                          : 'border-primary-700 hover:border-gray-500'
                       }`}
                       onClick={() => setPaymentMethod('paypal')}
                     >
                       <div className="flex justify-between items-center">
                         <h4 className="font-medium text-sm">PayPal</h4>
                         {paymentMethod === 'paypal' && (
-                          <div className="w-4 h-4 bg-purple-500 rounded-full flex items-center justify-center">
+                          <div className="w-4 h-4 bg-primary-500 rounded-full flex items-center justify-center">
                             <RiCheckLine className="text-white" size={12} />
                           </div>
                         )}
@@ -213,7 +213,7 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
                 {paymentMethod === 'card' && (
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-400 mb-1">
+                      <label className="block text-sm font-medium text-primary-700 mb-1">
                         Card Number
                       </label>
                       <input
@@ -222,11 +222,11 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
                         value={cardDetails.cardNumber}
                         onChange={handleInputChange}
                         placeholder="1234 5678 9012 3456"
-                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                        className="w-full px-3 py-2 bg-primary-800/20 border border-gray-600 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-400 mb-1">
+                      <label className="block text-sm font-medium text-primary-700 mb-1">
                         Name on Card
                       </label>
                       <input
@@ -235,12 +235,12 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
                         value={cardDetails.cardName}
                         onChange={handleInputChange}
                         placeholder="John Smith"
-                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                        className="w-full px-3 py-2 bg-primary-800/20 border border-gray-600 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-1">
+                        <label className="block text-sm font-medium text-primary-700 mb-1">
                           Expiry Date
                         </label>
                         <input
@@ -249,11 +249,11 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
                           value={cardDetails.expiryDate}
                           onChange={handleInputChange}
                           placeholder="MM/YY"
-                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                          className="w-full px-3 py-2 bg-primary-800/20 border border-gray-600 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-400 mb-1">
+                        <label className="block text-sm font-medium text-primary-700 mb-1">
                           CVV
                         </label>
                         <input
@@ -262,7 +262,7 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
                           value={cardDetails.cvv}
                           onChange={handleInputChange}
                           placeholder="123"
-                          className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                          className="w-full px-3 py-2 bg-primary-800/20 border border-gray-600 rounded-md text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
                         />
                       </div>
                     </div>
@@ -271,7 +271,7 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
 
                 {/* PayPal */}
                 {paymentMethod === 'paypal' && (
-                  <div className="bg-gray-700 p-3 rounded-lg text-center">
+                  <div className="bg-primary-700/80 p-3 rounded-lg text-center">
                     <p className="text-gray-300 text-sm mb-3">
                       You will be redirected to PayPal to complete your payment after confirming.
                     </p>
@@ -284,7 +284,7 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
             )}
 
             {/* Summary */}
-            <div className="bg-gray-700 rounded-lg p-3">
+            <div className="bg-primary-700/80 rounded-lg p-3">
               <h4 className="font-medium text-sm mb-2">Order Summary</h4>
               <div className="flex justify-between mb-1 text-sm">
                 <span className="text-gray-300">Plan:</span>
@@ -310,15 +310,15 @@ const MembershipUpdateModal = ({ isOpen, onClose, currentPlan, onUpdate }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3 py-1.5 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                className="px-3 py-1.5 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-white bg-primary-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className={`px-3 py-1.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-purple-700'
-                  } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
+                className={`px-3 py-1.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-primary-700'
+                  } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}
               >
                 {loading ? 'Processing...' : 'Confirm Update'}
               </button>

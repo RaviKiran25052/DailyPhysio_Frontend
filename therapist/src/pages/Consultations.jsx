@@ -46,7 +46,7 @@ const ExerciseSelector = ({ onSelect, onClose, selectedExercises }) => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-gray-800 p-6 rounded-lg w-full max-w-2xl">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500 mx-auto"></div>
         </div>
       </div>
     );
@@ -240,7 +240,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
       <div className="p-6">
         <div className="bg-gray-800 rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold mb-4 flex items-center">
-            <RiUserLine className="mr-2 text-purple-500" />
+            <RiUserLine className="mr-2 text-primary-500" />
             Patient Information
           </h3>
           <div className='flex justify-between items-center'>
@@ -273,7 +273,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
                 </button>
                 <button
                   onClick={handleSave}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
                 >
                   Save
                 </button>
@@ -289,7 +289,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
                 </button>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
                 >
                   Edit
                 </button>
@@ -301,7 +301,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="bg-gray-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <RiCalendarLine className="mr-2 text-purple-500" />
+              <RiCalendarLine className="mr-2 text-primary-500" />
               Duration
             </h3>
             <div className="space-y-3">
@@ -336,7 +336,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
 
           <div className="bg-gray-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <RiInformationLine className="mr-2 text-purple-500" />
+              <RiInformationLine className="mr-2 text-primary-500" />
               Notes
             </h3>
             {isEditing ? (
@@ -355,13 +355,13 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
         <div className="bg-gray-800 rounded-lg p-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold flex items-center">
-              <RiRunLine className="mr-2 text-purple-500" />
+              <RiRunLine className="mr-2 text-primary-500" />
               Recommended Exercises
             </h3>
             {isEditing && (
               <button
                 onClick={() => setShowExerciseSelector(true)}
-                className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
               >
                 <RiAddLine />
                 <span>Add Exercise</span>
@@ -389,9 +389,9 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
                   {exercise.category} - {exercise.subCategory}
                 </div>
                 <div className="text-sm">
-                  <span className="text-purple-500">Sets:</span> {exercise.set} |
-                  <span className="text-purple-500"> Reps:</span> {exercise.reps} |
-                  <span className="text-purple-500"> Hold:</span> {exercise.hold}s
+                  <span className="text-primary-500">Sets:</span> {exercise.set} |
+                  <span className="text-primary-500"> Reps:</span> {exercise.reps} |
+                  <span className="text-primary-500"> Hold:</span> {exercise.hold}s
                 </div>
               </div>
             ))}
@@ -446,7 +446,7 @@ const Consultations = () => {
   if (loading) {
     return (
       <div className="p-6 flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
       </div>
     );
   }
@@ -479,12 +479,12 @@ const Consultations = () => {
               placeholder="Search by patient name or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500 w-64 text-white"
+              className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary-500 w-64 text-white"
             />
           </div>
           <button
             onClick={() => setShowAddConsultation(true)}
-            className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
           >
             <RiAddLine />
             <span>New Consultation</span>
@@ -497,7 +497,7 @@ const Consultations = () => {
         {filteredConsultations.map((consultation) => (
           <div
             key={consultation._id}
-            className="bg-gray-800 rounded-xl border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
+            className="bg-primary-800 rounded-xl text-white transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
             onClick={() => setSelectedConsultation(consultation)}
           >
             <div className="p-6">
@@ -526,7 +526,7 @@ const Consultations = () => {
 
               {/* Date Info */}
               <div className="flex items-center space-x-3 mb-4">
-                <RiCalendarLine className="text-purple-500" size={20} />
+                <RiCalendarLine className="text-primary-500" size={20} />
                 <div>
                   <div className="text-sm text-gray-400">Created</div>
                   <div className="font-medium">{new Date(consultation.createdAt).toLocaleDateString()}</div>
@@ -535,7 +535,7 @@ const Consultations = () => {
 
               {/* Exercise Count */}
               <div className="flex items-center space-x-3 mb-4">
-                <RiRunLine className="text-purple-500" size={20} />
+                <RiRunLine className="text-primary-500" size={20} />
                 <div>
                   <div className="text-sm text-gray-400">Exercises</div>
                   <div className="font-medium">{consultation.recommendedExercises.length} assigned</div>
