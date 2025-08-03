@@ -5,7 +5,7 @@ import { Eye, EyeOff } from 'lucide-react';
 const API_URL = process.env.REACT_APP_API_URL;
 
 const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
-
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,19 +13,19 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
     confirmPassword: '',
     otp: '',
   });
-  
+
   // Add resetStep state to track password reset flow
   const [forgotPassword, setForgotPassword] = useState(false);
   const [resetStep, setResetStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
-  
+
   // Add registrationStep state to track registration flow
   const [registrationStep, setRegistrationStep] = useState(1); // 1: Form, 2: OTP Verification
-  
+
   const [passwordError, setPasswordError] = useState('');
   // Add state for password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -81,7 +81,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
         return false;
       }
     }
-    
+
     // Password reset form validation
     if (forgotPassword && resetStep === 3) {
       if (formData.password !== formData.confirmPassword) {
@@ -93,14 +93,16 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
         return false;
       }
     }
-    
+
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     if (!validateForm()) {
+      setIsLoading(false);
       return;
     }
 
@@ -112,7 +114,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
           const response = await axios.post(`${API_URL}/users/send-otp`, {
             email: formData.email,
           });
-          
+
           if (response.status === 200) {
             toast.success('OTP sent to your email', {
               position: "top-center"
@@ -126,7 +128,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             email: formData.email,
             otp: formData.otp,
           });
-          
+
           if (response.status === 200) {
             toast.success('OTP verified successfully', {
               position: "top-center"
@@ -141,7 +143,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             password: formData.password,
             confirmPassword: formData.confirmPassword,
           });
-          
+
           if (response.status === 200) {
             toast.success('Password reset successful', {
               position: "top-center"
@@ -191,7 +193,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             const response = await axios.post(`${API_URL}/users/send-otp`, {
               email: formData.email,
             });
-            
+
             if (response.status === 200) {
               toast.success('OTP sent to your email for verification', {
                 position: "top-center"
@@ -207,7 +209,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
               password: formData.password,
               otp: formData.otp,
             });
-            
+
             if (response.status === 201) {
               // Save token and user data to localStorage
               localStorage.setItem('token', JSON.stringify(response.data.token));
@@ -241,6 +243,9 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
           toast.error('Registration failed: ' + (error.response?.data?.message || 'Unknown error'), {
             position: "top-center"
           });
+          setIsLoading(false); // Add this line in catch blocks
+        } finally {
+          setIsLoading(false); // Add this line to ensure loading stops in all cases
         }
       }
     }
@@ -301,7 +306,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
     subtitle = 'Enter the 4-digit code sent to your email';
   } else {
     title = isSignIn ? 'Welcome Back' : 'Create Account';
-    subtitle = isSignIn 
+    subtitle = isSignIn
       ? 'Sign in to access your personalized exercise programs'
       : 'Join thousands improving their health with expert guidance';
   }
@@ -362,7 +367,7 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             )}
 
             {/* OTP field - shown in forgot password step 2 and registration step 2 */}
-            {(forgotPassword && resetStep === 2) || (!forgotPassword && !isSignIn && registrationStep === 2) && (
+            {((forgotPassword && resetStep === 2) || (!forgotPassword && !isSignIn && registrationStep === 2)) && (
               <div>
                 <label htmlFor="otp" className="block text-gray-700 mb-1 text-sm font-medium">Verification Code</label>
                 <input
@@ -380,34 +385,36 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             )}
 
             {/* Password fields - shown in login, signup step 1, and forgot password step 3 */}
-            {(isSignIn || (!forgotPassword && registrationStep === 1) || (forgotPassword && resetStep === 3)) && (
-              <div>
-                <label htmlFor="password" className="block text-gray-700 mb-1 text-sm font-medium">
-                  {forgotPassword ? 'New Password' : 'Password'}
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    autoComplete="current-password"
-                    onChange={handleChange}
-                    className="w-full border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                    placeholder={forgotPassword ? "Create new password" : isSignIn ? "Enter your password" : "Create a password"}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
-                    onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
+            {(
+              ((isSignIn || (!forgotPassword && registrationStep === 1)) && (!forgotPassword && resetStep === 1)) || (forgotPassword && resetStep === 3)
+            ) && (
+                <div>
+                  <label htmlFor="password" className="block text-gray-700 mb-1 text-sm font-medium">
+                    {forgotPassword ? 'New Password' : 'Password'}
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      autoComplete="current-password"
+                      onChange={handleChange}
+                      className="w-full border border-gray-600 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                      placeholder={forgotPassword ? "Create new password" : isSignIn ? "Enter your password" : "Create a password"}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Confirm password - shown in signup step 1 and forgot password step 3 */}
             {((!isSignIn && !forgotPassword && registrationStep === 1) || (forgotPassword && resetStep === 3)) && (
@@ -443,16 +450,33 @@ const Login = ({ isOpen, isSignIn, onChange, onClose, onAuthSuccess }) => {
             {/* Submit button with context-aware label */}
             <button
               type="submit"
-              className="w-full text-white bg-gradient-to-r from-primary-600 to-primary-800 py-2 px-4 rounded-md font-medium hover:from-primary-700 hover:to-primary-900 transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+              className="w-full text-white bg-gradient-to-r from-primary-600 to-primary-800 py-2 px-4 rounded-md font-medium hover:from-primary-700 hover:to-primary-900 transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-gray-800 flex items-center justify-center"
+              disabled={isLoading}
             >
-              {forgotPassword
-                ? (resetStep === 1 ? 'Send Verification Code' : 
-                   resetStep === 2 ? 'Verify Code' : 
-                   'Reset Password')
-                : (isSignIn ? 'Sign In' : 
-                   registrationStep === 1 ? 'Send Verification Code' : 
-                   'Complete Registration')
-              }
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  {forgotPassword
+                    ? (resetStep === 1 ? 'Sending...' :
+                      resetStep === 2 ? 'Verifying...' :
+                        'Resetting...')
+                    : (isSignIn ? 'Signing In...' :
+                      registrationStep === 1 ? 'Sending...' :
+                        'Registering...')
+                  }
+                </>
+              ) : (
+                forgotPassword
+                  ? (resetStep === 1 ? 'Send Verification Code' :
+                    resetStep === 2 ? 'Verify Code' :
+                      'Reset Password')
+                  : (isSignIn ? 'Sign In' :
+                    registrationStep === 1 ? 'Send Verification Code' :
+                      'Complete Registration')
+              )}
             </button>
           </form>
 
