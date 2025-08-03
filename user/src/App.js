@@ -7,6 +7,7 @@ import ExercisesPage from './pages/ExercisesPage';
 import ExerciseDetailPage from './pages/ExerciseDetailPage';
 import UserProfilePage from './pages/UserProfilePage';
 import CreatorExercisesPage from './pages/CreatorExercisesPage';
+import ConsultationDetails from './pages/ConsultationDetails';
 
 const MainLayout = () => (
   <>
@@ -21,21 +22,19 @@ const App = () => {
   return (
     <Router>
       <ToastContainer position='top-center' theme='dark' pauseOnHover={false} />
-      <main className='mt-16'>
-        <Routes>
-          {/* Route without Navbar */}
-          <Route path="/consultation/:id" element={<HomePage />} />
+      <Routes>
+        {/* Route without Navbar */}
+        <Route path="/consultation/:id" element={<ConsultationDetails />} />
 
-          {/* All routes with Navbar inside MainLayout */}
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/exercises" element={<ExercisesPage />} />
-            <Route path="/exercise/:id" element={<ExerciseDetailPage />} />
-            <Route path="/creator/exercise/:creatorId" element={<CreatorExercisesPage />} />
-            <Route path="/profile" element={<UserProfilePage />} />
-          </Route>
-        </Routes>
-      </main>
+        {/* All routes with Navbar inside MainLayout */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/exercises" element={<ExercisesPage />} />
+          <Route path="/exercise/:id" element={<ExerciseDetailPage />} />
+          <Route path="/creator/exercise/:creatorId" element={<CreatorExercisesPage />} />
+          <Route path="/profile" element={<UserProfilePage />} />
+        </Route>
+      </Routes>
     </Router>
   )
 }
