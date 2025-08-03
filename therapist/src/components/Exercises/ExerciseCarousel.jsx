@@ -83,7 +83,7 @@ const ExerciseCarousel = ({ exercises = [], onExerciseClick }) => {
 							{/* Content */}
 							<div className="p-6 flex flex-col">
 								<h3
-									className="text-xl font-medium text-white mb-3 cursor-pointer hover:text-purple-300 transition-colors"
+									className="text-xl font-medium text-white mb-3 cursor-pointer hover:text-primary-300 transition-colors"
 									onClick={() => handleExerciseClick(exercises[currentIndex]._id)}
 								>
 									{exercises[currentIndex].title}
@@ -92,7 +92,7 @@ const ExerciseCarousel = ({ exercises = [], onExerciseClick }) => {
 
 								{/* Categories */}
 								<div className="flex flex-wrap gap-2 mb-4">
-									<span className="bg-purple-900/60 text-purple-300 text-xs px-3 py-1 rounded-full">
+									<span className="bg-primary-900/60 text-primary-300 text-xs px-3 py-1 rounded-full">
 										{exercises[currentIndex].category}
 									</span>
 									<span className="bg-gray-700 text-gray-300 text-xs px-3 py-1 rounded-full">
@@ -103,7 +103,7 @@ const ExerciseCarousel = ({ exercises = [], onExerciseClick }) => {
 								{/* Action button */}
 								<button
 									onClick={() => handleExerciseClick(exercises[currentIndex]._id)}
-									className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition-colors"
+									className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors"
 								>
 									View Exercise
 								</button>
@@ -132,7 +132,7 @@ const ExerciseCarousel = ({ exercises = [], onExerciseClick }) => {
 					<button
 						onClick={prevExercise}
 						disabled={isAnimating}
-						className="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full transition-colors shadow-lg disabled:opacity-50"
+						className="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-full transition-colors shadow-lg disabled:opacity-50"
 						aria-label="Previous exercise"
 					>
 						<ChevronLeft size={20} />
@@ -145,7 +145,7 @@ const ExerciseCarousel = ({ exercises = [], onExerciseClick }) => {
 								key={index}
 								onClick={() => goToSlide(index)}
 								disabled={isAnimating}
-								className={`h-2 rounded-full transition-all ${currentIndex === index ? 'w-6 bg-purple-600' : 'w-2 bg-gray-600 hover:bg-gray-500'
+								className={`h-2 rounded-full transition-all ${currentIndex === index ? 'w-6 bg-primary-600' : 'w-2 bg-gray-600 hover:bg-gray-500'
 									}`}
 								aria-label={`Go to exercise ${index + 1}`}
 							/>
@@ -156,7 +156,7 @@ const ExerciseCarousel = ({ exercises = [], onExerciseClick }) => {
 					<button
 						onClick={nextExercise}
 						disabled={isAnimating}
-						className="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full transition-colors shadow-lg disabled:opacity-50"
+						className="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-full transition-colors shadow-lg disabled:opacity-50"
 						aria-label="Next exercise"
 					>
 						<ChevronRight size={20} />

@@ -16,7 +16,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 	const [errors, setErrors] = useState({});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState('');
-	
+
 	// Add forgot password state
 	const [forgotPassword, setForgotPassword] = useState(false);
 	const [resetStep, setResetStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
@@ -56,17 +56,17 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 			if (!formData.password) {
 				newErrors.password = 'Password is required';
 			}
-		} 
+		}
 		// Password reset validation (step 3)
 		else if (forgotPassword && resetStep === 3) {
 			if (!formData.password) {
 				newErrors.password = 'Password is required';
 			}
-			
+
 			if (formData.password !== formData.confirmPassword) {
 				newErrors.confirmPassword = 'Passwords do not match';
 			}
-			
+
 			if (formData.password && formData.password.length < 6) {
 				newErrors.password = 'Password must be at least 6 characters';
 			}
@@ -109,24 +109,24 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 							`${process.env.REACT_APP_API_URL}/therapist/forgot-password`,
 							{ email: formData.email }
 						);
-						
+
 						if (response.status === 200) {
 							toast.success('OTP sent to your email', {
 								position: "top-center"
 							});
 							setResetStep(2);
 						}
-					} 
+					}
 					else if (resetStep === 2) {
 						// Step 2: Verify OTP
 						const response = await axios.post(
 							`${process.env.REACT_APP_API_URL}/therapist/verify-otp`,
-							{ 
+							{
 								email: formData.email,
 								otp: formData.otp
 							}
 						);
-						
+
 						if (response.status === 200) {
 							toast.success('OTP verified successfully', {
 								position: "top-center"
@@ -144,7 +144,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 								confirmPassword: formData.confirmPassword
 							}
 						);
-						
+
 						if (response.status === 200) {
 							toast.success('Password reset successful', {
 								position: "top-center"
@@ -166,7 +166,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 						formData
 					);
 					console.log(response.data.status);
-					
+
 					onClose(response.data.status, true);
 					if (response.data.status === 'active') {
 						localStorage.setItem('therapistInfo', JSON.stringify(response.data));
@@ -177,7 +177,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 				setError(
 					error.response && error.response.data.message
 						? error.response.data.message
-						: forgotPassword 
+						: forgotPassword
 							? 'Failed to process request'
 							: 'Invalid email or password'
 				);
@@ -256,7 +256,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 									value={formData.email}
 									onChange={handleChange}
 									className={`w-full px-3 py-2 bg-gray-700 border ${errors.email ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 									placeholder="doctor@example.com"
 								/>
 								{errors.email && (
@@ -278,7 +278,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 									onChange={handleChange}
 									maxLength="4"
 									className={`w-full px-3 py-2 bg-gray-700 border ${errors.otp ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 tracking-widest text-center text-lg`}
+										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 tracking-widest text-center text-lg`}
 									placeholder="Enter 4-digit code"
 								/>
 								{errors.otp && (
@@ -300,7 +300,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 										value={formData.password}
 										onChange={handleChange}
 										className={`w-full px-3 py-2 bg-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-600'
-											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 										placeholder={forgotPassword ? "Create new password" : "Enter password"}
 									/>
 									<button
@@ -331,7 +331,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 										value={formData.confirmPassword}
 										onChange={handleChange}
 										className={`w-full px-3 py-2 bg-gray-700 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
-											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 										placeholder="Confirm new password"
 									/>
 									<button
@@ -357,7 +357,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 										id="remember-me"
 										name="remember-me"
 										type="checkbox"
-										className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-600 rounded"
+										className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-600 rounded"
 									/>
 									<label htmlFor="remember-me" className="ml-2 block text-sm text-gray-400">
 										Remember me
@@ -365,10 +365,10 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 								</div>
 
 								<div className="text-sm">
-									<button 
+									<button
 										type="button"
 										onClick={handleForgotPassword}
-										className="font-medium text-purple-500 hover:text-purple-400"
+										className="font-medium text-primary-500 hover:text-primary-400"
 									>
 										Forgot password?
 									</button>
@@ -382,7 +382,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 								<button
 									type="button"
 									onClick={handleBackStep}
-									className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+									className="text-primary-400 hover:text-primary-300 text-sm font-medium"
 								>
 									{resetStep > 1 ? 'Back to previous step' : 'Back to Login'}
 								</button>
@@ -393,14 +393,14 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 							<button
 								type="submit"
 								disabled={loading}
-								className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-purple-700'
-									} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
+								className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-primary-700'
+									} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}
 							>
-								{loading ? 'Processing...' : 
-									forgotPassword ? 
-										(resetStep === 1 ? 'Send Verification Code' : 
-										 resetStep === 2 ? 'Verify Code' : 
-										 'Reset Password') : 
+								{loading ? 'Processing...' :
+									forgotPassword ?
+										(resetStep === 1 ? 'Send Verification Code' :
+											resetStep === 2 ? 'Verify Code' :
+												'Reset Password') :
 										'Sign in'}
 							</button>
 						</div>
@@ -415,7 +415,7 @@ const TherapistLogin = ({ onClose, onRegister }) => {
 							<button
 								type="button"
 								onClick={onRegister}
-								className="font-medium text-purple-500 hover:text-purple-400"
+								className="font-medium text-primary-500 hover:text-primary-400"
 							>
 								Register now
 							</button>

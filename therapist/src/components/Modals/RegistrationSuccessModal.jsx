@@ -3,7 +3,7 @@ import React from 'react';
 const RegistrationSuccessModal = ({ onClose }) => {
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-			<div className="bg-gray-900 rounded-lg p-6 max-w-lg w-full shadow-xl border-2 border-purple-500">
+			<div className="bg-gray-900 rounded-lg p-6 max-w-lg w-full shadow-xl border-2 border-primary-500">
 				<div className="flex flex-col items-center">
 					<div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mb-4">
 						<svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,7 +23,7 @@ const RegistrationSuccessModal = ({ onClose }) => {
 
 					<button
 						onClick={onClose}
-						className="w-full py-2 px-4 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition-colors"
+						className="w-full py-2 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-md transition-colors"
 					>
 						I Understand
 					</button>

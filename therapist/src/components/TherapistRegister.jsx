@@ -18,7 +18,7 @@ const specializationOptions = [
 	'Other'
 ];
 
-const  TherapistRegister = ({ onClose, onLogin }) => {
+const TherapistRegister = ({ onClose, onLogin }) => {
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
@@ -207,7 +207,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 			setLoading(true);
 			try {
 				const { confirmPassword, profilePic, ...dataToSubmit } = formData;
-				
+
 				const response = await axios.post(
 					`${process.env.REACT_APP_API_URL}/therapist/register`,
 					dataToSubmit
@@ -254,7 +254,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 							<img
 								src={profilePicPreview}
 								alt="Profile"
-								className="w-full h-full rounded-full object-cover border-4 border-purple-600"
+								className="w-full h-full rounded-full object-cover border-4 border-primary-600"
 							/>
 							{profilePicPreview !== 'https://res.cloudinary.com/dalzs7bc2/image/upload/v1746784719/doc_jcxqwb.png' && (
 								<button
@@ -276,7 +276,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 							/>
 							<label
 								htmlFor="profilePicUpload"
-								className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 cursor-pointer"
+								className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 cursor-pointer"
 							>
 								<FaUpload className="mr-2" /> Upload Photo
 							</label>
@@ -300,7 +300,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 									value={formData.name}
 									onChange={handleChange}
 									className={`w-full px-3 py-2 bg-gray-700 border ${errors.name ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 									placeholder="Dr. John Smith"
 								/>
 								{errors.name && (
@@ -319,7 +319,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 									value={formData.email}
 									onChange={handleChange}
 									className={`w-full px-3 py-2 bg-gray-700 border ${errors.email ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 									placeholder="doctor@example.com"
 								/>
 								{errors.email && (
@@ -339,7 +339,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 										value={formData.password}
 										onChange={handleChange}
 										className={`w-full px-3 py-2 bg-gray-700 border ${errors.password ? 'border-red-500' : 'border-gray-600'
-											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 										placeholder="Enter password"
 									/>
 									<button
@@ -368,7 +368,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 										value={formData.confirmPassword}
 										onChange={handleChange}
 										className={`w-full px-3 py-2 bg-gray-700 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
-											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+											} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 										placeholder="Confirm password"
 									/>
 									<button
@@ -395,7 +395,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 									{formData.specializations.map((spec, index) => (
 										<span
 											key={index}
-											className="bg-purple-600 text-white text-sm px-3 py-1 rounded-full flex items-center"
+											className="bg-primary-600 text-white text-sm px-3 py-1 rounded-full flex items-center"
 										>
 											{spec}
 											<button
@@ -413,7 +413,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 									<select
 										value={selectedSpecialization}
 										onChange={handleSpecializationSelect}
-										className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+										className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
 									>
 										<option value="">Select a specialization</option>
 										{specializationOptions.map(option => (
@@ -423,7 +423,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 									<button
 										type="button"
 										onClick={addSpecialization}
-										className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+										className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 									>
 										Add
 									</button>
@@ -436,7 +436,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 											value={otherSpecialization}
 											onChange={handleOtherSpecializationChange}
 											placeholder="Enter specialization"
-											className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+											className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
 										/>
 									</div>
 								)}
@@ -457,7 +457,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 									value={formData.experience}
 									onChange={handleChange}
 									className={`w-full px-3 py-2 bg-gray-700 border ${errors.experience ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 									placeholder="5 years"
 								/>
 								{errors.experience && (
@@ -479,7 +479,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 											value="male"
 											checked={formData.gender === 'male'}
 											onChange={handleChange}
-											className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-600"
+											className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-600"
 										/>
 										<label htmlFor="male" className="ml-2 text-sm text-gray-300">
 											Male
@@ -493,7 +493,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 											value="female"
 											checked={formData.gender === 'female'}
 											onChange={handleChange}
-											className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-600"
+											className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-600"
 										/>
 										<label htmlFor="female" className="ml-2 text-sm text-gray-300">
 											Female
@@ -513,7 +513,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 									value={formData.workingAt}
 									onChange={handleChange}
 									className={`w-full px-3 py-2 bg-gray-700 border ${errors.workingAt ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 									placeholder="City General Hospital"
 								/>
 								{errors.workingAt && (
@@ -532,7 +532,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 									onChange={handleChange}
 									rows="3"
 									className={`w-full px-3 py-2 bg-gray-700 border ${errors.address ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 									placeholder="123 Medical Center Blvd, New York, NY"
 								></textarea>
 								{errors.address && (
@@ -551,7 +551,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 									value={formData.phoneNumber}
 									onChange={handleChange}
 									className={`w-full px-3 py-2 bg-gray-700 border ${errors.phoneNumber ? 'border-red-500' : 'border-gray-600'
-										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 									placeholder="+1 (555) 123-4567"
 								/>
 								{errors.phoneNumber && (
@@ -564,8 +564,8 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 								<button
 									type="submit"
 									disabled={loading}
-									className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-purple-700'
-										} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
+									className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-primary-700'
+										} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}
 								>
 									{loading ? 'Registering...' : 'Register'}
 								</button>
@@ -580,7 +580,7 @@ const  TherapistRegister = ({ onClose, onLogin }) => {
 						<button
 							type="button"
 							onClick={onLogin}
-							className="font-medium text-purple-500 hover:text-purple-400"
+							className="font-medium text-primary-500 hover:text-primary-400"
 						>
 							Login
 						</button>

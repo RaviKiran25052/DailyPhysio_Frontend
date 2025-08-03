@@ -93,7 +93,7 @@ const ExerciseManagement = () => {
   if (loading) {
     return (
       <div className="p-6 flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
       </div>
     );
   }
@@ -111,7 +111,7 @@ const ExerciseManagement = () => {
               placeholder="Search exercises..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500 w-64 text-white"
+              className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary-500 w-64 text-white"
             />
           </div>
           <button
@@ -120,7 +120,7 @@ const ExerciseManagement = () => {
               setIsEdit(false);
               setShowExerciseModal(true);
             }}
-            className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
           >
             <RiAddLine />
             <span>Add Exercise</span>
@@ -133,7 +133,7 @@ const ExerciseManagement = () => {
         <button
           onClick={() => setActiveTab('public')}
           className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'public'
-            ? 'bg-purple-600 text-white'
+            ? 'bg-primary-600 text-white'
             : 'bg-gray-800 text-gray-400 hover:text-white'
             }`}
         >
@@ -143,7 +143,7 @@ const ExerciseManagement = () => {
         <button
           onClick={() => setActiveTab('private')}
           className={`px-4 py-2 rounded-lg transition-colors ${activeTab === 'private'
-            ? 'bg-purple-600 text-white'
+            ? 'bg-primary-600 text-white'
             : 'bg-gray-800 text-gray-400 hover:text-white'
             }`}
         >
@@ -157,7 +157,7 @@ const ExerciseManagement = () => {
         {filteredExercises.map((exercise) => (
           <div
             key={exercise._id}
-            className="relative bg-gray-800 rounded-xl border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/20 overflow-hidden flex flex-col"
+            className="relative bg-gray-800 rounded-xl border border-gray-700 hover:border-primary-500 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-primary-500/20 overflow-hidden flex flex-col"
           >
             {/* Media carousel with overlay gradient */}
             <div className="relative h-48">
@@ -176,7 +176,7 @@ const ExerciseManagement = () => {
                   className="p-2 bg-gray-700/80 hover:bg-gray-600 text-white rounded-lg backdrop-blur-sm transform transition-transform hover:scale-110"
                   aria-label="Edit exercise"
                 >
-                  <RiEditLine className="text-purple-200" />
+                  <RiEditLine className="text-primary-200" />
                 </button>
                 <button
                   onClick={(e) => {
@@ -200,16 +200,16 @@ const ExerciseManagement = () => {
                 }
               })}
             >
-              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-white group-hover:text-purple-300 transition">
+              <h3 className="text-lg font-semibold mb-2 flex items-center gap-2 text-white group-hover:text-primary-300 transition">
                 <span className="line-clamp-1">{exercise.title}</span>
-                <SquareArrowOutUpRight size={16} className="text-purple-400 transform transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                <SquareArrowOutUpRight size={16} className="text-primary-400 transform transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
               </h3>
 
               <p className="text-gray-400 text-sm mb-4 line-clamp-2 flex-1">{exercise.description}</p>
 
               <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-700/50">
                 <div className="text-sm text-gray-400 flex items-center">
-                  <span className="inline-block px-2 py-1 bg-gray-700/50 rounded-md text-purple-200 mr-2">
+                  <span className="inline-block px-2 py-1 bg-gray-700/50 rounded-md text-primary-200 mr-2">
                     {exercise.category}
                   </span>
                   <span className="text-gray-500">
@@ -224,12 +224,12 @@ const ExerciseManagement = () => {
                       handleToggleType(exercise._id, exercise.custom?.type);
                     }}
                     className={`px-3 py-1 rounded-lg flex items-center gap-2 transition-colors ${exercise.custom?.type === 'public'
-                      ? 'bg-purple-600 hover:bg-purple-700'
+                      ? 'bg-primary-600 hover:bg-primary-700'
                       : 'bg-gray-600 hover:bg-gray-700'
                       } text-white text-sm`}
                   >
                     {exercise.custom?.type === 'public'
-                      ? <><RiLockUnlockLine className="text-purple-200" /> <span>Private</span></>
+                      ? <><RiLockUnlockLine className="text-primary-200" /> <span>Private</span></>
                       : <><RiLockLine className="text-gray-300" /> <span>Public</span></>
                     }
                   </button>

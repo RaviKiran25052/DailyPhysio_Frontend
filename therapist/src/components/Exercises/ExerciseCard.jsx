@@ -49,14 +49,14 @@ const ExerciseCard = ({
       </div>
 
       <div className="p-3 flex flex-col">
-        <h3 onClick={handleViewDetails} className="flex gap-2 text-lg font-semibold mb-2 text-white hover:text-purple-300 line-clamp-1 cursor-pointer">
+        <h3 onClick={handleViewDetails} className="flex gap-2 text-lg font-semibold mb-2 text-white hover:text-primary-300 line-clamp-1 cursor-pointer">
           {exercise.title || exercise.name || "Unnamed Exercise"}<SquareArrowOutUpRight size={14} />
         </h3>
 
         {/* Make categories and positions visible on all screens */}
         <div className="mb-2 flex flex-wrap gap-1">
           {exercise.category && (
-            <span className="text-xs bg-purple-900/60 text-purple-300 px-2 py-0.5 rounded-full truncate max-w-[120px]">
+            <span className="text-xs bg-primary-900/60 text-primary-300 px-2 py-0.5 rounded-full truncate max-w-[120px]">
               {exercise.category}
             </span>
           )}

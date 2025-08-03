@@ -45,7 +45,7 @@ const ExerciseDetailPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
       </div>
     );
   }
@@ -57,7 +57,7 @@ const ExerciseDetailPage = () => {
         <p className="text-gray-400 mb-6">The exercise you're looking for doesn't exist or has been removed.</p>
         <button
           onClick={() => navigate('/exercises')}
-          className="px-4 py-2 bg-purple-600 rounded-md hover:bg-purple-700 transition"
+          className="px-4 py-2 bg-primary-600 rounded-md hover:bg-primary-700 transition"
         >
           View All Exercises
         </button>
@@ -71,7 +71,7 @@ const ExerciseDetailPage = () => {
         <div className="flex items-center mb-4">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center text-gray-300 hover:text-purple-400 transition-colors"
+            className="flex items-center text-gray-300 hover:text-primary-400 transition-colors"
           >
             <ArrowLeft size={20} className="mr-1 sm:mr-2" />
             <span>Back</span>
@@ -84,7 +84,7 @@ const ExerciseDetailPage = () => {
             {/* Exercise title and category */}
             <div className="mb-4">
               <div className="flex flex-wrap items-center gap-2 mb-2">
-                <span className="text-xs bg-purple-900/60 text-purple-300 px-2 py-1 rounded-full">
+                <span className="text-xs bg-primary-900/60 text-primary-300 px-2 py-1 rounded-full">
                   {exercise?.category}
                 </span>
                 <span className="text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded-full">
@@ -118,7 +118,7 @@ const ExerciseDetailPage = () => {
             {/* Recommended parameters */}
             <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 mb-6">
               <h2 className="text-lg font-semibold mb-4 flex items-center">
-                <Activity className="mr-2 text-purple-400" size={18} />
+                <Activity className="mr-2 text-primary-400" size={18} />
                 Recommended Parameters
               </h2>
 
@@ -150,7 +150,7 @@ const ExerciseDetailPage = () => {
                 <h2 className="text-lg font-semibold mb-4">Creator</h2>
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3">
                   <div className="flex items-center mb-3 sm:mb-0">
-                    <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                    <div className="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-semibold">
                       {creatorData.name ? creatorData.name.charAt(0) : 'A'}
                     </div>
                     <div className="ml-3">
@@ -159,7 +159,7 @@ const ExerciseDetailPage = () => {
                     </div>
                   </div>
                 </div>
-                <button onClick={() => navigate(`/creator/exercise/${exercise.custom.creatorId}`)} className='border-2 w-full border-purple-700 bg-purple-800 hover:bg-purple-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
+                <button onClick={() => navigate(`/creator/exercise/${exercise.custom.creatorId}`)} className='border-2 w-full border-primary-700 bg-primary-800 hover:bg-primary-900 hover:text-white text-sm rounded-md px-3 py-1'>View Exercises</button>
               </div>
             )}
 

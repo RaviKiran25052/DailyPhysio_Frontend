@@ -88,7 +88,7 @@ const UserManagement = () => {
   if (loading) {
     return (
       <div className="p-6 flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
       </div>
     );
   }
@@ -114,12 +114,12 @@ const UserManagement = () => {
               placeholder="Search users..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500 w-64 text-white"
+              className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary-500 w-64 text-white"
             />
           </div>
           <button
             onClick={() => setShowUserModal(true)}
-            className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
           >
             <RiAddLine />
             <span>Add User</span>
@@ -132,11 +132,11 @@ const UserManagement = () => {
         {filteredUsers.map((user) => (
           <div
             key={user._id}
-            className="bg-gray-800 rounded-xl border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1"
+            className="bg-gray-800 rounded-xl border border-gray-700 hover:border-primary-500 transition-all duration-300 transform hover:-translate-y-1"
           >
             <div className="p-6">
               <div className="flex items-center space-x-4 mb-4">
-                <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center">
                   {user.profilePic ?
                     <img
                       src={user.profilePic}
@@ -166,7 +166,7 @@ const UserManagement = () => {
                   : user.membership?.type === 'monthly'
                     ? 'bg-yellow-500/20 text-yellow-500'
                     : user.membership?.type === 'yearly'
-                      ? 'bg-purple-500/20 text-purple-500'
+                      ? 'bg-primary-500/20 text-primary-500'
                       : 'bg-gray-300 text-gray-600'
                   }`}>
                   {user.membership?.type || 'No Plan'}

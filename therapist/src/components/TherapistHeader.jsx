@@ -36,9 +36,9 @@ const TherapistHeader = ({ onLogin, onRegister }) => {
 						<div className="relative">
 							<button
 								onClick={toggleDropdown}
-								className="flex items-center space-x-2 text-white hover:text-purple-400 focus:outline-none"
+								className="flex items-center space-x-2 text-white hover:text-primary-400 focus:outline-none"
 							>
-								<FaUser className="text-purple-500" />
+								<FaUser className="text-primary-500" />
 								<span className="hidden md:inline-block">{therapistInfo.name}</span>
 								{showDropdown ? <FaTimes size={12} /> : <FaBars size={12} />}
 							</button>
@@ -64,13 +64,13 @@ const TherapistHeader = ({ onLogin, onRegister }) => {
 						<div className="space-x-2">
 							<button
 								onClick={onLogin}
-								className="px-4 py-2 text-sm text-white hover:text-purple-400 focus:outline-none cursor-pointer"
+								className="px-4 py-2 text-sm text-white hover:text-primary-400 focus:outline-none cursor-pointer"
 							>
 								Log in
 							</button>
 							<button
 								onClick={onRegister}
-								className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+								className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 							>
 								Register
 							</button>

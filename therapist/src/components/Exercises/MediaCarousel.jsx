@@ -119,7 +119,7 @@ const MediaCarousel = ({ images = [], video = null }) => {
 									className="absolute inset-0 bg-black/10 flex items-center justify-center opacity-0 hover:opacity-100 cursor-pointer z-20"
 									onClick={togglePlayPause}
 								>
-									<div className="bg-purple-600/80 hover:bg-purple-500 rounded-full p-4 transform hover:scale-110 transition-all duration-300">
+									<div className="bg-primary-600/80 hover:bg-primary-500 rounded-full p-4 transform hover:scale-110 transition-all duration-300">
 										{isPlaying ? (
 											<Pause size={24} className="text-white" />
 										) : (
@@ -148,7 +148,7 @@ const MediaCarousel = ({ images = [], video = null }) => {
 					{/* Previous button */}
 					<span
 						onClick={prevSlide}
-						className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white pointer-events-auto"
+						className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-800/70 p-2 rounded-full hover:bg-primary-700 text-white pointer-events-auto"
 						aria-label="Previous media"
 					>
 						<ChevronLeft size={16} />
@@ -157,7 +157,7 @@ const MediaCarousel = ({ images = [], video = null }) => {
 					{/* Next button */}
 					<span
 						onClick={nextSlide}
-						className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white pointer-events-auto"
+						className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-800/70 p-2 rounded-full hover:bg-primary-700 text-white pointer-events-auto"
 						aria-label="Next media"
 					>
 						<ChevronRight size={16} />
@@ -170,8 +170,8 @@ const MediaCarousel = ({ images = [], video = null }) => {
 								key={idx}
 								onClick={(e) => goToSlide(idx, e)}
 								className={`w-2 h-2 rounded-full transition-all pointer-events-auto ${idx === currentIndex
-									? 'bg-purple-500 w-4'
-									: 'bg-gray-400 hover:bg-purple-400'
+									? 'bg-primary-500 w-4'
+									: 'bg-gray-400 hover:bg-primary-400'
 									}`}
 								aria-label={`Go to media ${idx + 1}`}
 							/>
@@ -185,7 +185,7 @@ const MediaCarousel = ({ images = [], video = null }) => {
 				<div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-40">
 					<div
 						onClick={toggleMaximize}
-						className="bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white"
+						className="bg-gray-800/70 p-2 rounded-full hover:bg-primary-700 text-white"
 						aria-label="Maximize carousel"
 					>
 						<Maximize size={16} />
@@ -198,7 +198,7 @@ const MediaCarousel = ({ images = [], video = null }) => {
 				<div className="absolute top-4 right-4 z-50 flex space-x-2">
 					<span
 						onClick={closeMaximizedView}
-						className="bg-gray-800/70 p-2 rounded-full hover:bg-purple-700 text-white"
+						className="bg-gray-800/70 p-2 rounded-full hover:bg-primary-700 text-white"
 						aria-label="Close carousel"
 					>
 						<X size={16} />

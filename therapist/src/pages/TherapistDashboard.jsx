@@ -136,8 +136,8 @@ const TherapistDashboard = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-8 md:mb-0">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-purple-800">
-                DailyPhysio for Therapists
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary-500">
+                <span className="text-white">DailyPhysio</span> for Therapists
               </h1>
               <p className="text-xl text-gray-300 mb-8">
                 Your all-in-one platform for managing patient exercises, consultations, and tracking rehabilitation progress.
@@ -145,7 +145,7 @@ const TherapistDashboard = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={() => setShowRegisterModal(true)}
-                  className="px-8 py-3 bg-gradient-to-r from-purple-800 to-purple-500 rounded-lg font-medium hover:opacity-90 transition-all duration-200"
+                  className="px-8 py-3 bg-gradient-to-r from-primary-800 to-primary-500 rounded-lg font-medium hover:opacity-90 transition-all duration-200"
                 >
                   Get Started
                 </button>
@@ -159,8 +159,8 @@ const TherapistDashboard = () => {
             </div>
             <div className="md:w-1/2">
               <div className="relative overflow-hidden">
-                <div className="absolute -top-4 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob"></div>
-                <div className="absolute -bottom-8 right-0 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000"></div>
+                <div className="absolute -top-4 -left-4 w-72 h-72 bg-primary-500 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob"></div>
+                <div className="absolute -bottom-8 right-0 w-72 h-72 bg-primary-600 rounded-full mix-blend-multiply filter blur-2xl opacity-30 animate-blob animation-delay-2000"></div>
                 <div className="relative">
                   <img
                     src="/assets/start your healing.jpg"
@@ -177,51 +177,51 @@ const TherapistDashboard = () => {
       {/* Features Section */}
       <section className="py-16 px-4 bg-gray-800 bg-opacity-50">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-12 text-purple-700">Powerful Tools for Rehabilitation Professionals</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-primary-500">Powerful Tools for Rehabilitation Professionals</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
-              <div className="text-purple-500 mb-4">
+            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-primary-500 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/20">
+              <div className="text-primary-500 mb-4">
                 <FaUsers size={32} />
               </div>
               <h3 className="text-xl font-semibold mb-3">Patient Management</h3>
               <p className="text-gray-400">Easily add, organize, and manage your patient database with detailed profiles and treatment history.</p>
             </div>
 
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
-              <div className="text-purple-500 mb-4">
+            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-primary-500 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/20">
+              <div className="text-primary-500 mb-4">
                 <FaDumbbell size={32} />
               </div>
               <h3 className="text-xl font-semibold mb-3">Exercise Library</h3>
               <p className="text-gray-400">Access a comprehensive library of exercises with detailed instructions, videos, and customization options.</p>
             </div>
 
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
-              <div className="text-purple-500 mb-4">
+            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-primary-500 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/20">
+              <div className="text-primary-500 mb-4">
                 <FaClipboardList size={32} />
               </div>
               <h3 className="text-xl font-semibold mb-3">Custom Routines</h3>
               <p className="text-gray-400">Create personalized exercise routines tailored to each patient's specific rehabilitation needs.</p>
             </div>
 
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
-              <div className="text-purple-500 mb-4">
+            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-primary-500 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/20">
+              <div className="text-primary-500 mb-4">
                 <FaCalendarAlt size={32} />
               </div>
               <h3 className="text-xl font-semibold mb-3">Consultation Tools</h3>
               <p className="text-gray-400">Schedule and manage consultations, with integrated notes and exercise assignment capabilities.</p>
             </div>
 
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
-              <div className="text-purple-500 mb-4">
+            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-primary-500 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/20">
+              <div className="text-primary-500 mb-4">
                 <FaChartLine size={32} />
               </div>
               <h3 className="text-xl font-semibold mb-3">Progress Tracking</h3>
               <p className="text-gray-400">Monitor patient progress with detailed analytics, adherence metrics, and outcome measurements.</p>
             </div>
 
-            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20">
-              <div className="text-purple-500 mb-4">
+            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-primary-500 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/20">
+              <div className="text-primary-500 mb-4">
                 <FaUserMd size={32} />
               </div>
               <h3 className="text-xl font-semibold mb-3">Patient Portal</h3>
@@ -234,11 +234,11 @@ const TherapistDashboard = () => {
       {/* How It Works Section */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-12 text-purple-700">How DailyPhysio Works</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-primary-500">How DailyPhysio Works</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-primary-500 flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl font-bold">1</span>
               </div>
               <h3 className="text-xl font-semibold mb-3">Create Patient Profiles</h3>
@@ -246,7 +246,7 @@ const TherapistDashboard = () => {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-primary-500 flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl font-bold">2</span>
               </div>
               <h3 className="text-xl font-semibold mb-3">Assign Custom Exercises</h3>
@@ -254,7 +254,7 @@ const TherapistDashboard = () => {
             </div>
 
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-purple-500 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-primary-500 flex items-center justify-center mx-auto mb-4">
                 <span className="text-xl font-bold">3</span>
               </div>
               <h3 className="text-xl font-semibold mb-3">Monitor Progress</h3>
@@ -267,7 +267,7 @@ const TherapistDashboard = () => {
       {/* Pricing Section - Updated with selectable plans */}
       <section className="py-16 px-4 bg-gray-800 bg-opacity-50">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-4 text-purple-700">Membership Plans</h2>
+          <h2 className="text-3xl font-bold text-center mb-4 text-primary-500">Membership Plans</h2>
           <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
             Choose the plan that fits your practice needs. Upgrade or downgrade anytime.
           </p>
@@ -276,20 +276,19 @@ const TherapistDashboard = () => {
             {membershipPlans.map((plan, index) => (
               <div
                 key={index}
-                className={`bg-gray-800 rounded-xl overflow-hidden flex-1 max-w-md cursor-pointer transition-all duration-300 ${
-                  activePlan === index
-                    ? 'border-2 border-purple-500 transform md:scale-105 shadow-xl shadow-purple-500/20'
-                    : 'border border-gray-700 hover:border-purple-400'
-                }`}
+                className={`bg-gray-800 rounded-xl overflow-hidden flex-1 max-w-md cursor-pointer transition-all duration-300 ${activePlan === index
+                    ? 'border-2 border-primary-500 transform md:scale-105 shadow-xl shadow-primary-500/20'
+                    : 'border border-gray-700 hover:border-primary-400'
+                  }`}
                 onClick={() => handlePlanSelect(index)}
               >
                 {plan.featured && activePlan !== index && (
-                  <div className="bg-purple-500 py-1 text-center">
+                  <div className="bg-primary-500 py-1 text-center">
                     <span className="text-sm font-medium">Most Popular</span>
                   </div>
                 )}
                 {activePlan === index && (
-                  <div className="bg-purple-600 py-1 text-center">
+                  <div className="bg-primary-600 py-1 text-center">
                     <span className="text-sm font-medium">Selected Plan</span>
                   </div>
                 )}
@@ -312,11 +311,10 @@ const TherapistDashboard = () => {
                   </ul>
 
                   <button
-                    className={`w-full py-3 rounded-lg font-medium transition-all duration-200 ${
-                      activePlan === index
-                        ? 'bg-gradient-to-r from-purple-600 to-purple-800 hover:opacity-90'
+                    className={`w-full py-3 rounded-lg font-medium transition-all duration-200 ${activePlan === index
+                        ? 'bg-gradient-to-r from-primary-600 to-primary-800 hover:opacity-90'
                         : 'bg-gray-700 hover:bg-gray-600'
-                    }`}
+                      }`}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent triggering the parent onClick
                       handlePlanSelect(index);
@@ -338,7 +336,7 @@ const TherapistDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center mb-4">
-                <svg className="w-8 h-8 text-purple-500 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-8 h-8 text-primary-500 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M19 11H5C3.89543 11 3 11.8954 3 13V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V13C21 11.8954 20.1046 11 19 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M17 2L12 7L7 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M12 7V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

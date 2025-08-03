@@ -420,13 +420,13 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 				onClick={onClose}
 			></div>
 			<div className="relative max-w-4xl mx-auto h-[90vh] overflow-y-auto custom-scrollbar p-6 bg-gray-800 rounded-xl shadow-lg text-gray-200">
-				<h1 className="text-3xl font-bold text-center text-purple-400 mb-8">
+				<h1 className="text-3xl font-bold text-center text-primary-400 mb-8">
 					{isEdit ? 'Edit Exercise' : 'Create New Exercise'}
 				</h1>
 				<form onSubmit={handleSubmit} className="space-y-6">
 					{/* Basic Info Section */}
 					<div className="bg-gray-700 p-6 rounded-lg shadow-md">
-						<h2 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
+						<h2 className="text-xl font-semibold text-primary-300 mb-4 flex items-center">
 							<FiList className="mr-2" /> Basic Information
 						</h2>
 
@@ -441,7 +441,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									name="title"
 									value={formData.title}
 									onChange={handleChange}
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 									required
 								/>
 							</div>
@@ -455,7 +455,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									name="position"
 									value={formData.position}
 									onChange={handleChange}
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 									required
 								>
 									<option value="">Select Position</option>
@@ -478,7 +478,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									name="customPosition"
 									value={formData.customPosition}
 									onChange={handleChange}
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 									required
 								/>
 							</div>
@@ -494,7 +494,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 								value={formData.description}
 								onChange={handleChange}
 								rows="3"
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 								required
 							/>
 						</div>
@@ -509,7 +509,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 								value={formData.instruction}
 								onChange={handleChange}
 								rows="5"
-								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+								className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 								required
 							/>
 						</div>
@@ -517,7 +517,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 
 					{/* Category Section */}
 					<div className="bg-gray-700 p-6 rounded-lg shadow-md">
-						<h2 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
+						<h2 className="text-xl font-semibold text-primary-300 mb-4 flex items-center">
 							<FiTag className="mr-2" /> Categories
 						</h2>
 
@@ -531,7 +531,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									name="category"
 									value={formData.category}
 									onChange={handleChange}
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 									required
 								>
 									<option value="">Select Category</option>
@@ -552,7 +552,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 										name="subCategory"
 										value={formData.subCategory}
 										onChange={handleChange}
-										className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+										className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 										disabled={!formData.category || formData.category === 'Other'}
 										required
 									>
@@ -574,7 +574,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 										name="customSubCategory"
 										value={formData.customSubCategory}
 										onChange={handleChange}
-										className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+										className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 										required
 									/>
 								</div>
@@ -592,7 +592,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									name="customCategory"
 									value={formData.customCategory}
 									onChange={handleChange}
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 									required
 								/>
 							</div>
@@ -609,7 +609,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									name="customSubCategory"
 									value={formData.customSubCategory}
 									onChange={handleChange}
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 									required
 								/>
 							</div>
@@ -625,7 +625,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 										value="public"
 										checked={formData.type === "public"}
 										onChange={handleChange}
-										className="form-radio h-5 w-5 text-purple-600"
+										className="form-radio h-5 w-5 text-primary-600"
 									/>
 									<span className="ml-2 text-gray-300">Public</span>
 								</label>
@@ -636,7 +636,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 										value="private"
 										checked={formData.type === "private"}
 										onChange={handleChange}
-										className="form-radio h-5 w-5 text-purple-600"
+										className="form-radio h-5 w-5 text-primary-600"
 									/>
 									<span className="ml-2 text-gray-300">Private</span>
 								</label>
@@ -646,7 +646,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 
 					{/* Performance Section */}
 					<div className="bg-gray-700 p-6 rounded-lg shadow-md">
-						<h2 className="text-xl font-semibold text-purple-300 mb-4">Performance Details</h2>
+						<h2 className="text-xl font-semibold text-primary-300 mb-4">Performance Details</h2>
 
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 							<div>
@@ -659,7 +659,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									name="perform.count"
 									value={formData.perform.count}
 									onChange={handleChange}
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 								/>
 							</div>
 
@@ -672,7 +672,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									name="perform.type"
 									value={formData.perform.type}
 									onChange={handleChange}
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 								>
 									<option value="hour">Hour</option>
 									<option value="day">Day</option>
@@ -690,7 +690,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									name="reps"
 									value={formData.reps}
 									onChange={handleChange}
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 								/>
 							</div>
 
@@ -704,7 +704,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									name="hold"
 									value={formData.hold}
 									onChange={handleChange}
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 								/>
 							</div>
 						</div>
@@ -721,7 +721,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 									value={formData.set}
 									onChange={handleChange}
 									min="0"
-									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+									className="w-full px-4 py-2 bg-gray-600 border border-gray-500 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-white"
 								/>
 							</div>
 						</div>
@@ -729,7 +729,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 
 					{/* Media Section */}
 					<div className="bg-gray-700 p-6 rounded-lg shadow-md">
-						<h2 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
+						<h2 className="text-xl font-semibold text-primary-300 mb-4 flex items-center">
 							<FiVideo className="mr-2" /> Video
 						</h2>
 
@@ -751,7 +751,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 								<span className='absolute top-3 right-3 p-1 bg-red-600 hover:bg-red-800 text-white rounded-lg cursor-pointer' onClick={removeVideo}>
 									<X size={18} />
 								</span>
-								<h3 className="text-lg font-medium text-purple-300 mb-2">Video Preview</h3>
+								<h3 className="text-lg font-medium text-primary-300 mb-2">Video Preview</h3>
 								<video
 									controls
 									className="w-full rounded-lg max-h-64"
@@ -768,7 +768,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 								<span className='absolute top-3 right-3 p-1 bg-red-600 hover:bg-red-800 text-white rounded-lg cursor-pointer' onClick={removeExistingVideo}>
 									<X size={18} />
 								</span>
-								<h3 className="text-lg font-medium text-purple-300 mb-2">Current Video</h3>
+								<h3 className="text-lg font-medium text-primary-300 mb-2">Current Video</h3>
 								<video
 									controls
 									className="w-full rounded-lg max-h-64"
@@ -787,7 +787,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 							<p className="text-gray-400 text-center py-4 mt-2">No video uploaded yet.</p>
 						)}
 
-						<h2 className="text-xl font-semibold text-purple-300 mt-8 mb-4 flex items-center">
+						<h2 className="text-xl font-semibold text-primary-300 mt-8 mb-4 flex items-center">
 							<FiImage className="mr-2" /> Images
 						</h2>
 
@@ -807,7 +807,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 						{/* New Images */}
 						{imageFiles.length > 0 && (
 							<>
-								<h3 className="text-lg font-medium text-purple-300 mt-4 mb-2">New Images</h3>
+								<h3 className="text-lg font-medium text-primary-300 mt-4 mb-2">New Images</h3>
 								<div className="mt-2 overflow-x-auto pb-4 custom-scrollbar">
 									<div className="flex space-x-4" style={{ minWidth: 'min-content' }}>
 										{imageFiles.map((imageData, index) => (
@@ -845,7 +845,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 						{/* Existing Images (when editing) */}
 						{existingImages.length > 0 && (
 							<>
-								<h3 className="text-lg font-medium text-purple-300 mt-4 mb-2">Current Images</h3>
+								<h3 className="text-lg font-medium text-primary-300 mt-4 mb-2">Current Images</h3>
 								<div className="mt-2 overflow-x-auto pb-4 custom-scrollbar">
 									<div className="flex space-x-4" style={{ minWidth: 'min-content' }}>
 										{existingImages.map((image, index) => (
@@ -895,7 +895,7 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 						<button
 							type="submit"
 							disabled={isSubmitting}
-							className={`px-6 py-3 ${isSubmitting ? 'bg-purple-400' : 'bg-purple-600 hover:bg-purple-500'} text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-gray-800 flex items-center`}
+							className={`px-6 py-3 ${isSubmitting ? 'bg-primary-400' : 'bg-primary-600 hover:bg-primary-500'} text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-gray-800 flex items-center`}
 						>
 							{isSubmitting ? (
 								<>
@@ -913,14 +913,14 @@ export default function HandleExercise({ isOpen, isEdit, onClose, exercise = nul
 				<style jsx>{`
 		  .custom-scrollbar::-webkit-scrollbar {
 			 height: 4px;
-			 width: 4px;
+			 width: 8px;
 		  }
 		  .custom-scrollbar::-webkit-scrollbar-track {
 			 background: #4B5563;
 			 border-radius: 8px;
 		  }
 		  .custom-scrollbar::-webkit-scrollbar-thumb {
-			 background-color: #8B5CF6;
+			 background-color: #009490;
 			 border-radius: 8px;
 		  }
 		`}</style>

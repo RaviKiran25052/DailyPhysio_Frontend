@@ -152,7 +152,7 @@ const NewConsultation = () => {
 										name="patientName"
 										value={formData.patientName}
 										onChange={handleChange}
-										className={`w-full px-3 py-2 bg-gray-700 border ${errors.patientName ? 'border-red-500' : 'border-gray-600'} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										className={`w-full px-3 py-2 bg-gray-700 border ${errors.patientName ? 'border-red-500' : 'border-gray-600'} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 										placeholder="John Doe"
 									/>
 									{errors.patientName && (
@@ -169,7 +169,7 @@ const NewConsultation = () => {
 										name="patientAge"
 										value={formData.patientAge}
 										onChange={handleChange}
-										className={`w-full px-3 py-2 bg-gray-700 border ${errors.patientAge ? 'border-red-500' : 'border-gray-600'} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										className={`w-full px-3 py-2 bg-gray-700 border ${errors.patientAge ? 'border-red-500' : 'border-gray-600'} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 										placeholder="42"
 									/>
 									{errors.patientAge && (
@@ -190,7 +190,7 @@ const NewConsultation = () => {
 												value="male"
 												checked={formData.patientGender === 'male'}
 												onChange={handleChange}
-												className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-600"
+												className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-600"
 											/>
 											<label htmlFor="patientMale" className="ml-2 text-sm text-gray-300">
 												Male
@@ -204,7 +204,7 @@ const NewConsultation = () => {
 												value="female"
 												checked={formData.patientGender === 'female'}
 												onChange={handleChange}
-												className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-600"
+												className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-600"
 											/>
 											<label htmlFor="patientFemale" className="ml-2 text-sm text-gray-300">
 												Female
@@ -222,7 +222,7 @@ const NewConsultation = () => {
 										name="condition"
 										value={formData.condition}
 										onChange={handleChange}
-										className={`w-full px-3 py-2 bg-gray-700 border ${errors.condition ? 'border-red-500' : 'border-gray-600'} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+										className={`w-full px-3 py-2 bg-gray-700 border ${errors.condition ? 'border-red-500' : 'border-gray-600'} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 										placeholder="Lower back pain"
 									/>
 									{errors.condition && (
@@ -239,7 +239,7 @@ const NewConsultation = () => {
 										name="diagnosis"
 										value={formData.diagnosis}
 										onChange={handleChange}
-										className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+										className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
 										placeholder="Lumbar strain"
 									/>
 								</div>
@@ -259,7 +259,7 @@ const NewConsultation = () => {
 											name="date"
 											value={formData.date}
 											onChange={handleChange}
-											className={`w-full px-3 py-2 bg-gray-700 border ${errors.date ? 'border-red-500' : 'border-gray-600'} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+											className={`w-full px-3 py-2 bg-gray-700 border ${errors.date ? 'border-red-500' : 'border-gray-600'} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 										/>
 										{errors.date && (
 											<p className="mt-1 text-sm text-red-500">{errors.date}</p>
@@ -275,7 +275,7 @@ const NewConsultation = () => {
 											name="time"
 											value={formData.time}
 											onChange={handleChange}
-											className={`w-full px-3 py-2 bg-gray-700 border ${errors.time ? 'border-red-500' : 'border-gray-600'} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+											className={`w-full px-3 py-2 bg-gray-700 border ${errors.time ? 'border-red-500' : 'border-gray-600'} rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500`}
 										/>
 										{errors.time && (
 											<p className="mt-1 text-sm text-red-500">{errors.time}</p>
@@ -291,7 +291,7 @@ const NewConsultation = () => {
 										name="duration"
 										value={formData.duration}
 										onChange={handleChange}
-										className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+										className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
 									>
 										<option value="30">30 minutes</option>
 										<option value="45">45 minutes</option>
@@ -308,7 +308,7 @@ const NewConsultation = () => {
 										name="sessionType"
 										value={formData.sessionType}
 										onChange={handleChange}
-										className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+										className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
 									>
 										<option value="In-Person">In-Person</option>
 										<option value="Telehealth">Telehealth</option>
@@ -324,7 +324,7 @@ const NewConsultation = () => {
 										name="status"
 										value={formData.status}
 										onChange={handleChange}
-										className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+										className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
 									>
 										<option value="Scheduled">Scheduled</option>
 										<option value="In Progress">In Progress</option>
@@ -342,7 +342,7 @@ const NewConsultation = () => {
 										name="location"
 										value={formData.location}
 										onChange={handleChange}
-										className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+										className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
 										placeholder="Room 302, City Hospital"
 									/>
 								</div>
@@ -359,7 +359,7 @@ const NewConsultation = () => {
 								value={formData.treatmentPlan}
 								onChange={handleChange}
 								rows="3"
-								className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+								className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
 								placeholder="Treatment plan details"
 							></textarea>
 						</div>
@@ -374,7 +374,7 @@ const NewConsultation = () => {
 								value={formData.notes}
 								onChange={handleChange}
 								rows="3"
-								className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+								className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
 								placeholder="Any additional notes..."
 							></textarea>
 						</div>
@@ -384,14 +384,14 @@ const NewConsultation = () => {
 							<button
 								type="button"
 								onClick={() => navigate('/dashboard')}
-								className="px-4 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+								className="px-4 py-2 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 							>
 								Cancel
 							</button>
 							<button
 								type="submit"
 								disabled={loading}
-								className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-purple-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
+								className={`px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-primary-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500`}
 							>
 								{loading ? 'Creating...' : 'Create Consultation'}
 							</button>
