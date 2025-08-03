@@ -227,18 +227,18 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
         onConfirm={handleDelete}
       />
 
-      <div className="flex justify-between items-center mx-6 my-6">
+      <div className="flex justify-between items-center mx-6 mt-6">
         <button
           onClick={onBack}
-          className="flex items-center space-x-2 text-gray-400 hover:text-white border border-gray-400 p-2 rounded-md"
+          className="flex items-center space-x-2 text-gray-500 hover:text-gray-600 border-2 border-gray-500 p-2 rounded-md"
         >
           <RiArrowLeftLine size={20} />
           <span>Back to Consultations</span>
         </button>
       </div>
 
-      <div className="p-6">
-        <div className="bg-gray-800 rounded-lg p-6 mb-6">
+      <div className="p-6 text-white">
+        <div className="bg-primary-800 rounded-lg p-6 mb-6">
           <h3 className="text-lg font-semibold mb-4 flex items-center">
             <RiUserLine className="mr-2 text-primary-500" />
             Patient Information
@@ -299,7 +299,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div className="bg-gray-800 rounded-lg p-6">
+          <div className="bg-primary-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center">
               <RiCalendarLine className="mr-2 text-primary-500" />
               Duration
@@ -324,7 +324,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
                     type="number"
                     value={Math.max(activeDays, 0)}
                     onChange={(e) => setActiveDays(parseInt(e.target.value))}
-                    className="w-24 px-2 py-1 bg-gray-700 rounded border border-gray-600"
+                    className="w-24 px-2 py-1 bg-primary-700 rounded border border-gray-600"
                     min="1"
                   />
                 ) : (
@@ -334,7 +334,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
             </div>
           </div>
 
-          <div className="bg-gray-800 rounded-lg p-6">
+          <div className="bg-primary-800 rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center">
               <RiInformationLine className="mr-2 text-primary-500" />
               Notes
@@ -343,7 +343,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full h-32 px-3 py-2 bg-gray-700 rounded border border-gray-600 resize-none"
+                className="w-full h-32 px-3 py-2 bg-primary-700 rounded border border-gray-600 resize-none"
                 placeholder="Add notes here..."
               />
             ) : (
@@ -352,7 +352,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-lg p-6">
+        <div className="bg-primary-800 rounded-lg p-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold flex items-center">
               <RiRunLine className="mr-2 text-primary-500" />
@@ -370,7 +370,7 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {recommendedExercises.map((exercise) => (
-              <div key={exercise._id} className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative">
+              <div key={exercise._id} className="bg-primary-700 rounded-lg p-4 relative">
                 {isEditing && (
                   <button
                     onClick={() => handleRemoveExercise(exercise._id)}
@@ -389,9 +389,9 @@ const ConsultationDetails = ({ consultation, onBack, onUpdate }) => {
                   {exercise.category} - {exercise.subCategory}
                 </div>
                 <div className="text-sm">
-                  <span className="text-primary-500">Sets:</span> {exercise.set} |
-                  <span className="text-primary-500"> Reps:</span> {exercise.reps} |
-                  <span className="text-primary-500"> Hold:</span> {exercise.hold}s
+                  <span className="text-primary-400">Sets:</span> {exercise.set} |
+                  <span className="text-primary-400"> Reps:</span> {exercise.reps} |
+                  <span className="text-primary-400"> Hold:</span> {exercise.hold}s
                 </div>
               </div>
             ))}
@@ -479,7 +479,7 @@ const Consultations = () => {
               placeholder="Search by patient name or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary-500 w-64 text-white"
+              className="pl-10 pr-4 py-2 bg-primary-800 border border-gray-700 rounded-lg focus:outline-none focus:border-primary-500 w-64 text-white"
             />
           </div>
           <button
@@ -516,9 +516,9 @@ const Consultations = () => {
                   </div>
                 </div>
                 {/* Status Badge */}
-                <span className={`px-2 rounded-full text-sm ${consultation.request.status === 'active'
-                  ? 'bg-green-500 bg-opacity-20 text-green-500'
-                  : 'bg-yellow-500 bg-opacity-20 text-yellow-500'
+                <span className={`px-2 rounded-full text-sm font-semibold ${consultation.request.status === 'active'
+                  ? 'bg-green-500 text-green-900'
+                  : 'bg-yellow-500 text-yellow-900'
                   }`}>
                   {consultation.request.status}
                 </span>
@@ -526,7 +526,7 @@ const Consultations = () => {
 
               {/* Date Info */}
               <div className="flex items-center space-x-3 mb-4">
-                <RiCalendarLine className="text-primary-500" size={20} />
+                <RiCalendarLine className="text-primary-400" size={20} />
                 <div>
                   <div className="text-sm text-gray-400">Created</div>
                   <div className="font-medium">{new Date(consultation.createdAt).toLocaleDateString()}</div>
@@ -535,7 +535,7 @@ const Consultations = () => {
 
               {/* Exercise Count */}
               <div className="flex items-center space-x-3 mb-4">
-                <RiRunLine className="text-primary-500" size={20} />
+                <RiRunLine className="text-primary-400" size={20} />
                 <div>
                   <div className="text-sm text-gray-400">Exercises</div>
                   <div className="font-medium">{consultation.recommendedExercises.length} assigned</div>
@@ -551,7 +551,7 @@ const Consultations = () => {
               )}
 
               {/* View Details Button */}
-              <button className="w-full mt-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors">
+              <button className="w-full mt-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
                 View Details
               </button>
             </div>

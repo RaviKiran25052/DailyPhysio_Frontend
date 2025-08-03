@@ -151,15 +151,15 @@ const AddConsultation = ({ onClose, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-gray-800 rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+      <div className="bg-primary-800 rounded-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
         {/* Header */}
         <div className="p-6 border-b border-gray-700 flex justify-between items-center">
           <div>
             <h2 className="text-xl font-bold text-white">New Consultation</h2>
             <div className="flex mt-2 space-x-4">
-              <div className={`text-sm ${step >= 1 ? 'text-purple-400' : 'text-gray-400'}`}>1. Select Patient</div>
-              <div className={`text-sm ${step >= 2 ? 'text-purple-400' : 'text-gray-400'}`}>2. Choose Exercises</div>
-              <div className={`text-sm ${step >= 3 ? 'text-purple-400' : 'text-gray-400'}`}>3. Finalize</div>
+              <div className={`text-sm ${step >= 1 ? 'text-primary-400' : 'text-gray-400'}`}>1. Select Patient</div>
+              <div className={`text-sm ${step >= 2 ? 'text-primary-400' : 'text-gray-400'}`}>2. Choose Exercises</div>
+              <div className={`text-sm ${step >= 3 ? 'text-primary-400' : 'text-gray-400'}`}>3. Finalize</div>
             </div>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
@@ -182,12 +182,12 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                         placeholder="Search users..."
                         value={userSearchTerm}
                         onChange={(e) => setUserSearchTerm(e.target.value)}
-                        className="pl-10 pr-4 py-2 w-full bg-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="pl-10 pr-4 py-2 w-full bg-primary-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
                     <button
                       onClick={() => setShowNewUserForm(true)}
-                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                      className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                     >
                       New User
                     </button>
@@ -198,7 +198,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                       <div
                         key={user._id}
                         onClick={() => handleUserSelect(user)}
-                        className="bg-gray-700 p-4 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                        className="bg-primary-700 p-4 rounded-lg cursor-pointer hover:bg-primary-600 transition-colors"
                       >
                         <div className="flex items-center space-x-3">
                           <img
@@ -216,7 +216,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                   </div>
                 </>
               ) : (
-                <div className="bg-gray-700 rounded-lg p-6">
+                <div className="bg-primary-700 rounded-lg p-6">
                   <h3 className="text-lg font-medium text-white mb-4">Create New User</h3>
                   <div className="space-y-4">
                     <div>
@@ -226,7 +226,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 bg-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-2 bg-primary-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
                     <div>
@@ -236,7 +236,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 bg-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-2 bg-primary-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
                     <div>
@@ -246,7 +246,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 bg-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-2 bg-primary-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
                     <div>
@@ -256,19 +256,19 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-2 bg-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-2 bg-primary-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
                     <div className="flex space-x-3">
                       <button
                         onClick={() => setShowNewUserForm(false)}
-                        className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500"
+                        className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-gray-500"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={() => handleFormSubmission()}
-                        className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                        className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
                       >
                         Continue
                       </button>
@@ -298,7 +298,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                     placeholder="Search exercises..."
                     value={exerciseSearchTerm}
                     onChange={(e) => setExerciseSearchTerm(e.target.value)}
-                    className="pl-10 pr-4 py-2 w-full bg-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="pl-10 pr-4 py-2 w-full bg-primary-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -308,15 +308,15 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                   <div
                     key={exercise._id}
                     onClick={() => toggleExerciseSelection(exercise)}
-                    className={`bg-gray-700 p-4 rounded-lg cursor-pointer transition-colors ${selectedExercises.some(ex => ex._id === exercise._id)
-                        ? 'ring-2 ring-purple-500'
-                        : 'hover:bg-gray-600'
+                    className={`bg-primary-700 p-4 rounded-lg cursor-pointer transition-colors ${selectedExercises.some(ex => ex._id === exercise._id)
+                        ? 'ring-2 ring-primary-500'
+                        : 'hover:bg-primary-600'
                       }`}
                   >
                     <div className="flex justify-between items-start">
                       <h3 className="font-medium text-white">{exercise.title}</h3>
                       <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${selectedExercises.some(ex => ex._id === exercise._id)
-                          ? 'bg-purple-500 border-purple-500'
+                          ? 'bg-primary-500 border-primary-500'
                           : 'border-gray-500'
                         }`}>
                         {selectedExercises.some(ex => ex._id === exercise._id) && (
@@ -327,7 +327,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                       </div>
                     </div>
                     <p className="text-sm text-gray-400 mt-2">{exercise.description}</p>
-                    <div className="mt-2 text-sm text-purple-400">
+                    <div className="mt-2 text-sm text-primary-400">
                       {exercise.category} - {exercise.subCategory}
                     </div>
                   </div>
@@ -338,7 +338,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                 <button
                   onClick={() => setStep(3)}
                   disabled={selectedExercises.length === 0}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Continue
                 </button>
@@ -362,7 +362,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <h3 className="text-lg font-medium text-white mb-4">Summary</h3>
-                  <div className="bg-gray-700 p-4 rounded-lg space-y-4">
+                  <div className="bg-primary-700 p-4 rounded-lg space-y-4">
                     <div>
                       <div className="text-sm text-gray-400">Patient</div>
                       <div className="font-medium text-white">
@@ -388,7 +388,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                         min="1"
                         value={consultationData.activeDays}
                         onChange={(e) => setConsultationData(prev => ({ ...prev, activeDays: e.target.value }))}
-                        className="w-full px-4 py-2 bg-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-2 bg-primary-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
                     </div>
                     <div>
@@ -399,7 +399,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                         value={consultationData.notes}
                         onChange={(e) => setConsultationData(prev => ({ ...prev, notes: e.target.value }))}
                         rows="4"
-                        className="w-full px-4 py-2 bg-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-2 bg-primary-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
                         placeholder="Add any additional notes..."
                       ></textarea>
                     </div>
@@ -411,7 +411,7 @@ const AddConsultation = ({ onClose, onSuccess }) => {
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50"
+                  className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50"
                 >
                   {loading ? (
                     <div className="flex items-center">
