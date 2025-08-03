@@ -189,7 +189,7 @@ const MediaCarousel = ({ images = [], video = null }) => {
 
 			{/* Minimize button (only in maximized view) */}
 			{maximized && (
-				<div className="absolute top-4 right-4 z-50 flex space-x-2">
+				<div className="absolute top-4 right-4 z-40 flex space-x-2">
 					<span
 						onClick={closeMaximizedView}
 						className="bg-gray-800/70 p-2 rounded-full hover:bg-primary-700 text-white"
@@ -211,7 +211,7 @@ const MediaCarousel = ({ images = [], video = null }) => {
 
 			{/* Maximized view portal */}
 			{isMaximized && createPortal(
-				<div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
+				<div className="fixed inset-0 z-40 bg-black/90 flex items-center justify-center">
 					<div className="w-full h-full md:w-5/6 md:h-5/6">
 						{renderCarousel(true)}
 					</div>

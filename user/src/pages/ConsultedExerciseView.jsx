@@ -152,7 +152,7 @@ const ConsultedExerciseView = () => {
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-primary-50">
 			{/* Enhanced Header */}
-			<div className="bg-white/80 backdrop-blur-sm border-b border-primary-100 sticky top-0 z-10">
+			<div className="bg-white/80 backdrop-blur-sm border-b border-primary-100 sticky top-0 z-50">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 					<button
 						onClick={goBack}
@@ -170,7 +170,7 @@ const ConsultedExerciseView = () => {
 					{/* Left Column - Media & Description */}
 					<div className="lg:col-span-7 mb-8 lg:mb-0">
 						{/* Media Section with Enhanced Styling */}
-						<div className="relative overflow-hidden rounded-2xl shadow-xl bg-white h-96 mb-8">
+						<div className="relative overflow-hidden rounded-2xl shadow-xl bg-white h-52 md:h-96 mb-8">
 							<MediaCarousel images={exercise.image} video={exercise.video} />
 							{exercise.isPremium && (
 								<span className="absolute top-3 left-3 bg-yellow-400 text-yellow-800 p-1 rounded text-sm flex items-center z-10">
@@ -187,7 +187,7 @@ const ConsultedExerciseView = () => {
 										{exercise.title}
 									</h1>
 
-									<div className="grid grid-cols-1 md:grid-cols-2 content-start">
+									<div className="grid grid-cols-1 md:grid-cols-2 content-start gap-6">
 										<div>
 											{/* Enhanced Categories */}
 											<div className="flex flex-wrap items-center gap-2 mb-4">
@@ -207,7 +207,7 @@ const ConsultedExerciseView = () => {
 											</div>
 										</div>
 
-										<div className="flex items-start justify-end space-x-4 text-sm text-gray-600 mb-4">
+										<div className="flex items-start justify-end space-x-4 text-sm text-gray-600">
 											<span className="flex items-center bg-gray-100 px-3 py-1 rounded-full">
 												<Eye className="w-4 h-4 mr-1" />
 												{exercise.views}
@@ -244,54 +244,54 @@ const ConsultedExerciseView = () => {
 					<div className="lg:col-span-5">
 						{/* Enhanced Exercise Stats Grid */}
 						<div className="grid grid-cols-2 gap-4 mb-6">
-							<div className="bg-gradient-to-br from-primary-500 to-primary-600 p-6 rounded-2xl text-center text-white shadow-xl transform hover:scale-105 transition-all duration-200">
+							<div className="bg-gradient-to-br from-primary-500 to-primary-600 p-4 md:p-6 rounded-2xl text-center text-white shadow-xl transform hover:scale-105 transition-all duration-200">
 								<div className="flex items-center gap-4">
-									<div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+									<div className="flex-shrink-0 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
 										<Repeat className="w-5 h-5" />
 									</div>
 									<div className='flex flex-col items-start'>
-										<div className="text-xl font-bold mb-1">{exercise.reps}</div>
-										<div className="text-sm opacity-90">Repetitions</div>
+										<div className="md:text-xl font-bold mb-1">{exercise.reps}</div>
+										<div className="text-xs md:text-sm opacity-90">Repetitions</div>
 									</div>
 								</div>
 							</div>
 
-							<div className="bg-gradient-to-br from-primary-600 to-primary-700 p-6 rounded-2xl text-center text-white shadow-xl transform hover:scale-105 transition-all duration-200">
+							<div className="bg-gradient-to-br from-primary-600 to-primary-700 p-4 md:p-6 rounded-2xl text-center text-white shadow-xl transform hover:scale-105 transition-all duration-200">
 								<div className="flex items-center gap-4">
-									<div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+									<div className="flex-shrink-0 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
 										<Clock className="w-5 h-5" />
 									</div>
 									<div className='flex flex-col items-start'>
-										<div className="text-xl font-bold mb-1">{exercise.hold}s</div>
-										<div className="text-sm opacity-90">Hold Time</div>
+										<div className="md:text-xl font-bold mb-1">{exercise.hold}s</div>
+										<div className="text-xs md:text-sm opacity-90">Hold Time</div>
 									</div>
 								</div>
 							</div>
 
-							<div className="bg-gradient-to-br from-primary-400 to-primary-500 p-6 rounded-2xl text-center text-white shadow-xl transform hover:scale-105 transition-all duration-200">
+							<div className="bg-gradient-to-br from-primary-400 to-primary-500 p-4 md:p-6 rounded-2xl text-center text-white shadow-xl transform hover:scale-105 transition-all duration-200">
 								<div className="flex items-center gap-4">
-									<div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+									<div className="flex-shrink-0 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
 										<Users className="w-5 h-5" />
 									</div>
 									<div className='flex flex-col items-start'>
-										<div className="text-xl font-bold mb-1">{exercise.set}</div>
-										<div className="text-sm opacity-90">Sets</div>
+										<div className="md:text-xl font-bold mb-1">{exercise.set}</div>
+										<div className="text-xs md:text-sm opacity-90">Sets</div>
 									</div>
 								</div>
 							</div>
 
-							<div className="bg-gradient-to-br from-primary-700 to-primary-800 p-6 rounded-2xl text-center text-white shadow-xl transform hover:scale-105 transition-all duration-200">
+							<div className="bg-gradient-to-br from-primary-700 to-primary-800 p-4 md:p-6 rounded-2xl text-center text-white shadow-xl transform hover:scale-105 transition-all duration-200">
 								<div className="flex items-center gap-4">
-									<div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+									<div className="flex-shrink-0 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
 										<Calendar className="w-5 h-5" />
 									</div>
 									<div className='flex flex-col items-start'>
-										<div className="text-xl font-bold mb-1">
+										<div className="md:text-xl font-bold mb-1">
 											{exercise.perform.count}x/{exercise.perform.type}
 										</div>
+										<div className="text-xs md:text-sm opacity-90">Frequency</div>
 									</div>
 								</div>
-								<div className="text-sm opacity-90">Frequency</div>
 							</div>
 						</div>
 
