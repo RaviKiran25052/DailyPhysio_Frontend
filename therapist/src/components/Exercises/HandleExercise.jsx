@@ -4,7 +4,7 @@ import { FiSave, FiPlusCircle, FiX, FiVideo, FiImage, FiTag, FiList } from 'reac
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/hep2go';
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5500/dailyphysio/dailyphysio';
 
 export default function HandleExercise({ isOpen, isEdit, onClose, exercise = null, token, onSuccess }) {
 	const [formData, setFormData] = useState({

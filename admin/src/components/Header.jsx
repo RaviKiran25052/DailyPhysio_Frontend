@@ -13,14 +13,14 @@ const Header = ({ adminInfo, handleLogout, toggleSidebar }) => {
 				</button>
 
 				<div className="flex-1 md:flex-none">
-					<h1 className="text-lg font-semibold md:hidden text-purple-600">DailyPhysio</h1>
+					<h1 className="text-lg font-semibold md:hidden text-primary-600">DailyPhysio</h1>
 				</div>
 
 				<div className="flex items-center space-x-4">
 					{/* Profile dropdown */}
 					<div className="relative">
 						<div className="flex items-center space-x-3">
-							<div className="h-8 w-8 rounded-full bg-purple-600 flex items-center justify-center text-white">
+							<div className="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center text-white">
 								<FaUser className="h-4 w-4" />
 							</div>
 							<div className="flex flex-col text-right text-sm">
@@ -31,7 +31,7 @@ const Header = ({ adminInfo, handleLogout, toggleSidebar }) => {
 							</div>
 							<button
 								onClick={handleLogout}
-								className="flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+								className="flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 							>
 								<FaSignOutAlt className="mr-2" />
 								Logout

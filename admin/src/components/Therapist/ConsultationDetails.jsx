@@ -28,7 +28,7 @@ const ConsultationDetails = ({ consultation, onBack }) => {
 
 			<div className="bg-gray-800 rounded-lg p-6 mb-6">
 				<h3 className="text-lg font-semibold mb-4 flex items-center">
-					<RiUserLine className="mr-2 text-purple-500" />
+					<RiUserLine className="mr-2 text-primary-500" />
 					Patient Information
 				</h3>
 				<div className='flex justify-between items-center'>
@@ -57,7 +57,7 @@ const ConsultationDetails = ({ consultation, onBack }) => {
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 				<div className="bg-gray-800 rounded-lg p-6">
 					<h3 className="text-lg font-semibold mb-4 flex items-center">
-						<RiCalendarLine className="mr-2 text-purple-500" />
+						<RiCalendarLine className="mr-2 text-primary-500" />
 						Duration
 					</h3>
 					<div className="space-y-3">
@@ -86,7 +86,7 @@ const ConsultationDetails = ({ consultation, onBack }) => {
 
 				<div className="bg-gray-800 rounded-lg p-6">
 					<h3 className="text-lg font-semibold mb-4 flex items-center">
-						<RiInformationLine className="mr-2 text-purple-500" />
+						<RiInformationLine className="mr-2 text-primary-500" />
 						Notes
 					</h3>
 					<p className="text-gray-300">{consultation.notes}</p>
@@ -95,7 +95,7 @@ const ConsultationDetails = ({ consultation, onBack }) => {
 
 			<div className="bg-gray-800 rounded-lg p-6 space-y-3">
 				<h3 className="text-lg font-semibold flex items-center">
-					<RiRunLine className="mr-2 text-purple-500" />
+					<RiRunLine className="mr-2 text-primary-500" />
 					Recommended Exercises
 				</h3>
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -111,9 +111,9 @@ const ConsultationDetails = ({ consultation, onBack }) => {
 								{exercise.category} - {exercise.subCategory}
 							</div>
 							<div className="text-sm">
-								<span className="text-purple-500">Sets:</span> {exercise.set} |
-								<span className="text-purple-500"> Reps:</span> {exercise.reps} |
-								<span className="text-purple-500"> Hold:</span> {exercise.hold}s
+								<span className="text-primary-500">Sets:</span> {exercise.set} |
+								<span className="text-primary-500"> Reps:</span> {exercise.reps} |
+								<span className="text-primary-500"> Hold:</span> {exercise.hold}s
 							</div>
 						</div>
 					))}

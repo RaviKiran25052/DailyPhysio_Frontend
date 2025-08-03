@@ -18,8 +18,8 @@ const Sidebar = ({ tab, setTab }) => {
 	return (
 		<div className="bg-gray-900 text-white w-64 space-y-6 py-4">
 			<div className="px-4">
-				<Link to="/admin/home" className="flex items-center space-x-2">
-					<span className="text-xl font-extrabold text-purple-500">DailyPhysio</span>
+				<Link to="/home" className="flex items-center space-x-2">
+					<span className="text-xl font-extrabold text-primary-500">DailyPhysio</span>
 				</Link>
 			</div>
 
@@ -29,7 +29,7 @@ const Sidebar = ({ tab, setTab }) => {
 						key={index}
 						onClick={() => setTab(item.tab)}
 						className={`flex items-center space-x-3 px-4 py-3 cursor-pointer rounded-lg transition-colors ${tab === item.tab
-							? 'bg-purple-700 text-white'
+							? 'bg-primary-700 text-white'
 							: 'text-gray-300 hover:bg-gray-800 hover:text-white'
 							}`}
 					>

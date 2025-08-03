@@ -43,7 +43,7 @@ const TherapistDetail = () => {
 				setLoading(true);
 
 				// API configuration
-				const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+				const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5500/dailyphysio';
 				const admin = localStorage.getItem('adminInfo')
 					? JSON.parse(localStorage.getItem('adminInfo'))
 					: null;
@@ -82,12 +82,12 @@ const TherapistDetail = () => {
 			<div className="min-h-screen bg-gray-900 flex items-center justify-center">
 				<div className="text-center">
 					<div className="relative">
-						<div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-200 border-t-purple-500 mx-auto mb-4"></div>
-						<div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-purple-100 border-t-transparent animate-pulse mx-auto"></div>
+						<div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-200 border-t-primary-500 mx-auto mb-4"></div>
+						<div className="absolute inset-0 rounded-full h-16 w-16 border-4 border-primary-100 border-t-transparent animate-pulse mx-auto"></div>
 					</div>
 					<div className="space-y-2">
-						<p className="text-purple-200 font-medium">Loading therapist data...</p>
-						<p className="text-purple-300 text-sm">Please wait while we fetch the information</p>
+						<p className="text-primary-200 font-medium">Loading therapist data...</p>
+						<p className="text-primary-300 text-sm">Please wait while we fetch the information</p>
 					</div>
 				</div>
 			</div>
@@ -96,7 +96,7 @@ const TherapistDetail = () => {
 
 	if (error) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-gray-900 via-red-900 to-pink-900 flex items-center justify-center p-4">
+			<div className="min-h-screen bg-gradient-to-br from-gray-900 via-red-900 to-primary-900 flex items-center justify-center p-4">
 				<div className="text-center bg-gray-800/90 backdrop-blur-sm p-8 rounded-2xl border border-red-500/30 max-w-md w-full shadow-2xl">
 					<div className="relative mb-6">
 						<div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -110,7 +110,7 @@ const TherapistDetail = () => {
 					<p className="text-red-200 mb-6 leading-relaxed">{error}</p>
 					<button
 						onClick={handleBackClick}
-						className="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+						className="bg-gradient-to-r from-red-600 to-primary-600 hover:from-red-700 hover:to-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
 					>
 						<ArrowLeft className="w-4 h-4 mr-2 inline-block" />
 						Go Back
@@ -122,31 +122,31 @@ const TherapistDetail = () => {
 
 	const { therapist, consultations, exercises, users, stats, storageInfo } = therapistData || {};
 	console.log(storageInfo);
-	
-	const StatCard = ({ icon: Icon, title, value, color = 'purple' }) => (
+
+	const StatCard = ({ icon: Icon, title, value, color = 'primary' }) => (
 		<div className="group relative overflow-hidden">
-			<div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
-			<div className="flex  justify-between relative bg-gray-800/90 backdrop-blur-sm p-6 rounded-2xl border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 group-hover:transform group-hover:scale-105 shadow-xl">
+			<div className="absolute inset-0 bg-gradient-to-r from-primary-600/10 to-primary-600/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+			<div className="flex  justify-between relative bg-gray-800/90 backdrop-blur-sm p-6 rounded-2xl border border-gray-700/50 hover:border-primary-500/50 transition-all duration-300 group-hover:transform group-hover:scale-105 shadow-xl">
 				<div>
-					<div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color === 'purple' ? 'bg-purple-500/20 text-purple-400' :
+					<div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color === 'primary' ? 'bg-primary-500/20 text-primary-400' :
 						color === 'blue' ? 'bg-blue-500/20 text-blue-400' :
 							color === 'green' ? 'bg-green-500/20 text-green-400' :
 								color === 'orange' ? 'bg-orange-500/20 text-orange-400' :
 									color === 'red' ? 'bg-red-500/20 text-red-400' :
 										color === 'yellow' ? 'bg-yellow-500/20 text-yellow-400' :
-											'bg-purple-500/20 text-purple-400'
+											'bg-primary-500/20 text-primary-400'
 						}`}>
 						<Icon className="w-6 h-6" />
 					</div>
 					<p className="text-gray-400 text-sm mt-3">{title}</p>
 				</div>
-				<p className={`text-3xl font-bold ${color === 'purple' ? 'text-purple-400' :
+				<p className={`text-3xl font-bold ${color === 'primary' ? 'text-primary-400' :
 					color === 'blue' ? 'text-blue-400' :
 						color === 'green' ? 'text-green-400' :
 							color === 'orange' ? 'text-orange-400' :
 								color === 'red' ? 'text-red-400' :
 									color === 'yellow' ? 'text-yellow-400' :
-										'text-purple-400'
+										'text-primary-400'
 					}`}>
 					{value}
 				</p>
@@ -158,8 +158,8 @@ const TherapistDetail = () => {
 		<button
 			onClick={() => onClick(id)}
 			className={`group relative flex items-center space-x-3 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${active
-				? 'bg-purple-700 text-white shadow-lg shadow-purple-500/25'
-				: 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 hover:text-white border border-gray-700/50 hover:border-purple-500/30'
+				? 'bg-primary-700 text-white shadow-lg shadow-primary-500/25'
+				: 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 hover:text-white border border-gray-700/50 hover:border-primary-500/30'
 				}`}
 		>
 			<Icon className="w-5 h-5" />
@@ -182,7 +182,7 @@ const TherapistDetail = () => {
 			case 'monthly':
 				return 'bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-300 border-blue-500/30';
 			case 'yearly':
-				return 'bg-gradient-to-r from-purple-500/20 to-violet-500/20 text-purple-300 border-purple-500/30';
+				return 'bg-gradient-to-r from-primary-500/20 to-violet-500/20 text-primary-300 border-primary-500/30';
 			default:
 				return 'bg-gradient-to-r from-gray-500/20 to-slate-500/20 text-gray-300 border-gray-500/30';
 		}
@@ -218,7 +218,7 @@ const TherapistDetail = () => {
 					icon={BookOpen}
 					title="Total Exercises"
 					value={stats?.totalExercises || 0}
-					color="purple"
+					color="primary"
 				/>
 				<StatCard
 					icon={Users}
@@ -234,7 +234,7 @@ const TherapistDetail = () => {
 				<div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
 					<div className="flex items-center justify-between mb-6">
 						<h3 className="text-lg font-semibold text-gray-100 flex items-center">
-							<Calendar className="w-5 h-5 mr-2 text-purple-400" />
+							<Calendar className="w-5 h-5 mr-2 text-primary-400" />
 							Recent Consultations
 						</h3>
 						<span className="text-sm text-gray-400">{consultations?.length || 0} total</span>
@@ -242,7 +242,7 @@ const TherapistDetail = () => {
 					<div className="space-y-4">
 						{consultations?.slice(0, 3).map((consultation) => (
 							<div key={consultation._id} className="flex items-center space-x-4 p-4 bg-gray-700/30 rounded-xl border border-gray-600/30">
-								<div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+								<div className="w-10 h-10 bg-gradient-to-r from-primary-600 to-primary-600 rounded-full flex items-center justify-center">
 									<User className="w-5 h-5 text-white" />
 								</div>
 								<div className="flex-1">
@@ -269,7 +269,7 @@ const TherapistDetail = () => {
 				<div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
 					<div className="flex items-center justify-between mb-6">
 						<h3 className="text-lg font-semibold text-gray-100 flex items-center">
-							<BookOpen className="w-5 h-5 mr-2 text-purple-400" />
+							<BookOpen className="w-5 h-5 mr-2 text-primary-400" />
 							Recent Exercises
 						</h3>
 						<span className="text-sm text-gray-400">{exercises?.length || 0} total</span>
@@ -290,7 +290,7 @@ const TherapistDetail = () => {
 									) : (
 										<Lock className="w-4 h-4 text-yellow-400" />
 									)}
-									{exercise.isPremium && <Crown className="w-4 h-4 text-purple-400" />}
+									{exercise.isPremium && <Crown className="w-4 h-4 text-primary-400" />}
 								</div>
 							</div>
 						)) || (
@@ -333,10 +333,10 @@ const TherapistDetail = () => {
 			{users && users.length > 0 ? (
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{users.map((user) => (
-						<div key={user._id} className="group bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 hover:border-purple-500/30 transition-all duration-300">
+						<div key={user._id} className="group bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 hover:border-primary-500/30 transition-all duration-300">
 							<div className="flex items-center justify-between">
 								<div className="flex items-center space-x-4">
-									<div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+									<div className="w-12 h-12 bg-gradient-to-r from-primary-600 to-primary-600 rounded-full flex items-center justify-center">
 										{user.profilePic ?
 											<img
 												src={user.profilePic}
@@ -380,7 +380,7 @@ const TherapistDetail = () => {
 
 	if (!therapist) {
 		return (
-			<div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900 flex items-center justify-center p-4">
+			<div className="min-h-screen bg-gradient-to-br from-gray-900 via-primary-900 to-violet-900 flex items-center justify-center p-4">
 				<div className="text-center bg-gray-800/90 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 max-w-md w-full shadow-2xl">
 					<div className="w-20 h-20 bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-6">
 						<User className="w-10 h-10 text-gray-400" />
@@ -389,7 +389,7 @@ const TherapistDetail = () => {
 					<p className="text-gray-300 mb-6 leading-relaxed">No therapist data available for this request.</p>
 					<button
 						onClick={handleBackClick}
-						className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+						className="bg-gradient-to-r from-primary-600 to-primary-600 hover:from-primary-700 hover:to-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
 					>
 						<ArrowLeft className="w-4 h-4 mr-2 inline-block" />
 						Go Back
@@ -404,7 +404,7 @@ const TherapistDetail = () => {
 			{/* Header */}
 			<button
 				onClick={handleBackClick}
-				className="group flex items-center space-x-2 text-gray-300 hover:text-purple-400 transition-all duration-200 bg-gray-700/50 hover:bg-gray-600/50 px-4 py-2 mb-6 rounded-lg border border-gray-600/30 hover:border-purple-500/30"
+				className="group flex items-center space-x-2 text-gray-300 hover:text-primary-400 transition-all duration-200 bg-gray-700/50 hover:bg-gray-600/50 px-4 py-2 mb-6 rounded-lg border border-gray-600/30 hover:border-primary-500/30"
 			>
 				<ArrowLeft className="w-5 h-5 group-hover:transform group-hover:-translate-x-1 transition-transform" />
 				<span>Back</span>
@@ -413,13 +413,13 @@ const TherapistDetail = () => {
 			{/* Therapist Details Section */}
 			<div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-8 mb-8 shadow-2xl">
 				<h2 className="text-2xl font-bold text-gray-100 flex items-center">
-					<Stethoscope className="w-6 h-6 mr-3 text-purple-400" />
+					<Stethoscope className="w-6 h-6 mr-3 text-primary-400" />
 					Therapist Information
 				</h2>
 				<div className="flex justify-between items-center">
 					<div className="flex items-center space-x-6 my-6">
 						<div className="relative">
-							<div className="w-20 h-20 rounded-full overflow-hidden bg-purple-600 p-1">
+							<div className="w-20 h-20 rounded-full overflow-hidden bg-primary-600 p-1">
 								{therapist.profilePic ? (
 									<img
 										src={therapist.profilePic}
@@ -438,7 +438,7 @@ const TherapistDetail = () => {
 						</div>
 						<div>
 							<h1 className="text-xl font-bold text-gray-100 mb-1">{therapist.name}</h1>
-							<p className="text-purple-300 text-sm">{therapist.email}</p>
+							<p className="text-primary-300 text-sm">{therapist.email}</p>
 						</div>
 					</div>
 					<div className='flex flex-col items-end'>
@@ -459,12 +459,12 @@ const TherapistDetail = () => {
 				{therapist.specializations && therapist.specializations.length > 0 && (
 					<div className="mb-6 pt-8 border-t border-gray-700/50">
 						<h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
-							<Award className="w-5 h-5 mr-2 text-purple-400" />
+							<Award className="w-5 h-5 mr-2 text-primary-400" />
 							Specializations
 						</h3>
 						<div className="flex flex-wrap gap-3">
 							{therapist.specializations.map((spec, index) => (
-								<span key={index} className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-200 px-4 py-2 rounded-full text-sm border border-purple-500/30 hover:border-purple-400/50 transition-colors">
+								<span key={index} className="bg-gradient-to-r from-primary-500/20 to-primary-500/20 text-primary-200 px-4 py-2 rounded-full text-sm border border-primary-500/30 hover:border-primary-400/50 transition-colors">
 									{spec}
 								</span>
 							))}
@@ -476,7 +476,7 @@ const TherapistDetail = () => {
 				{therapist.bio && (
 					<div className="mb-6 pt-8 border-t border-gray-700/50">
 						<h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
-							<FileText className="w-5 h-5 mr-2 text-purple-400" />
+							<FileText className="w-5 h-5 mr-2 text-primary-400" />
 							Bio
 						</h3>
 						<div className="bg-gray-700/30 rounded-xl p-6 border border-gray-600/30">
@@ -541,8 +541,8 @@ const TherapistDetail = () => {
 							</div>
 						</div>
 						<div className="flex items-center space-x-4 p-4 bg-gray-700/30 rounded-xl border border-gray-600/30">
-							<div className="w-10 h-10 bg-pink-500/20 rounded-xl flex items-center justify-center">
-								<UserCheck className="w-5 h-5 text-pink-400" />
+							<div className="w-10 h-10 bg-primary-500/20 rounded-xl flex items-center justify-center">
+								<UserCheck className="w-5 h-5 text-primary-400" />
 							</div>
 							<div>
 								<p className="text-sm text-gray-400">Gender</p>
@@ -556,7 +556,7 @@ const TherapistDetail = () => {
 				{therapist.membership && therapist.membership.length > 0 && (
 					<div className="pt-8 border-t border-gray-700/50">
 						<h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
-							<CreditCard className="w-5 h-5 mr-2 text-purple-400" />
+							<CreditCard className="w-5 h-5 mr-2 text-primary-400" />
 							Membership
 						</h3>
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

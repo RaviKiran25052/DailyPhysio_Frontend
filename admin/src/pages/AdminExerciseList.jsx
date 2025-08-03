@@ -12,7 +12,7 @@ import Pagination from '../components/Pagination';
 import { FaPlus } from 'react-icons/fa';
 import HandleExercise from '../components/Exercises/HandleExercise';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5500/dailyphysio';
 
 const AdminExerciseList = () => {
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ const AdminExerciseList = () => {
       : null;
 
     if (!loggedInAdmin) {
-      navigate('/admin/login');
+      navigate('/login');
       return;
     }
 
@@ -253,7 +253,7 @@ const AdminExerciseList = () => {
               <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
               <button
                 onClick={handleAddExercise}
-                className="flex items-center justify-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                className="flex items-center justify-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
               >
                 <FaPlus className="mr-2" />
                 Add Exercise
@@ -269,7 +269,7 @@ const AdminExerciseList = () => {
 
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
             </div>
           ) : (
             <>

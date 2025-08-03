@@ -15,8 +15,8 @@ const ExerciseTabs = ({ activeTab, onTabChange, counts }) => {
 						key={tab.id}
 						onClick={() => onTabChange(tab.id)}
 						className={`py-3 px-4 text-lg font-medium border-b-2 ${activeTab === tab.id
-								? 'border-purple-500 text-purple-400'
-								: 'border-transparent text-gray-400 hover:text-purple-300 hover:border-gray-600'
+								? 'border-primary-500 text-primary-400'
+								: 'border-transparent text-gray-400 hover:text-primary-300 hover:border-gray-600'
 							}`}
 					>
 						{tab.label} ({tab.count})

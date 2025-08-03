@@ -12,7 +12,7 @@ const SearchBar = ({ searchTerm, onSearchChange }) => {
 				placeholder="Search by name, category, position..."
 				value={searchTerm}
 				onChange={(e) => onSearchChange(e.target.value)}
-				className="pl-10 pr-4 py-2 w-full rounded-md bg-gray-800 border border-gray-700 text-purple-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+				className="pl-10 pr-4 py-2 w-full rounded-md bg-gray-800 border border-gray-700 text-primary-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
 			/>
 		</div>
 	);

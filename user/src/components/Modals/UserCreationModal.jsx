@@ -61,7 +61,7 @@ const UserCreationModal = ({ isOpen, onClose, formData, handleInputChange, onCon
 								name="name"
 								value={formData.name}
 								onChange={handleInputChange}
-								className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
+								className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
 								autoComplete="name"
 							/>
 						</div>
@@ -73,7 +73,7 @@ const UserCreationModal = ({ isOpen, onClose, formData, handleInputChange, onCon
 								name="email"
 								value={formData.email}
 								onChange={handleInputChange}
-								className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
+								className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
 								autoComplete="email"
 							/>
 						</div>
@@ -86,7 +86,7 @@ const UserCreationModal = ({ isOpen, onClose, formData, handleInputChange, onCon
 									name="password"
 									value={formData.password}
 									onChange={handleInputChange}
-									className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors pr-10"
+									className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors pr-10"
 									autoComplete="new-password"
 								/>
 								<button
@@ -108,7 +108,7 @@ const UserCreationModal = ({ isOpen, onClose, formData, handleInputChange, onCon
 									name="confirmPassword"
 									value={formData.confirmPassword}
 									onChange={handleInputChange}
-									className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors pr-10"
+									className="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors pr-10"
 									autoComplete="new-password"
 								/>
 								<button
@@ -131,7 +131,7 @@ const UserCreationModal = ({ isOpen, onClose, formData, handleInputChange, onCon
 							</button>
 							<button
 								onClick={onContinue}
-								className="flex-1 px-4 py-2.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500"
+								className="flex-1 px-4 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500"
 							>
 								Continue
 							</button>

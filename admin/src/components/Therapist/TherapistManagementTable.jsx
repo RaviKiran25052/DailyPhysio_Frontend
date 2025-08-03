@@ -7,7 +7,7 @@ export default function TherapistManagementTable({ therapists, onUpdate, onBack 
 			<div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6">
 				<button
 					onClick={onBack}
-					className="flex items-center px-4 py-2 mb-4 sm:mb-0 border border-transparent rounded-md shadow-sm text-sm font-medium text-purple-400 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+					className="flex items-center px-4 py-2 mb-4 sm:mb-0 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-400 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 				>
 					<FaArrowLeft className="mr-2" />
 					Go Back
@@ -19,13 +19,13 @@ export default function TherapistManagementTable({ therapists, onUpdate, onBack 
 					<table className="min-w-full divide-y divide-gray-700">
 						<thead className="bg-gray-900/50">
 							<tr>
-								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Name</th>
-								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Email</th>
-								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Hospital/Clinic</th>
-								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Phone Number</th>
-								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Specialization</th>
-								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Experience</th>
-								<th className="px-6 py-4 text-sm font-semibold text-purple-300">Status</th>
+								<th className="px-6 py-4 text-sm font-semibold text-primary-300">Name</th>
+								<th className="px-6 py-4 text-sm font-semibold text-primary-300">Email</th>
+								<th className="px-6 py-4 text-sm font-semibold text-primary-300">Hospital/Clinic</th>
+								<th className="px-6 py-4 text-sm font-semibold text-primary-300">Phone Number</th>
+								<th className="px-6 py-4 text-sm font-semibold text-primary-300">Specialization</th>
+								<th className="px-6 py-4 text-sm font-semibold text-primary-300">Experience</th>
+								<th className="px-6 py-4 text-sm font-semibold text-primary-300">Status</th>
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-gray-700">
@@ -56,7 +56,7 @@ export default function TherapistManagementTable({ therapists, onUpdate, onBack 
 										<div className="flex space-x-2">
 											<button
 												onClick={() => onUpdate(therapist._id, 'active')}
-												className="px-3 py-1 inline-flex items-center text-xs leading-5 font-medium rounded-md bg-purple-600 hover:bg-purple-500 text-white transition duration-150 shadow-sm"
+												className="px-3 py-1 inline-flex items-center text-xs leading-5 font-medium rounded-md bg-primary-600 hover:bg-primary-500 text-white transition duration-150 shadow-sm"
 											>
 												<FaCheck className="mr-1" />
 												Approve

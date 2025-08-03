@@ -5,7 +5,7 @@ import { FaUserDoctor } from "react-icons/fa6";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5500/dailyphysio';
 
 const UserManagement = () => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const UserManagement = () => {
         : null;
 
     if (!loggedInAdmin) {
-      navigate('/admin/login');
+      navigate('/login');
       return;
     }
     fetchUsers(loggedInAdmin.token);
@@ -148,7 +148,7 @@ const UserManagement = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('adminInfo');
-    navigate('/admin/login');
+    navigate('/login');
   };
 
   // Calculate days remaining for premium users
@@ -157,7 +157,7 @@ const UserManagement = () => {
 
     if (!currentMembership || !currentMembership.paymentDate) return 'N/A';
 
-    const paymentDate = new Date(currentMembership.paymentDate);    
+    const paymentDate = new Date(currentMembership.paymentDate);
     const currentDate = new Date();
     const diffTime = Math.abs(currentDate - paymentDate);
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
@@ -217,7 +217,7 @@ const UserManagement = () => {
             placeholder="Search by name or email..."
             value={searchTerm}
             onChange={handleSearch}
-            className="pl-10 pr-4 py-2 w-full rounded-md bg-gray-800 border border-gray-700 text-purple-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            className="pl-10 pr-4 py-2 w-full rounded-md bg-gray-800 border border-gray-700 text-primary-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           />
         </div>
       </div>
@@ -228,13 +228,13 @@ const UserManagement = () => {
           <button
             onClick={() => handleTabChange('users')}
             className={`${activeTab === 'users'
-              ? 'border-purple-500 text-purple-500'
+              ? 'border-primary-500 text-primary-500'
               : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
               } whitespace-nowrap py-3 px-1 border-b-2 font-medium flex items-center`}
           >
             <FaUsers className="mr-2" />
             Regular Users
-            <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === 'users' ? 'bg-purple-900 text-purple-300' : 'bg-gray-800 text-gray-300'
+            <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === 'users' ? 'bg-primary-900 text-primary-300' : 'bg-gray-800 text-gray-300'
               }`}>
               {regularUsers.length}
             </span>
@@ -243,13 +243,13 @@ const UserManagement = () => {
           <button
             onClick={() => handleTabChange('premium')}
             className={`${activeTab === 'premium'
-              ? 'border-purple-500 text-purple-500'
+              ? 'border-primary-500 text-primary-500'
               : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
               } whitespace-nowrap py-3 px-1 border-b-2 font-medium flex items-center`}
           >
             <FaCrown className="mr-2" />
             Premium Users
-            <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === 'premium' ? 'bg-purple-900 text-purple-300' : 'bg-gray-800 text-gray-300'
+            <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === 'premium' ? 'bg-primary-900 text-primary-300' : 'bg-gray-800 text-gray-300'
               }`}>
               {premiumUsers.length}
             </span>
@@ -258,13 +258,13 @@ const UserManagement = () => {
           <button
             onClick={() => handleTabChange('therapist')}
             className={`${activeTab === 'therapist'
-              ? 'border-purple-500 text-purple-500'
+              ? 'border-primary-500 text-primary-500'
               : 'border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300'
               } whitespace-nowrap py-3 px-1 border-b-2 font-medium flex items-center`}
           >
             <FaUserDoctor className="mr-2" />
             Therapist Users
-            <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === 'therapist' ? 'bg-purple-900 text-purple-300' : 'bg-gray-800 text-gray-300'
+            <span className={`ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium ${activeTab === 'therapist' ? 'bg-primary-900 text-primary-300' : 'bg-gray-800 text-gray-300'
               }`}>
               {therapistUsers.length}
             </span>
@@ -274,7 +274,7 @@ const UserManagement = () => {
 
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
         </div>
       ) : (
         <div className="overflow-x-auto">
@@ -284,16 +284,16 @@ const UserManagement = () => {
               <table className="min-w-full divide-y divide-gray-700 bg-gray-800 rounded-lg overflow-hidden shadow-lg">
                 <thead>
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       S.No
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Name
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Email
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Created On
                     </th>
                   </tr>
@@ -302,7 +302,7 @@ const UserManagement = () => {
                   {currentRegularUsers.length > 0 ? (
                     currentRegularUsers.map((user, index) => (
                       <tr key={user._id} className="hover:bg-gray-700">
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-primary-300">
                           {indexOfFirstUser + index + 1}
                         </td>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-white">
@@ -335,8 +335,8 @@ const UserManagement = () => {
                         key={index}
                         onClick={() => paginate(index + 1)}
                         className={`px-3 py-1 rounded-md ${currentPage === index + 1
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-800 text-purple-400 hover:bg-gray-700'
+                          ? 'bg-primary-600 text-white'
+                          : 'bg-gray-800 text-primary-400 hover:bg-gray-700'
                           }`}
                       >
                         {index + 1}
@@ -354,22 +354,22 @@ const UserManagement = () => {
               <table className="min-w-full divide-y divide-gray-700 bg-gray-800 rounded-lg overflow-hidden shadow-lg">
                 <thead>
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       S.No
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Name
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Plan Type
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Payment Date
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Days Remaining
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Status
                     </th>
                   </tr>
@@ -380,13 +380,13 @@ const UserManagement = () => {
                       const currentMembership = getCurrentMembership(user);
                       return (
                         <tr key={user._id} className="hover:bg-gray-700">
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-primary-300">
                             {indexOfFirstUser + index + 1}
                           </td>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-white">
                             {user.fullName}
                           </td>
-                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
+                          <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-primary-300">
                             <span className="px-2 py-1 text-sm text-black bg-yellow-600 rounded-full">
                               {currentMembership?.type === 'monthly' ? 'Monthly' : 'Yearly'}
                             </span>
@@ -399,8 +399,8 @@ const UserManagement = () => {
                           </td>
                           <td className="px-6 py-4 text-center whitespace-nowrap text-sm">
                             <span className={`px-2 py-1 text-xs rounded-full ${currentMembership?.status === 'active'
-                                ? 'bg-green-900 text-green-300'
-                                : 'bg-red-900 text-red-300'
+                              ? 'bg-green-900 text-green-300'
+                              : 'bg-red-900 text-red-300'
                               }`}>
                               {currentMembership?.status || 'Unknown'}
                             </span>
@@ -427,8 +427,8 @@ const UserManagement = () => {
                         key={index}
                         onClick={() => paginate(index + 1)}
                         className={`px-3 py-1 rounded-md ${currentPage === index + 1
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-800 text-purple-400 hover:bg-gray-700'
+                          ? 'bg-primary-600 text-white'
+                          : 'bg-gray-800 text-primary-400 hover:bg-gray-700'
                           }`}
                       >
                         {index + 1}
@@ -446,19 +446,19 @@ const UserManagement = () => {
               <table className="min-w-full divide-y divide-gray-700 bg-gray-800 rounded-lg overflow-hidden shadow-lg">
                 <thead>
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       S.No
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Name
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Email
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Created By
                     </th>
-                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-purple-400 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-center text-xs font-medium text-primary-400 uppercase tracking-wider">
                       Created on
                     </th>
                   </tr>
@@ -467,13 +467,13 @@ const UserManagement = () => {
                   {currentTherapistUsers.length > 0 ? (
                     currentTherapistUsers.map((user, index) => (
                       <tr key={user._id} className="hover:bg-gray-700">
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-primary-300">
                           {indexOfFirstUser + index + 1}
                         </td>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-white">
                           {user.fullName}
                         </td>
-                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-purple-300">
+                        <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-primary-300">
                           {user.email}
                         </td>
                         <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-300">
@@ -503,8 +503,8 @@ const UserManagement = () => {
                         key={index}
                         onClick={() => paginate(index + 1)}
                         className={`px-3 py-1 rounded-md ${currentPage === index + 1
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-800 text-purple-400 hover:bg-gray-700'
+                          ? 'bg-primary-600 text-white'
+                          : 'bg-gray-800 text-primary-400 hover:bg-gray-700'
                           }`}
                       >
                         {index + 1}

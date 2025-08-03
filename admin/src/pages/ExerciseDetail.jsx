@@ -34,7 +34,7 @@ const ExerciseDetail = ({ exercise, onEdit, onDelete, onBack }) => {
 				<div className="flex justify-between items-center">
 					<button
 						onClick={onBack}
-						className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-purple-400 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+						className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-400 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 					>
 						<FaArrowLeft className="mr-2" />
 						Back to List
@@ -43,7 +43,7 @@ const ExerciseDetail = ({ exercise, onEdit, onDelete, onBack }) => {
 					<div className="flex space-x-3">
 						<button
 							onClick={() => onEdit(exercise)}
-							className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+							className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
 						>
 							Edit
 						</button>
@@ -62,28 +62,28 @@ const ExerciseDetail = ({ exercise, onEdit, onDelete, onBack }) => {
 				{/* Left Column - Text Information */}
 				<div className="space-y-6">
 					<div>
-						<h2 className="text-2xl font-bold text-purple-400 mb-2 flex items-center gap-4">
+						<h2 className="text-2xl font-bold text-primary-400 mb-2 flex items-center gap-4">
 							<p>{exercise.title}</p>
 							{exercise.isPremium &&
 								<div className='bg-yellow-500 rounded-md z-10 p-1'>
 									<Crown size={16} className='text-gray-800' />
 								</div>
 							}
-							{exercise.custom.createdBy !== "admin"  && (
+							{exercise.custom.createdBy !== "admin" && (
 								<span className="border-2 border-blue-600 text-blue-500 px-3 py-1 rounded-full text-xs font-thin">
 									Custom
 								</span>
 							)}
 						</h2>
-						<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-300 to-transparent"></div>
+						<div className="h-px mb-2 bg-gradient-to-r from-transparent via-primary-300 to-transparent"></div>
 
 						<div className="flex justify-between gap-1 my-3">
 							<div className='flex gap-1'>
-								<span className="bg-purple-900 text-purple-300 px-3 py-1 rounded-full text-sm">{exercise.category}</span>
+								<span className="bg-primary-900 text-primary-300 px-3 py-1 rounded-full text-sm">{exercise.category}</span>
 								<span className='text-white text-lg font-thin'>/</span>
-								<span className="text-purple-300 py-1 rounded-full text-sm">{exercise.subCategory}</span>
+								<span className="text-primary-300 py-1 rounded-full text-sm">{exercise.subCategory}</span>
 							</div>
-							<span className="bg-gray-700 text-purple-300 px-3 py-1 rounded-full text-sm">
+							<span className="bg-gray-700 text-primary-300 px-3 py-1 rounded-full text-sm">
 								Position: {exercise.position}
 							</span>
 						</div>
@@ -92,35 +92,35 @@ const ExerciseDetail = ({ exercise, onEdit, onDelete, onBack }) => {
 					</div>
 
 					<div className="bg-gray-700 rounded-lg p-4">
-						<h3 className="text-lg font-semibold text-purple-300 mb-3">Instructions</h3>
+						<h3 className="text-lg font-semibold text-primary-300 mb-3">Instructions</h3>
 						<p className="text-gray-300">{exercise.instruction}</p>
 					</div>
 
 					<div className="grid grid-cols-2 gap-4">
 						<div className="bg-gray-700 rounded-lg p-4 flex flex-col items-center">
-							<FaDumbbell className="text-purple-400 text-xl mb-2" />
-							<h4 className="text-sm font-medium text-purple-300">Sets</h4>
+							<FaDumbbell className="text-primary-400 text-xl mb-2" />
+							<h4 className="text-sm font-medium text-primary-300">Sets</h4>
 							<p className="text-xl font-bold text-white">{exercise.set}</p>
 						</div>
 						<div className="bg-gray-700 rounded-lg p-4 flex flex-col items-center">
-							<FaDumbbell className="text-purple-400 text-xl mb-2" />
-							<h4 className="text-sm font-medium text-purple-300">Reps</h4>
+							<FaDumbbell className="text-primary-400 text-xl mb-2" />
+							<h4 className="text-sm font-medium text-primary-300">Reps</h4>
 							<p className="text-xl font-bold text-white">{exercise.reps}</p>
 						</div>
 						<div className="bg-gray-700 rounded-lg p-4 flex flex-col items-center">
-							<FaClock className="text-purple-400 text-xl mb-2" />
-							<h4 className="text-sm font-medium text-purple-300">Hold (sec)</h4>
+							<FaClock className="text-primary-400 text-xl mb-2" />
+							<h4 className="text-sm font-medium text-primary-300">Hold (sec)</h4>
 							<p className="text-xl font-bold text-white">{exercise.hold}</p>
 						</div>
 						<div className="bg-gray-700 rounded-lg p-4 flex flex-col items-center">
-							<FaClock className="text-purple-400 text-xl mb-2" />
-							<h4 className="text-sm font-medium text-purple-300">Perform</h4>
+							<FaClock className="text-primary-400 text-xl mb-2" />
+							<h4 className="text-sm font-medium text-primary-300">Perform</h4>
 							<p className="text-xl font-bold text-white">{exercise.perform.count} {exercise.perform.type}</p>
 						</div>
 					</div>
 
 					<div className="bg-gray-700 rounded-lg p-4">
-						<h4 className="text-sm font-medium text-purple-400 mb-3">Exercise Stats</h4>
+						<h4 className="text-sm font-medium text-primary-400 mb-3">Exercise Stats</h4>
 						<div className="grid grid-cols-2 gap-4">
 							<div className="flex items-center">
 								<FaEye className="text-gray-400 mr-2" />
@@ -140,7 +140,7 @@ const ExerciseDetail = ({ exercise, onEdit, onDelete, onBack }) => {
 					</div>
 
 					<div className="bg-gray-700 rounded-lg p-4">
-						<h4 className="text-sm font-medium text-purple-400 mb-3">Additional Information</h4>
+						<h4 className="text-sm font-medium text-primary-400 mb-3">Additional Information</h4>
 						<div className="space-y-2 flex justify-between">
 							<div className="flex items-center">
 								<FaCalendarAlt className="text-gray-400 mr-2" />
@@ -170,7 +170,7 @@ const ExerciseDetail = ({ exercise, onEdit, onDelete, onBack }) => {
 				<div className="space-y-6">
 					{exercise.image && exercise.image.length > 0 && (
 						<div className="bg-gray-700 rounded-lg p-4">
-							<h4 className="text-sm font-medium text-purple-400 mb-3">Exercise Images</h4>
+							<h4 className="text-sm font-medium text-primary-400 mb-3">Exercise Images</h4>
 							<div className="relative">
 								<img
 									src={exercise.image[currentImageIndex]}
@@ -195,7 +195,7 @@ const ExerciseDetail = ({ exercise, onEdit, onDelete, onBack }) => {
 											{exercise.image.map((_, index) => (
 												<button
 													key={index}
-													className={`w-2 h-2 rounded-full ${index === currentImageIndex ? 'bg-purple-500' : 'bg-gray-500'
+													className={`w-2 h-2 rounded-full ${index === currentImageIndex ? 'bg-primary-500' : 'bg-gray-500'
 														}`}
 													onClick={() => setCurrentImageIndex(index)}
 												/>
@@ -209,7 +209,7 @@ const ExerciseDetail = ({ exercise, onEdit, onDelete, onBack }) => {
 
 					{exercise.video && (
 						<div className="bg-gray-700 rounded-lg p-4">
-							<h4 className="text-sm font-medium text-purple-400 mb-3">Exercise Video</h4>
+							<h4 className="text-sm font-medium text-primary-400 mb-3">Exercise Video</h4>
 							<video
 								src={exercise.video}
 								controls

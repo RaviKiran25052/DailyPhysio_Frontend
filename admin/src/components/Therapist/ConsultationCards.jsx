@@ -22,7 +22,7 @@ const ConsultationCards = ({ consultations }) => {
 			{consultations.map((consultation) => (
 				<div
 					key={consultation._id}
-					className="bg-gray-800 rounded-xl border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
+					className="bg-gray-800 rounded-xl border border-gray-700 hover:border-primary-500 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer"
 					onClick={() => showConsultation(consultation)}
 				>
 					<div className="p-6">
@@ -50,7 +50,7 @@ const ConsultationCards = ({ consultations }) => {
 
 						{/* Date Info */}
 						<div className="flex items-center space-x-3 mb-4">
-							<RiCalendarLine className="text-purple-500" size={20} />
+							<RiCalendarLine className="text-primary-500" size={20} />
 							<div>
 								<div className="text-sm text-gray-400">Created</div>
 								<div className="font-medium">{new Date(consultation.createdAt).toLocaleDateString()}</div>
@@ -59,7 +59,7 @@ const ConsultationCards = ({ consultations }) => {
 
 						{/* Exercise Count */}
 						<div className="flex items-center space-x-3 mb-4">
-							<RiRunLine className="text-purple-500" size={20} />
+							<RiRunLine className="text-primary-500" size={20} />
 							<div>
 								<div className="text-sm text-gray-400">Exercises</div>
 								<div className="font-medium">{consultation.recommendedExercises.length} assigned</div>

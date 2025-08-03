@@ -26,7 +26,7 @@ const ExerciseCard = ({ exercise, onTypeChange, onDelete }) => {
 			<div className="p-4">
 				<div className="flex justify-between items-start mb-3 ">
 					<h3
-						className="font-medium flex gap-2 text-white hover:text-purple-300 cursor-pointer transition text-lg"
+						className="font-medium flex gap-2 text-white hover:text-primary-300 cursor-pointer transition text-lg"
 						onClick={() => navigate(`/exercise/${exercise._id}`)}>
 						{exercise.title}<SquareArrowOutUpRight size={14} />
 					</h3>
@@ -52,7 +52,7 @@ const ExerciseCard = ({ exercise, onTypeChange, onDelete }) => {
 					<div className="flex space-x-2">
 						<button
 							onClick={() => onTypeChange(exercise)}
-							className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs rounded transition flex items-center"
+							className="px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white text-xs rounded transition flex items-center"
 						>
 							{exercise.custom.type === 'public' ? (
 								<>
@@ -68,7 +68,7 @@ const ExerciseCard = ({ exercise, onTypeChange, onDelete }) => {
 						</button>
 						<button
 							onClick={() => onDelete(exercise)}
-							className="px-3 py-1 border-2 border-purple-500 hover:text-red-300 hover:border-red-500 text-white text-xs rounded transition flex items-center"
+							className="px-3 py-1 border-2 border-primary-500 hover:text-red-300 hover:border-red-500 text-white text-xs rounded transition flex items-center"
 						>
 							<Trash2 size={12} className="mr-1" />
 							Delete

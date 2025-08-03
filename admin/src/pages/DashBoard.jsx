@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell, ResponsiveContainer, Legend } from 'recharts';
 
-const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5500/dailyphysio';
 
 const DashBoard = () => {
 	const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ const DashBoard = () => {
 
 	const handleLogout = () => {
 		localStorage.clear();
-		navigate('/admin/login');
+		navigate('/login');
 	};
 
 	useEffect(() => {
@@ -58,7 +58,7 @@ const DashBoard = () => {
 			: null;
 
 		if (!loggedInAdmin) {
-			navigate('/admin/login');
+			navigate('/login');
 			return;
 		}
 
@@ -127,24 +127,24 @@ const DashBoard = () => {
 		.map(([name, value]) => ({ name, value }))
 		.filter(item => item.value > 0);
 
-	// Purple color variants for the charts
-	const purpleColors = [
-		'rgb(233, 213, 255)', // purple-100
-		'rgb(221, 189, 255)', // purple-200
-		'rgb(196, 149, 253)', // purple-300
-		'rgb(168, 101, 245)', // purple-400
-		'rgb(147, 64, 236)', // purple-500
-		'rgb(128, 38, 219)', // purple-600
-		'rgb(109, 24, 192)', // purple-700
-		'rgb(88, 17, 158)', // purple-800
-		'rgb(73, 13, 130)', // purple-900
+	// primary color variants for the charts
+	const tealColors = [
+		'rgb(224, 250, 248)', // lightest (approx primary-100)
+		'rgb(178, 240, 235)', // primary-200
+		'rgb(128, 220, 215)', // primary-300
+		'rgb(64, 190, 185)',  // primary-400
+		'rgb(0, 148, 144)',   // primary-500
+		'rgb(0, 128, 125)',   // primary-600
+		'rgb(0, 108, 105)',   // primary-700
+		'rgb(0, 90, 88)',     // primary-800
+		'rgb(0, 75, 74)',     // primary-900
 	];
 
 	// Custom Recharts Tooltip component
 	const CustomTooltip = ({ active, payload }) => {
 		if (active && payload && payload.length) {
 			return (
-				<div className="bg-gray-800 text-white p-2 rounded-md border border-purple-500 shadow-lg">
+				<div className="bg-gray-800 text-white p-2 rounded-md border border-primary-500 shadow-lg">
 					<p className="text-sm font-medium">{`${payload[0].name}: ${payload[0].value}`}</p>
 				</div>
 			);
@@ -153,17 +153,17 @@ const DashBoard = () => {
 	};
 
 	// Function to get gradient colors for each dataset
-	// This creates a visual distinction between charts without modifying purpleColors
+	// This creates a visual distinction between charts without modifying tealColors
 	const getChartColors = (dataIndex) => {
 		switch (dataIndex) {
-			case 0: // Lighter purples for User membership
-				return [purpleColors[1], purpleColors[3], purpleColors[5]];
-			case 1: // Medium purples for Exercises by Creator
-				return [purpleColors[2], purpleColors[4], purpleColors[6]];
-			case 2: // Darker purples for Therapist Status
-				return [purpleColors[4], purpleColors[6], purpleColors[8]];
+			case 0: // Lighter primarys for User membership
+				return [tealColors[1], tealColors[3], tealColors[5]];
+			case 1: // Medium primarys for Exercises by Creator
+				return [tealColors[2], tealColors[4], tealColors[6]];
+			case 2: // Darker primarys for Therapist Status
+				return [tealColors[4], tealColors[6], tealColors[8]];
 			default:
-				return purpleColors;
+				return tealColors;
 		}
 	};
 
@@ -171,12 +171,12 @@ const DashBoard = () => {
 		const chartColors = getChartColors(index);
 
 		return (
-			<div className="bg-gradient-to-br from-gray-900 to-purple-900 rounded-xl shadow-lg p-5 border border-purple-600/50 transition-all duration-300 hover:shadow-xl hover:border-purple-500">
+			<div className="bg-gradient-to-br from-gray-900 to-primary-900 rounded-xl shadow-lg p-5 border border-primary-600/50 transition-all duration-300 hover:shadow-xl hover:border-primary-500">
 				<div className="flex items-center justify-center mb-3">
-					<div className="p-2 bg-purple-700/30 rounded-lg mr-2">
+					<div className="p-2 bg-primary-700/30 rounded-lg mr-2">
 						{icon}
 					</div>
-					<h3 className="text-lg font-semibold text-purple-200">{title}</h3>
+					<h3 className="text-lg font-semibold text-primary-200">{title}</h3>
 				</div>
 				<div className="bg-gray-800/40 rounded-lg p-3 backdrop-blur-sm">
 					<div className="h-64">
@@ -202,7 +202,7 @@ const DashBoard = () => {
 								</Pie>
 								<Tooltip content={<CustomTooltip />} />
 								<Legend
-									formatter={(value) => <span className="text-purple-200 text-sm">{value}</span>}
+									formatter={(value) => <span className="text-primary-200 text-sm">{value}</span>}
 									wrapperStyle={{ paddingTop: "8px" }}
 								/>
 							</PieChart>
@@ -214,19 +214,19 @@ const DashBoard = () => {
 	};
 
 	const userIcon = (
-		<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 			<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
 		</svg>
 	);
 
 	const exerciseIcon = (
-		<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 			<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
 		</svg>
 	);
 
 	const therapistIcon = (
-		<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 			<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
 		</svg>
 	);
@@ -235,102 +235,102 @@ const DashBoard = () => {
 		<>
 			{loading ?
 				<div className="flex justify-center items-center h-64">
-					<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+					<div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
 				</div>
 				:
 				<div className="bg-gray-900 text-white px-6">
 					{/* SECTION 1: INFO CARDS */}
-					<h2 className="text-2xl font-bold mb-6 text-purple-100 border-b border-purple-500 pb-2">
+					<h2 className="text-2xl font-bold mb-6 text-primary-100 border-b border-primary-500 pb-2">
 						Overview Stats
 					</h2>
 					<div className="grid grid-cols-4 gap-6 mb-8">
 						{/* Card 1: User Counts */}
-						<div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl shadow-lg p-4 border border-purple-700/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-purple-500">
+						<div className="bg-gradient-to-br from-primary-900 to-primary-800 rounded-xl shadow-lg p-4 border border-primary-700/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-primary-500">
 							<div className="flex items-center mb-3">
-								<div className="p-2 bg-purple-700/30 rounded-lg mr-3">
-									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<div className="p-2 bg-primary-700/30 rounded-lg mr-3">
+									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
 									</svg>
 								</div>
-								<h3 className="text-lg font-semibold text-purple-200">User Types</h3>
+								<h3 className="text-lg font-semibold text-primary-200">User Types</h3>
 							</div>
-							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-300 to-transparent"></div>
+							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-primary-300 to-transparent"></div>
 							<div className="space-y-1">
 								<div className="flex justify-between items-center">
-									<p className="text-sm text-purple-300 font-medium">Regular Users</p>
+									<p className="text-sm text-primary-300 font-medium">Regular Users</p>
 									<p className="text-2xl font-bold text-white">{analyticsData?.users?.regularUsersCount}</p>
 								</div>
 								<div className="flex justify-between items-center">
-									<p className="text-sm text-purple-300 font-medium">Pro Users</p>
+									<p className="text-sm text-primary-300 font-medium">Pro Users</p>
 									<p className="text-2xl font-bold text-white">{analyticsData?.users?.proUsersCount}</p>
 								</div>
 							</div>
 						</div>
 
 						{/* Card 2: User Creation Sources */}
-						<div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl shadow-lg p-4 border border-purple-600/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-purple-400">
+						<div className="bg-gradient-to-br from-primary-900 to-primary-800 rounded-xl shadow-lg p-4 border border-primary-600/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-primary-400">
 							<div className="flex items-center mb-3">
-								<div className="p-2 bg-purple-600/30 rounded-lg mr-3">
-									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<div className="p-2 bg-primary-600/30 rounded-lg mr-3">
+									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
 									</svg>
 								</div>
-								<h3 className="text-lg font-semibold text-purple-200">User Sources</h3>
+								<h3 className="text-lg font-semibold text-primary-200">User Sources</h3>
 							</div>
-							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-300 to-transparent"></div>
+							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-primary-300 to-transparent"></div>
 							<div className="space-y-1">
 								<div className="flex justify-between items-center">
-									<p className="text-sm text-purple-200 font-medium">Users Registered</p>
+									<p className="text-sm text-primary-200 font-medium">Users Registered</p>
 									<p className="text-2xl font-bold text-white">{analyticsData?.users?.regularUsersCount + analyticsData?.users?.proUsersCount - analyticsData?.users?.therapistCreatedUsersCount}</p>
 								</div>
 								<div className="flex justify-between items-center">
-									<p className="text-sm text-purple-200 font-medium">Therapist Created</p>
+									<p className="text-sm text-primary-200 font-medium">Therapist Created</p>
 									<p className="text-2xl font-bold text-white">{analyticsData?.users?.therapistCreatedUsersCount}</p>
 								</div>
 							</div>
 						</div>
 
 						{/* Card 3: Exercise Types */}
-						<div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl shadow-lg p-4 border border-purple-500/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-purple-300">
+						<div className="bg-gradient-to-br from-primary-900 to-primary-800 rounded-xl shadow-lg p-4 border border-primary-500/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-primary-300">
 							<div className="flex items-center mb-3">
-								<div className="p-2 bg-purple-500/30 rounded-lg mr-3">
-									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<div className="p-2 bg-primary-500/30 rounded-lg mr-3">
+									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
 									</svg>
 								</div>
-								<h3 className="text-lg font-semibold text-purple-100">Exercise Types</h3>
+								<h3 className="text-lg font-semibold text-primary-100">Exercise Types</h3>
 							</div>
-							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-300 to-transparent"></div>
+							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-primary-300 to-transparent"></div>
 							<div className="space-y-1">
 								<div className="flex justify-between items-center">
-									<p className="text-sm text-purple-100 font-medium">Free Exercises</p>
+									<p className="text-sm text-primary-100 font-medium">Free Exercises</p>
 									<p className="text-2xl font-bold text-white">{analyticsData?.exercises?.freeCount}</p>
 								</div>
 								<div className="flex justify-between items-center">
-									<p className="text-sm text-purple-100 font-medium">Premium Exercises</p>
+									<p className="text-sm text-primary-100 font-medium">Premium Exercises</p>
 									<p className="text-2xl font-bold text-white">{analyticsData?.exercises?.premiumCount}</p>
 								</div>
 							</div>
 						</div>
 
 						{/* Card 4: Active Therapists */}
-						<div className="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl shadow-lg p-4 border border-purple-400/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-purple-200">
+						<div className="bg-gradient-to-br from-primary-900 to-primary-800 rounded-xl shadow-lg p-4 border border-primary-400/50 transition-all duration-300 hover:shadow-xl hover:scale-102 hover:border-primary-200">
 							<div className="flex items-center mb-3">
-								<div className="p-2 bg-purple-400/30 rounded-lg mr-3">
-									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<div className="p-2 bg-primary-400/30 rounded-lg mr-3">
+									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
 									</svg>
 								</div>
-								<h3 className="text-lg font-semibold text-purple-50">Therapists</h3>
+								<h3 className="text-lg font-semibold text-primary-50">Therapists</h3>
 							</div>
-							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-purple-300 to-transparent"></div>
+							<div className="h-px mb-2 bg-gradient-to-r from-transparent via-primary-300 to-transparent"></div>
 							<div className="space-y-1">
 								<div className="flex justify-between items-center">
-									<p className="text-sm text-purple-100 font-medium">Active Therapists</p>
+									<p className="text-sm text-primary-100 font-medium">Active Therapists</p>
 									<p className="text-2xl font-bold text-white">{analyticsData?.therapists?.statusCounts?.active}</p>
 								</div>
 								<div className="flex justify-between items-center">
-									<p className="text-sm text-purple-100 font-medium">Total Therapists</p>
+									<p className="text-sm text-primary-100 font-medium">Total Therapists</p>
 									<p className="text-2xl font-bold text-white">{analyticsData?.therapists?.statusCounts?.total}</p>
 								</div>
 							</div>
@@ -338,8 +338,8 @@ const DashBoard = () => {
 					</div>
 
 					{/* SECTION 2: DOUGHNUT CHARTS */}
-					<h2 className="text-2xl font-bold mb-6 text-purple-100 border-b border-purple-500 pb-2 flex items-center">
-						<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<h2 className="text-2xl font-bold mb-6 text-primary-100 border-b border-primary-500 pb-2 flex items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
 						</svg>
 						Distribution Analysis
@@ -351,22 +351,22 @@ const DashBoard = () => {
 					</div>
 
 					{/* SECTION 3: BAR CHARTS */}
-					<h2 className="text-2xl font-bold mb-6 text-purple-100 border-b border-purple-500 pb-2 flex items-center">
-						<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<h2 className="text-2xl font-bold mb-6 text-primary-100 border-b border-primary-500 pb-2 flex items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
 						</svg>
 						Detailed Breakdowns
 					</h2>
 					<div className="space-y-8">
 						{/* Bar Chart 1: Exercise Categories */}
-						<div className="bg-gradient-to-br from-gray-900 to-purple-900 rounded-xl shadow-lg p-5 border border-purple-600/50 transition-all duration-300 hover:shadow-xl hover:border-purple-500">
+						<div className="bg-gradient-to-br from-gray-900 to-primary-900 rounded-xl shadow-lg p-5 border border-primary-600/50 transition-all duration-300 hover:shadow-xl hover:border-primary-500">
 							<div className="flex items-center mb-4">
-								<div className="p-2 bg-purple-700/30 rounded-lg mr-3">
-									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<div className="p-2 bg-primary-700/30 rounded-lg mr-3">
+									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
 									</svg>
 								</div>
-								<h3 className="text-lg font-semibold text-purple-200">Exercise Categories</h3>
+								<h3 className="text-lg font-semibold text-primary-200">Exercise Categories</h3>
 							</div>
 							<div className="bg-gray-800/40 rounded-lg p-4 backdrop-blur-sm">
 								<div className="h-64">
@@ -376,7 +376,7 @@ const DashBoard = () => {
 											margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
 										>
 											<defs>
-												{purpleColors.map((color, index) => (
+												{tealColors.map((color, index) => (
 													<linearGradient key={`gradient-${index}`} id={`colorGradient${index}`} x1="0" y1="0" x2="0" y2="1">
 														<stop offset="5%" stopColor={color} stopOpacity={0.9} />
 														<stop offset="95%" stopColor={color} stopOpacity={0.6} />
@@ -386,17 +386,17 @@ const DashBoard = () => {
 											<CartesianGrid strokeDasharray="3 3" stroke="#444" opacity={0.3} />
 											<XAxis
 												dataKey="name"
-												stroke="#a78bfa"
+												stroke="#00615f"
 												angle={-45}
 												textAnchor="end"
 												height={80}
-												tick={{ fontSize: 12, fill: "#d8b4fe" }}
-												tickLine={{ stroke: "#a78bfa" }}
+												tick={{ fontSize: 12, fill: "#26c7c4" }}
+												tickLine={{ stroke: "#00615f" }}
 											/>
 											<YAxis
-												stroke="#a78bfa"
-												tick={{ fill: "#d8b4fe" }}
-												tickLine={{ stroke: "#a78bfa" }}
+												stroke="#00615f"
+												tick={{ fill: "#26c7c4" }}
+												tickLine={{ stroke: "#00615f" }}
 											/>
 											<Tooltip
 												content={<CustomTooltip />}
@@ -415,7 +415,7 @@ const DashBoard = () => {
 												{categoryCountsData.map((entry, index) => (
 													<Cell
 														key={`cell-${index}`}
-														fill='#a246ff'
+														fill='#00615f'
 														className="cursor-pointer"
 													/>
 												))}
@@ -427,14 +427,14 @@ const DashBoard = () => {
 						</div>
 
 						{/* Bar Chart 2: Exercise Positions (Horizontal) */}
-						<div className="bg-gradient-to-br from-gray-900 to-purple-900 rounded-xl shadow-lg p-5 border border-purple-600/50 transition-all duration-300 hover:shadow-xl hover:border-purple-500">
+						<div className="bg-gradient-to-br from-gray-900 to-primary-900 rounded-xl shadow-lg p-5 border border-primary-600/50 transition-all duration-300 hover:shadow-xl hover:border-primary-500">
 							<div className="flex items-center mb-4">
-								<div className="p-2 bg-purple-700/30 rounded-lg mr-3">
-									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<div className="p-2 bg-primary-700/30 rounded-lg mr-3">
+									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
 									</svg>
 								</div>
-								<h3 className="text-lg font-semibold text-purple-200">Exercise Positions</h3>
+								<h3 className="text-lg font-semibold text-primary-200">Exercise Positions</h3>
 							</div>
 							<div className="bg-gray-800/40 rounded-lg p-4 backdrop-blur-sm">
 								<div className="h-64">
@@ -445,7 +445,7 @@ const DashBoard = () => {
 											margin={{ top: 20, right: 30, left: 100, bottom: 20 }}
 										>
 											<defs>
-												{purpleColors.map((color, index) => (
+												{tealColors.map((color, index) => (
 													<linearGradient key={`gradient-pos-${index}`} id={`posGradient${index}`} x1="0" y1="0" x2="1" y2="0">
 														<stop offset="5%" stopColor={color} stopOpacity={0.9} />
 														<stop offset="95%" stopColor={color} stopOpacity={0.6} />
@@ -455,17 +455,17 @@ const DashBoard = () => {
 											<CartesianGrid strokeDasharray="3 3" stroke="#444" horizontal={false} opacity={0.3} />
 											<XAxis
 												type="number"
-												stroke="#a78bfa"
-												tick={{ fill: "#d8b4fe" }}
-												tickLine={{ stroke: "#a78bfa" }}
+												stroke="#00615f"
+												tick={{ fill: "#26c7c4" }}
+												tickLine={{ stroke: "#00615f" }}
 											/>
 											<YAxis
 												dataKey="name"
 												type="category"
-												stroke="#a78bfa"
-												tick={{ fontSize: 12, fill: "#d8b4fe" }}
+												stroke="#00615f"
+												tick={{ fontSize: 12, fill: "#26c7c4" }}
 												width={80}
-												tickLine={{ stroke: "#a78bfa" }}
+												tickLine={{ stroke: "#00615f" }}
 											/>
 											<Tooltip
 												content={<CustomTooltip />}
@@ -484,7 +484,7 @@ const DashBoard = () => {
 												{positionCountsData.map((entry, index) => (
 													<Cell
 														key={`cell-${index}`}
-														fill="#a246ff"
+														fill="#00615f"
 														className="cursor-pointer"
 													/>
 												))}
@@ -496,14 +496,14 @@ const DashBoard = () => {
 						</div>
 
 						{/* Bar Chart 3: Therapist Specializations (Horizontal) */}
-						<div className="bg-gradient-to-br from-gray-900 to-purple-900 rounded-xl shadow-lg p-5 border border-purple-600/50 transition-all duration-300 hover:shadow-xl hover:border-purple-500">
+						<div className="bg-gradient-to-br from-gray-900 to-primary-900 rounded-xl shadow-lg p-5 border border-primary-600/50 transition-all duration-300 hover:shadow-xl hover:border-primary-500">
 							<div className="flex items-center mb-4">
-								<div className="p-2 bg-purple-700/30 rounded-lg mr-3">
-									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<div className="p-2 bg-primary-700/30 rounded-lg mr-3">
+									<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-primary-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
 									</svg>
 								</div>
-								<h3 className="text-lg font-semibold text-purple-200">Therapist Specializations</h3>
+								<h3 className="text-lg font-semibold text-primary-200">Therapist Specializations</h3>
 							</div>
 							<div className="bg-gray-800/40 rounded-lg p-4 backdrop-blur-sm">
 								<div className="h-64">
@@ -514,7 +514,7 @@ const DashBoard = () => {
 											margin={{ top: 20, right: 30, left: 120, bottom: 20 }}
 										>
 											<defs>
-												{purpleColors.map((color, index) => (
+												{tealColors.map((color, index) => (
 													<linearGradient key={`gradient-spec-${index}`} id={`specGradient${index}`} x1="0" y1="0" x2="1" y2="0">
 														<stop offset="5%" stopColor={color} stopOpacity={0.9} />
 														<stop offset="95%" stopColor={color} stopOpacity={0.6} />
@@ -524,17 +524,17 @@ const DashBoard = () => {
 											<CartesianGrid strokeDasharray="3 3" stroke="#444" horizontal={false} opacity={0.3} />
 											<XAxis
 												type="number"
-												stroke="#a78bfa"
-												tick={{ fill: "#d8b4fe" }}
-												tickLine={{ stroke: "#a78bfa" }}
+												stroke="#00615f"
+												tick={{ fill: "#26c7c4" }}
+												tickLine={{ stroke: "#00615f" }}
 											/>
 											<YAxis
 												dataKey="name"
 												type="category"
-												stroke="#a78bfa"
-												tick={{ fontSize: 12, fill: "#d8b4fe" }}
+												stroke="#00615f"
+												tick={{ fontSize: 12, fill: "#26c7c4" }}
 												width={100}
-												tickLine={{ stroke: "#a78bfa" }}
+												tickLine={{ stroke: "#00615f" }}
 											/>
 											<Tooltip
 												content={<CustomTooltip />}
@@ -553,7 +553,7 @@ const DashBoard = () => {
 												{specializationCountsData.map((entry, index) => (
 													<Cell
 														key={`cell-${index}`}
-														fill="#a246ff"
+														fill="#00615f"
 														className="cursor-pointer"
 													/>
 												))}

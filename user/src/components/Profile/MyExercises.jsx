@@ -22,7 +22,7 @@ const ErrorState = ({ message, onRetry }) => {
     <div className="text-center py-8">
       <p className="text-red-400">{message}</p>
       <button
-        className="mt-4 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition"
+        className="mt-4 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md transition"
         onClick={onRetry}
       >
         Retry
@@ -245,7 +245,7 @@ const MyExercises = () => {
       {/* Page Title */}
       <div className="p-4 border-b border-gray-800">
         <h1 className="text-xl font-bold text-white flex items-center">
-          <Dumbbell size={20} className="mr-2 text-purple-400" />
+          <Dumbbell size={20} className="mr-2 text-primary-400" />
           My Exercises
         </h1>
       </div>
@@ -253,14 +253,14 @@ const MyExercises = () => {
       {/* Tabs */}
       <div className="flex border-b border-gray-800">
         <button
-          className={`flex-1 py-3 px-4 text-center flex items-center justify-center ${activeExerciseTab === 'public' ? 'text-purple-400 border-b-2 border-purple-500' : 'text-gray-400 hover:text-white'}`}
+          className={`flex-1 py-3 px-4 text-center flex items-center justify-center ${activeExerciseTab === 'public' ? 'text-primary-400 border-b-2 border-primary-500' : 'text-gray-400 hover:text-white'}`}
           onClick={() => setActiveExerciseTab('public')}
         >
           <Globe size={16} className="mr-2" />
           My Public Exercises
         </button>
         <button
-          className={`flex-1 py-3 px-4 text-center flex items-center justify-center ${activeExerciseTab === 'private' ? 'text-purple-400 border-b-2 border-purple-500' : 'text-gray-400 hover:text-white'}`}
+          className={`flex-1 py-3 px-4 text-center flex items-center justify-center ${activeExerciseTab === 'private' ? 'text-primary-400 border-b-2 border-primary-500' : 'text-gray-400 hover:text-white'}`}
           onClick={() => setActiveExerciseTab('private')}
         >
           <Lock size={16} className="mr-2" />

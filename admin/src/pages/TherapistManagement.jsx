@@ -7,7 +7,7 @@ import TherapistCard from '../components/Therapist/TherapistCard';
 import TherapistManagementTable from '../components/Therapist/TherapistManagementTable';
 
 // API URL from environment or default
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5500/dailyphysio';
 
 const TherapistManagement = () => {
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const TherapistManagement = () => {
       };
 
       const response = await axios.get(`${API_URL}/admin/therapists`, config);
-      
+
       const fetchedTherapists = response.data.therapists || [];
       const fetchedPendingTherapists = response.data.pendingTherapists || [];
 
@@ -143,15 +143,15 @@ const TherapistManagement = () => {
               placeholder="Search by therapist name..."
               value={searchTerm}
               onChange={handleSearch}
-              className="pl-10 pr-4 py-2 w-full rounded-md bg-gray-800 border border-gray-700 text-purple-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="pl-10 pr-4 py-2 w-full rounded-md bg-gray-800 border border-gray-700 text-primary-300 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
-          <div onClick={() => setIsCards(false)} className="cursor-pointer relative flex items-center justify-center w-10 h-10 rounded-full bg-purple-600/10 border-2 border-purple-500 group-hover:scale-105 transition-transform duration-300">
+          <div onClick={() => setIsCards(false)} className="cursor-pointer relative flex items-center justify-center w-10 h-10 rounded-full bg-primary-600/10 border-2 border-primary-500 group-hover:scale-105 transition-transform duration-300">
             <FaBell className="text-white relative z-10" />
             {requestCount > 0 &&
               <>
-                <div className="absolute animate-ping h-full w-full bg-purple-500 opacity-75 rounded-full"></div>
-                <span className="absolute -top-2 -right-2 bg-white text-purple-900 text-[10px] font-bold rounded-full px-1.5 py-0.5 shadow">
+                <div className="absolute animate-ping h-full w-full bg-primary-500 opacity-75 rounded-full"></div>
+                <span className="absolute -top-2 -right-2 bg-white text-primary-900 text-[10px] font-bold rounded-full px-1.5 py-0.5 shadow">
                   {requestCount}
                 </span>
               </>
@@ -163,7 +163,7 @@ const TherapistManagement = () => {
       {/* Therapist Cards */}
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
         </div>
       ) : (
         isCards ?
@@ -197,7 +197,7 @@ const TherapistManagement = () => {
               </label>
               <div className="relative">
                 <select
-                  className="block w-full pl-3 pr-10 py-2 text-base bg-gray-700 border border-gray-600 text-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 rounded-md"
+                  className="block w-full pl-3 pr-10 py-2 text-base bg-gray-700 border border-gray-600 text-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 rounded-md"
                   defaultValue={selectedTherapist.status}
                   onChange={(e) => setSelectedTherapist({ ...selectedTherapist, status: e.target.value })}
                 >
@@ -217,11 +217,11 @@ const TherapistManagement = () => {
               </button>
               <button
                 onClick={() => updateTherapistStatus(selectedTherapist._id, selectedTherapist.status)}
-                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-500 transition duration-150"
+                className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-500 transition duration-150"
                 disabled={processing}
               >
                 {processing ?
-                  <div className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-md opacity-75">
+                  <div className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-md opacity-75">
                     <FaSpinner className="animate-spin mr-2" /> Updating...
                   </div>
                   : "Update"

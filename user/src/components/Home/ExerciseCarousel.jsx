@@ -190,7 +190,7 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 										</div>
 
 										{/* Image carousel */}
-										<MediaCarousel images={exercise.image || []}/>
+										<MediaCarousel images={exercise.image || []} />
 									</div>
 
 									<div className="p-6">
@@ -224,7 +224,7 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 										</p>
 
 										{/* Stats card - similar to TherapistCarousel but using exercise data */}
-										<div className="bg-primary-500/50 rounded-xl p-4 grid grid-cols-4 gap-1 border border-gray-700/40 group-hover:border-purple-500/20 transition-all duration-300 mb-4">
+										<div className="bg-primary-500/50 rounded-xl p-4 grid grid-cols-4 gap-1 border border-gray-700/40 group-hover:border-primary-500/20 transition-all duration-300 mb-4">
 											<div className="flex flex-col items-center text-center">
 												<Repeat size={18} className="text-primary-600 mb-1" />
 												<span className="text-white font-medium text-sm">{exercise.reps}</span>
@@ -268,7 +268,7 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 								onClick={prevExercises}
 								disabled={startIdx === 0 || isAnimating}
 								className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx === 0 ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
-									'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+									'bg-primary-600/20 text-primary-300 hover:bg-primary-600/40 hover:text-white'
 									} transition-all duration-300`}
 								aria-label="Previous exercises"
 							>
@@ -278,7 +278,7 @@ const ExerciseCarousel = ({ exercises = [], loading = false }) => {
 								onClick={nextExercises}
 								disabled={startIdx >= exercises.length - visibleCards || isAnimating}
 								className={`flex items-center justify-center w-10 h-10 rounded-full ${startIdx >= exercises.length - visibleCards ? 'bg-gray-800 text-gray-600 cursor-not-allowed' :
-									'bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 hover:text-white'
+									'bg-primary-600/20 text-primary-300 hover:bg-primary-600/40 hover:text-white'
 									} transition-all duration-300`}
 								aria-label="Next exercises"
 							>
