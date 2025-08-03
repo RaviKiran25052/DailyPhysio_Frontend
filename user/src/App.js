@@ -8,6 +8,7 @@ import ExerciseDetailPage from './pages/ExerciseDetailPage';
 import UserProfilePage from './pages/UserProfilePage';
 import CreatorExercisesPage from './pages/CreatorExercisesPage';
 import ConsultationDetails from './pages/ConsultationDetails';
+import ConsultedExerciseView from './pages/ConsultedExerciseView';
 
 const MainLayout = () => (
   <>
@@ -25,6 +26,7 @@ const App = () => {
       <Routes>
         {/* Route without Navbar */}
         <Route path="/consultation/:id" element={<ConsultationDetails />} />
+        <Route path="/consultation/exercise/:id" element={<ConsultedExerciseView />} />
 
         {/* All routes with Navbar inside MainLayout */}
         <Route element={<MainLayout />}>

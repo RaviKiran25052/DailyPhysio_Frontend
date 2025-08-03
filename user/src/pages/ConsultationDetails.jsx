@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, Calendar, Play, Eye, Heart, Award, Crown } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import MediaCarousel from '../components/Exercises/MediaCarousel';
 import axios from 'axios';
 
@@ -13,6 +13,7 @@ const ConsultationDetails = () => {
 
 	// Extract consultation ID from URL (simulated)
 	const { id } = useParams();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		fetchConsultationDetails();
@@ -21,8 +22,6 @@ const ConsultationDetails = () => {
 	const fetchConsultationDetails = async () => {
 		try {
 			setLoading(true);
-			console.log(`${API_URL}/consultation/${id}`);
-
 			const response = await axios.get(`${API_URL}/consultation/${id}`);
 
 			if (response.data.success) {
@@ -306,7 +305,10 @@ const ConsultationDetails = () => {
 									</div>
 
 									{/* Action Button */}
-									<button className="w-full bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600 transition-colors font-medium">
+									<button
+										onClick={() => navigate(`/consultation/exercise/${exercise._id}`)}
+										className="w-full cursor-pointer bg-primary-500 text-white py-2 px-4 rounded-lg hover:bg-primary-600 transition-colors font-medium"
+									>
 										View Exercise
 									</button>
 								</div>
