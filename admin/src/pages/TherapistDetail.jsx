@@ -444,7 +444,7 @@ const TherapistDetail = () => {
 					<div className='flex flex-col items-end'>
 						<div className="flex items-center text-sm gap-2">
 							<Database size={18} />
-							Data consumed:
+							Available Storage:
 						</div>
 						<span className='text-yellow-400'>
 							{storageInfo?.remainingStorage} / {storageInfo?.storageLimit}

@@ -41,7 +41,7 @@ const Adminlogin = () => {
       };
 
       const { data } = await axios.post(
-        `${API_URL}/login`,
+        `${API_URL}/admin/login`,
         { email, password },
         config
       );
